@@ -99,7 +99,7 @@ drop _merge
 rename (ccid name) (SUBID alter_name)
 order SUBID alterid id
 sort SUBID alterid
-destring SUBID,replace
+destring SUBID alterid,replace
 
 *make names consistent
 replace alter_name =strtrim(alter_name) //remove leading and trailing blanks
@@ -107,18 +107,36 @@ replace alter_name =subinstr(alter_name, ".", "",.) //remove .
 replace alter_name =subinstr(alter_name, `"""' , "",.) //remove "
 replace alter_name =strlower(alter_name) //change to lower case
 replace alter_name =stritrim(alter_name) //consecutive blanks collapsed to one blank
+preserve
+
+/*check alterid & alter_name within each wave of NC*/
+
+duplicates list SUBID alter_name date_snad //alter duplicates in one wave: 10458 has 1 relative and coworker both name steve h 
+duplicates list SUBID alterid date_snad //double check with alterid
+
+
+/*check alterid & alter_name across waves of NC*/
+
+
+duplicates drop SUBID alterid alter_name,force //drop alters in multiple waves
+duplicates list SUBID alter_name //alter duplicates in one wave: 10458 has 1 relative and coworker both name steve h 
+duplicates list SUBID alterid //8 alters have different spelling in 2 waves (10155: 5,21; 10328:1; 10339:40; )
+rename alterid alterid_nc
+save "NC-alterid-match",replace
 
 
 /*check alterid with uniqueid list*/
 
-
 *same name but different alterid
-*preserve
-rename alterid alterid_nc
-merge m:1 SUBID alter_name using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\ENSO clean\temp\ENSO-Participant-alter-LONG-clean.dta",keepusing(SUBID alterid alter_name) //merge with unique ID??? Remove excessive alters in unique ID vs. cleaned ENSO
-sort SUBID NC
+
+import excel using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\ENSO clean\UniqueID  W12345-Focal-20210215", clear first 
+keep SUBID TIEID_uniq name 
+rename (name TIEID_uniq) (alter_name alterid)
+duplicates drop SUBID alter_name,force
+merge 1:1 SUBID alter_name using "NC-alterid-match",keepusing(SUBID alterid_nc alter_name) //NC 10458 has 1 relative and coworker both name steve h 
+sort SUBID alter_name
 keep if _merge==3
-list SUBID alter_name alterid* if alterid != alterid_nc //start here
+list SUBID alter_name alterid* if alterid != alterid_nc //none should exist here, otherwise fix. start here
 
 *same alterid but different name
 duplicates drop SUBID alter_name alterid,force //drop duplicates due to merge
@@ -136,7 +154,7 @@ drop _merge dup
 
 /*check and fill missing on generators*/
 
-
+restore
 foreach x of varlist prevalter broughtforward stilldiscuss alterim* alterhm* alteret* prevalterimcat* alterrel* {
 	replace `x' = "1" if `x'== "true" | `x'== "TRUE"
 	replace `x' = "0" if `x'== "false" | `x'== "FALSE"
