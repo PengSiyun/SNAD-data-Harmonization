@@ -87,9 +87,13 @@ keep networkcanvasegouuid totval totnum totnum1
 duplicates drop networkcanvasegouuid, force
 save "Netcanvas-participant-altertie-EGOAGG-20211112.dta", replace
 
+
+
 ***************************************************************
 **# 2 merge files 
 ***************************************************************
+
+
 use "Netcanvas-participant-interviewer-20211112.dta",clear
 merge 1:1 networkcanvasegouuid using "Netcanvas-participant-ego-20211112.dta", nogen //only older protocols have interviewer files
 merge 1:m networkcanvasegouuid using "Netcanvas-participant-alter-20211112.dta", nogen //all matched
@@ -107,7 +111,17 @@ replace alter_name =subinstr(alter_name, ".", "",.) //remove .
 replace alter_name =subinstr(alter_name, `"""' , "",.) //remove "
 replace alter_name =strlower(alter_name) //change to lower case
 replace alter_name =stritrim(alter_name) //consecutive blanks collapsed to one blank
+
+
 preserve
+
+
+
+
+***************************************************************
+**#3 Check and fix altername and alterid across SNAD
+***************************************************************
+
 
 /*check alterid & alter_name within each wave of NC*/
 
@@ -152,21 +166,17 @@ sort SUBID alterid
 keep if _merge==3
 list SUBID alterid alter_name* if alter_name != alter_name_nc //double check to make sure people with same id are indeed different spelling rather than different people
 
-*start here
-
-
-
 
 
 
 ***************************************************************
-**#3 clean generators
+**#4 clean generators
 ***************************************************************
-
-
-/*check and fill missing on generators*/
 
 restore
+/*check and fill missing on generators*/
+
+
 foreach x of varlist prevalter broughtforward stilldiscuss alterim* alterhm* alteret* prevalterimcat* alterrel* {
 	replace `x' = "1" if `x'== "true" | `x'== "TRUE"
 	replace `x' = "0" if `x'== "false" | `x'== "FALSE"
@@ -221,8 +231,8 @@ drop prevalterimcat_*
 /*drop previous alters that entered by mistakes*/
 
 fre prevalter 
-drop if prevalter!="TRUE" & name_gen==0
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Netcanvas\cleaned\NC-participant-alter-LONG-prevalters.dta"
+drop if prevalter!=1 & name_gen==0
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Netcanvas\cleaned\NC-participant-alter-LONG-prevalters.dta",replace
 
 /*drop alters from previous wave but not mentioned in this wave*/
 
@@ -232,129 +242,169 @@ drop if name_gen==0
 
 
 ***********************************************************************
-**# 4. Retrive old alters' relation type and other demo (i.e., gender,race, age, college) from ENSO/pilot (only needed for early interviews in NC)
+**# 5. Retrive old alters' relation type and other demo (i.e., gender,race, age, college) from ENSO/pilot (only needed for early interviews in NC)
 ***********************************************************************
 
 
-/*clean alter demo for merge with ENSO*/
+/*clean alter demo for merge with ENSO&pilots*/
 
 
 destring SUBID altersex altercollege alterage alterrace,replace force
-recode altercollege altersex (-8=.) (1=1) (2=0)
-label define alterrace 1 "Asian" 2 "African American" 3 "Hispanic" 4 "White" 5 "Other"
+recode altercollege (-8=.) (1=1) (2=0)
+recode altersex (-8=.) (2=1) (1=0),gen(tfem)
+drop altersex
+recode alterrace (3=4) (4=3) (5=4)
+label define alterrace 1 "Asian" 2 "African American" 3 "White" 4 "Other"
 label values alterrace alterrace
 save "NC-Participant-LONG-20211112.dta", replace 
 
 
-/*Filter for W1 NC with missing alter demo*/
+/*Merge W1 NC with missing alter demo with ENSO*/
 
 
 keep if NC==1
 egen relmiss=rowtotal(alterrel*) //209 alters are missing/0 on all relation type
-fre relmiss altersex // 909 alters are missing on gender
-keep if prevalter==1 | relmiss==0 | missing(altersex) | missing(altercollege) |missing(alterage) | missing(alterrace) //keep all 729 alters that are old or missing on demo
-duplicates list SUBID alterid //10155 has 2 waves in NC
-save "NC-oldalters",replace
-use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\ENSO clean\temp\ENSO-Participant-alter-LONG-clean.dta",clear
-keep SUBID ENSO alter_name nirel* tfem alter_college alter_race alter_age 
 
-merge 1:m SUBID alter_name using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\SNAD-Participant-T1234-CleanB-LONG-20201001",keepusing(SUBID alter_name time imd imr imb hmd hmr hmb rel* tfem tcollege) nogen
-recode ENSO (.=0)
-label define ENSO 0 "pilot"
-label values ENSO ENSO
+*rename for merge with ENSO
+rename (altercollege alterage alterrace) (alter_college alter_age alter_race)
 
-***stopped here
-*correct names in ENSO/pilot to be the same as NC (identified by merge ENSO section below)
-replace alter_name="tammi w" if alter_name=="tammy w" & SUBID==3477
-replace alter_name="brian s" if alter_name=="bryan s" & SUBID==6302
-replace alter_name="carole d" if alter_name=="carol d" & SUBID==6302
-replace alter_name="kyle bub m" if alter_name=="kyle m" & SUBID==6377
-replace alter_name="vickie p" if alter_name=="vicky" & SUBID==6568
-replace alter_name="kathleen s" if alter_name=="kathleen r" & SUBID==6568
-replace alter_name="zac h" if alter_name=="zack h" & SUBID==10021
-replace alter_name="donelle w" if alter_name=="darnell w" & SUBID==10022
-replace alter_name="shalli h" if alter_name=="shalli m" & SUBID==10042
-replace alter_name="blesilla c" if alter_name=="blesila c" & SUBID==10049
-replace alter_name="shiley g" if alter_name=="shirley g" & SUBID==10052
-replace alter_name="kierra j" if alter_name=="keirra j" & SUBID==10124
-replace alter_name="sandy r" if alter_name=="sandra r" & SUBID==10237
-replace alter_name="dennis k" if alter_name=="dennis" & SUBID==10237
-replace alter_name="kelly s" if alter_name=="kelley s" & SUBID==10250
-replace alter_name="lynnette s" if alter_name=="lynette" & SUBID==10250
-replace alter_name="shalon m" if alter_name=="shalon s" & SUBID==10250
-replace alter_name="cathie h" if alter_name=="cathy h" & SUBID==10317
+*merge NC with ENSO
+merge 1:1 SUBID alterid using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\ENSO clean\temp\ENSO-Participant-alter-LONG-clean.dta",keepusing(nirel* tfem alter_race alter_age alter_college) update //update missing values in tfem alter_race alter_age alter_college of master data with values in using data
+drop if _merge==2 //drop ENSO alters did not match with NC old alters
+drop _merge
 
-replace alter_name="jackie b" if alter_name=="jackie h" & SUBID==10284
+*retrive relation type (it cannot be done with update because we need to use relmiss to identify missing)
+replace alterrel_1=nirelpart if relmiss==0
+replace alterrel_2=nirelprnt if relmiss==0
+replace alterrel_3=nirelsib if relmiss==0
+replace alterrel_4=nirelchld if relmiss==0
+replace alterrel_5=nirelgprnt if relmiss==0
+replace alterrel_6=nirelgchld if relmiss==0
+replace alterrel_7=nirelantun if relmiss==0
+replace alterrel_8=nirelinlaw if relmiss==0
+replace alterrel_9=nirelothrl if relmiss==0
+replace alterrel_10=nirelcowrk if relmiss==0
+replace alterrel_11=nirelnghbr if relmiss==0
+replace alterrel_12=nirelfrnd if relmiss==0
+replace alterrel_13=nirelemplr if relmiss==0
+replace alterrel_14=nirelemple if relmiss==0
+replace alterrel_15=nirelstdnt if relmiss==0
+replace alterrel_16=nirellwyr if relmiss==0
+replace alterrel_17=nireldoc if relmiss==0
+replace alterrel_18=nirelothmd if relmiss==0
+replace alterrel_19=nirelthrpy if relmiss==0
+replace alterrel_20=nirelrabbi if relmiss==0
+replace alterrel_21=nirelchrch if relmiss==0
+replace alterrel_22=nirelclub if relmiss==0
+replace alterrel_23=nirelactvt if relmiss==0
 
-*merge ENSO with NC
-merge m:1 SUBID alter_name using "NC-oldalters.dta"
-*this is to identify misspelling between pilot and ENSO
-fre SUBID if _merge==2 & SUBID>10042 // 188 new NC alters with missing demo did not match with pilot
-list alter_name _merge alterid if SUBID==10317 & _merge!=3
-keep if _merge==3 //drop pilot alters did not match with ENSO old alters
-
-*drop duplicated pilot data with no relation type info
-duplicates tag SUBID alter_name,gen(dup)
-egen miss=rowtotal(rel*) 
-list SUBID miss alter_name dup if miss==0 & dup>0 //jeff c of 6364 had no relation type in all waves of pilot data
-drop if miss==0 & dup>0
-drop miss dup
-
-*replace ENSO old alters with most recent pilot alter info
-gsort SUBID alter_name -time //sort time descending, so that first occurence is latest time
-duplicates drop SUBID alter_name,force //keep first occurence of duplicates
-count //315 old alters found in pilot (416-100=316), 1 pilot alter had no relation type info
-
-replace nifemale=tfem
-replace nirelothrl=relothrel
-replace nirelchrch=relchurch
-replace nirelemplr=relboss
-replace nirelcowrk=relcowork
-replace nirelemple=relemploy
-replace nirelfrnd=relfriend
-replace nirelantun=relauntunc
-replace nirelstdnt=relschool
-replace nirelsib=relsibling
-replace nirelgprnt=relgrandp
-replace nirelinlaw=relinlaw
-replace nirelgchld=relgrandc
-replace nirelothmd=relothmed
-replace nirelrabbi=relrelig
-replace nirelthrpy=relmental
-replace nirellwyr=rellawyer
-replace nirelpart=relpartner
-replace nirelnghbr=relneigh
-replace nirelclub=relclub
-replace nireldoc=reldoctor
-replace nirelchld=relchild
-replace nirelprnt=relparent
-replace nirelactvt=relleisure     
-drop time rel* tfem //drop variables from pilot
-egen relmiss=rowtotal(nirel*)
-fre relmiss //6 alters are missing/0 on all relation type in 316 found in pilot
-list SUBID alter_name if relmiss==0
-drop relmiss _merge
-append using "ENSO-Participant-LONG.dta"  
-duplicates drop SUBID alter_name,force //drop 315 duplicates from using data
+drop relmiss nirel*
+egen relmiss=rowtotal(alterrel*) //54 alters are still missing/0 on all relation type
 
 
+/*Merge W1 NC with missing alter demo with Pilots*/
+
+
+*rename for merge with pilots
+rename (alter_college) (tcollege)
+
+*merge NC with pilots
+preserve
+use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\SNAD-Participant-T1234-CleanB-LONG",replace
+keep SUBID alterid time rel* tfem tcollege
+
+*Only keep 1 wave 
+tostring SUBID alterid,replace
+gen id=SUBID+alterid
+destring SUBID alterid,replace
+reshape wide rel* tfem tcollege,i(id) j(time)
+drop id
+foreach x in tfem tcollege relpartner relparent relsibling relchild relgrandp relgrandc relauntunc relinlaw relothrel relcowork relneigh relfriend relboss relemploy relschool rellawyer reldoctor relothmed relmental relrelig relchurch relclub relleisure {
+	replace `x'4=`x'3 if missing(`x'4) 
+	replace `x'4=`x'2 if missing(`x'4)
+	replace `x'4=`x'1 if missing(`x'4)
+	rename `x'4 `x'
+	drop `x'1 `x'2 `x'3
+} //use the most recent wave demo info
+save "pilot-alterdemo",replace
+restore
+
+merge 1:1 SUBID alterid using "pilot-alterdemo", update //update missing values in tfem tcollege of master data with values in using data
+drop if _merge==2 //drop pilot alters did not match with NC old alters
+drop _merge
+
+
+*retrive relation type info (it cannot be done with update because we need to use relmiss to identify missing)
+replace alterrel_1=relpartner if relmiss==0
+replace alterrel_2=relparent if relmiss==0
+replace alterrel_3=relsibling if relmiss==0
+replace alterrel_4=relchild if relmiss==0
+replace alterrel_5=relgrandp if relmiss==0
+replace alterrel_6=relgrandc if relmiss==0
+replace alterrel_7=relauntunc if relmiss==0
+replace alterrel_8=relinlaw if relmiss==0
+replace alterrel_9=relothrel if relmiss==0
+replace alterrel_10=relcowork if relmiss==0
+replace alterrel_11=relneigh if relmiss==0
+replace alterrel_12=relfriend if relmiss==0
+replace alterrel_13=relboss if relmiss==0
+replace alterrel_14=relemploy if relmiss==0
+replace alterrel_15=relschool if relmiss==0
+replace alterrel_16=rellawyer if relmiss==0
+replace alterrel_17=reldoctor if relmiss==0
+replace alterrel_18=relothmed if relmiss==0
+replace alterrel_19=relmental if relmiss==0
+replace alterrel_20=relrelig if relmiss==0
+replace alterrel_21=relchurch if relmiss==0
+replace alterrel_22=relclub if relmiss==0
+replace alterrel_23=relleisure if relmiss==0
+drop rel*
+rename (tcollege alter_age alter_race) (altercollege alterage alterrace)
+recode NC (1=.)
+
+*append with wave 2+ NC
+append using "NC-Participant-LONG-20211112.dta" 
+drop if NC==1 //only append wave 2+
+recode NC (.=1)
+rename (tfem) (alterfem)
+rename (alterrel_1-alterrel_23) (relpartner relparent relsibling relchild relgrandp relgrandc relauntunc relinlaw relothrel relcowork relneigh relfriend relboss relemploy relschool rellawyer reldoctor relothmed relmental relrelig relchurch relclub relleisure)
+recode rel* (.=0) //. were from ENSO/pilots
+
+*rename (nirelpart nirelprnt nirelsib nirelchld nirelgprnt nirelgchld nirelantun nirelinlaw nirelothrl nirelcowrk nirelnghbr nirelfrnd nirelemplr nirelemple nirelstdnt nirellwyr nireldoc nirelothmd nirelthrpy nirelrabbi nirelchrch nirelclub nirelactvt) 
 
 
 
 
 ***************************************************************
-**#5 clean interpretors
+**#6 Retrive alter demo from NC T1 (those are skiped for T2+ NC)
 ***************************************************************
 
+
+egen relmiss=rowtotal(rel*) //65 alters are 0 on all relation type
+sort SUBID alterid NC // T1 alter appears first
+
+foreach x of varlist altercollege alterfem alterrace {
+	bysort SUBID alterid: replace `x'=`x'[1] if missing(`x') & NC>1 //take T1 values if missing
+}
+foreach x of varlist rel* {
+	bysort SUBID alterid: replace `x'=`x'[1] if relmiss==0 & NC>1 //take T1 values if relmiss=0
+}
+bysort SUBID alterid: replace alterage=alterage[1]+age(date_snad[1], date_snad) if missing(alterage) & NC>1 //take T1 values+time between waves if missing
+
+
+
+
+***************************************************************
+**#7 clean interpretors
+***************************************************************
+
+**start here
 
 /*this is not necessary if pilot data is not used*/
 
 
 egen pilot=rowtotal(alterim* alterhm*)
 *drop if pilot==0 | missing(pilot) //drop names that are not in health and important matter to be consistent with Pilot data 
-
-
-
 
 
 **stop here
@@ -364,11 +414,6 @@ mvpatterns if name_gen>0
 
 *check missing on alterid 
 list SUBID alter_name if missing(alterid) // no missing
-
-fre SUBID if missing(subname) & (broughtforward==1 | stilldiscuss==1)
-replace subname="Sarah Terry" if SUBID=="10394" //subname is found in Redcap
-
-fre SUBID if missing(altersex) & (broughtforward==1 | stilldiscuss==1) //129 alters missing in sex,reace, college, college,age because Evan's old protocol skip those demo questions when they are old alers
 
 list SUBID name alterid if missing(altercloseego) & (broughtforward==1 | stilldiscuss==1) //910004 & alterid 4 is missing on all interpretor; 
 
