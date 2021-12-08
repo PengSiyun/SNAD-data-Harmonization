@@ -33,16 +33,13 @@ format date_snad %dM_d,_CY //display in date
 list date_snad sessionfinish //double check
 
 *check ccid
-list ccid networkcanvascaseid if ccid!=networkcanvascaseid //1 case corrected below
-replace ccid=networkcanvascaseid if networkcanvascaseid=="10240" //ccid is wrong but networkcanvascaseid is correct
+list ccid networkcanvascaseid if ccid!=networkcanvascaseid //0 case, otherwise correct in the excel
 
 *create wave for NC
 sort ccid date_snad //sort ccid by time
 bysort ccid: gen NC=_n
 list ccid date_snad NC  //check order by time
- 
-
-drop session* interviewwave alterid ego_variable _filename // drop unnessary variables
+drop sessionstart sessionfinish sessionexported interviewwave alterid ego_variable _filename // drop unnessary variables
 
 save "Netcanvas-participant-ego-20211112.dta", replace
 
@@ -52,8 +49,7 @@ save "Netcanvas-participant-ego-20211112.dta", replace
 
 multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Netcanvas\Netcanvas Focal Interviews\alter") clear force import(stringcols(_all)) //import all variables as string
 drop if missing(networkcanvasegouuid) //empty row with no networkcanvasegouuid
-drop _filename // drop unnessary variables
-
+drop v57 v77 v78 _filename // drop unnessary variables
 save "Netcanvas-participant-alter-20211112.dta", replace
 
 
@@ -65,10 +61,10 @@ fre alteralterclose // alter do not know each other is not in the data
 destring alteralterclose,replace
 
 *impute missing in alter-alter tie due to accidental skip
-replace alteralterclose=1 if networkcanvasegouuid=="d8171411-dca7-45f1-a248-f16ad13f4072" & missing(alteralterclose) //they are both family members
-replace alteralterclose=1 if networkcanvasegouuid=="3613a591-79bc-4ea5-8d80-46e8dfe770f1" & missing(alteralterclose) //they are both children
-replace alteralterclose=1 if networkcanvasegouuid=="842da4a8-5dc0-432a-b958-c8bc440728cf" & missing(alteralterclose) //they are both coworker and friends
-replace alteralterclose=2 if networkcanvasegouuid=="a6a3cf29-ac92-4d63-9782-8cad50a30d72" & missing(alteralterclose) //they are a child and a friend
+replace alteralterclose=1 if networkcanvasuuid=="5e61b348-bd81-4e29-9f04-3c0ea0201768" & missing(alteralterclose) //they are both family members
+replace alteralterclose=1 if networkcanvasuuid=="f8be72ca-3e3f-48bb-88e2-8f9489294d7a" & missing(alteralterclose) //they are both children
+replace alteralterclose=1 if networkcanvasuuid=="e33cc922-9118-46a1-863b-97fa4500c03f" & missing(alteralterclose) //they are both coworker and friends
+replace alteralterclose=2 if networkcanvasuuid=="f09f351b-0fbd-4ec7-b17c-70322c6c2c6c" & missing(alteralterclose) //they are a child and a friend
 
 *clean
 recode alteralterclose (1=3) (2=2) (3=1) 
@@ -81,9 +77,10 @@ bysort networkcanvasegouuid: egen totnum=total(tievalue),mi //for Binary density
 
 recode alteralterclose (1/3=1),gen(newtievalue)
 bysort networkcanvasegouuid: egen totnum1=total(newtievalue),mi // for Density of networks know each other
+drop _filename
 
 save "Netcanvas-participant-altertie-long-20211112.dta", replace
-keep networkcanvasegouuid totval totnum totnum1
+keep networkcanvasegouuid totval totnum totnum1 
 duplicates drop networkcanvasegouuid, force
 save "Netcanvas-participant-altertie-EGOAGG-20211112.dta", replace
 
@@ -104,6 +101,7 @@ rename (ccid name) (SUBID alter_name)
 order SUBID alterid id
 sort SUBID alterid
 destring SUBID alterid,replace
+
 
 *make names consistent
 replace alter_name =strtrim(alter_name) //remove leading and trailing blanks
@@ -398,196 +396,196 @@ bysort SUBID alterid: replace alterage=alterage[1]+age(date_snad[1], date_snad) 
 **#7 clean interpretors
 ***************************************************************
 
-**start here
 
 /*this is not necessary if pilot data is not used*/
-
 
 egen pilot=rowtotal(alterim* alterhm*)
 *drop if pilot==0 | missing(pilot) //drop names that are not in health and important matter to be consistent with Pilot data 
 
 
-**stop here
-
-*missing on interpretors: 
-mvpatterns if name_gen>0
-
-*check missing on alterid 
-list SUBID alter_name if missing(alterid) // no missing
-
-list SUBID name alterid if missing(altercloseego) & (broughtforward==1 | stilldiscuss==1) //910004 & alterid 4 is missing on all interpretor; 
-
-list SUBID name alterid if missing(altersupfunc_1) & (broughtforward==1 | stilldiscuss==1) //10458,6125,10464 support function all false
-
-list SUBID name alterid if missing(altercls110) & (broughtforward==1 | stilldiscuss==1) //10389,910004 accidental skip
-
-*double check randomly choose 10
-destring random,replace
-bysort SUBID: egen random_tot = total(random)
-fre SUBID if random_tot!=10 & random_tot!=0 //6534 only chose 9
-
-*weird pattern of all false
-foreach x of varlist alterrel_* altersupfunc_* {
-	replace `x' = "0" if `x' == "false" | `x' == "FALSE"
-	replace `x' = "1" if `x' == "true" | `x' == "TRUE"
-	destring `x',replace
-}
-
-egen alterrel=rowtotal(alterrel_*)
-fre SUBID if alterrel==0 & (broughtforward==1 | stilldiscuss==1) //need to retrive demo from older waves (Evan skip demo if interviewed before)
-
-egen altersupfunc=rowtotal(altersupfunc_*)
-fre SUBID if alterrel==0 & altersupfunc==0 & (broughtforward==1 | stilldiscuss==1) //10154,10458,10459,10464,6125
+/*clean alter level interpretors*/
 
 
-/*
-************************************************************
-// 3. retrive ego info for baseline ENSO interview (not collected for other wave)
-************************************************************
-import delimited "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\ENSO clean\ENSO Focal\Ego\focal_bl_ego_export_17-1_2021-01-14T10 05 01.920140-05 00.csv", clear
-destring respondent_name,force gen(SUBID) 
-drop if missing(SUBID) | SUBID==445566 //drop all test runs
-replace SUBID=10400 if SUBID==1400
-drop if SUBID==10339 //ENSO interviewer thought 10039 is a misspelling of 10339 in ENSO, thus leave incomplete data for 10339 and restart interview for 10039
-replace SUBID=10339 if SUBID==10039 //actually 10039 is the wrong number, it should be 10339
-duplicates list SUBID //6377, 6574, 10067, 10127, 10163, 10216, 10239, 10262, 10327, 10332, 10339, 10360: 12 duplicates
-
-*manually check and drop duplicates within each wave
-drop if SUBID==6377 & interview_id==703
-
-
-
-
-
-
-
-************************************************************
-// 6. clean the variable names across 5 ENSO waves
-******************************************************
-
-
-*******clean name generators
-foreach x of varlist hlthburdn hlthcount hlthencrg impburdn impforce impmat ///
-    wkndties wkdyties family cowrkrs neighbrs anyelse partner {
-	egen `x'new=rowmean(`x' `x'2 `x'3 `x'4 `x'5)
-	drop `x' `x'2 `x'3 `x'4 `x'5
-	rename `x'new `x'
-}
-
-*******clean name interpretors 
-bysort SUBID: egen netsize=count(alter_name)
+bysort SUBID NC: egen netsize=count(name_gen)
 lab var netsize "Total number of alters mentioned" 
 
-foreach x of varlist niclose* {
-	tostring `x',replace
-	replace `x' =substr(`x',1,1) //remove " in string
+destring altercloseego,replace
+recode altercloseego (1=3) (2=2) (3=1)
+label define altercloseego 1 "Not very close" 2 "Sort of close" 3 "Very close"
+label values altercloseego altercloseego
+recode altercloseego (1 2=0) (3=1),gen(tclose)
+lab var tclose "Alter is very close"
+bysort SUBID NC: egen pclose=mean(tclose)
+lab var pclose "Proportion very close in network"
+bysort SUBID NC: egen mclose=mean(altercloseego)
+lab var mclose "Mean closeness in network, HI=MORE"
+
+destring alterfreqcon,replace
+recode alterfreqcon (1=3) (2=2) (3=1)
+label define alterfreqcon 1 "Hardly ever" 2 "Occcasionally" 3 "Often"
+label values alterfreqcon alterfreqcon
+recode alterfreqcon (1 2=0) (3=1),gen(tfreq)
+lab var tfreq "Alter sees or talks to ego often"
+bysort SUBID NC: egen pfreq=mean(tfreq)
+lab var pfreq "Proportion often in contact in network"
+bysort SUBID NC: egen mfreq=mean(alterfreqcon)
+lab var mfreq "Mean freq of contact in network, HI=MORE"
+bysort SUBID NC: egen sdfreq=sd(alterfreqcon)
+lab var sdfreq "Standard deviation of freq of contact in network"
+
+foreach x of varlist altersupfunc_* {
+	replace `x'="0" if `x'=="false" | `x'=="FALSE"
+	replace `x'="1" if `x'=="true" | `x'=="TRUE"
 	destring `x',replace
 }
-egen niclosenew=rowmean(niclose*)
-drop niclose niclose2 niclose3 niclose4 niclose5
-rename niclosenew niclose
-gen tclose=niclose
-recode tclose (2/3=0)
-lab var tclose "Alter is very close"
-bysort SUBID: egen pclose=mean(tclose)
-lab var pclose "Proportion very close in network"
-gen howcloser=niclose
-recode howcloser (1=3)(3=1)
-bysort SUBID: egen mclose=mean(howcloser)
-lab var mclose "Mean closeness in network, HI=MORE"
-drop howcloser 
-
-foreach x of varlist nitalk {
-	egen `x'new=rowmean(`x' `x'2 `x'3 `x'4 `x'5)
-	drop `x' `x'2 `x'3 `x'4 `x'5
-	rename `x'new `x'
-}
-gen tfreq=nitalk
-recode tfreq (2/3=0)
-lab var tfreq "Alter sees or talks to ego often"
-bysort SUBID: egen pfreq=mean(tfreq)
-lab var pfreq "Proportion often in contact in network"
-gen seetalkr=nitalk
-recode seetalkr (1=3)(3=1)
-bysort SUBID: egen mfreq=mean(seetalkr)
-lab var mfreq "Mean freq of contact in network, HI=MORE"
-bysort SUBID: egen sdfreq=sd(seetalkr)
-lab var sdfreq "Standard deviation of freq of contact in network"
-drop seetalkr
-
-foreach x of varlist nisupcare nisupcash nisupchor nisuplstn nisupsugg {
-	egen `x'new=rowmean(`x' `x'2 `x'3 `x'4 `x'5)
-	drop `x' `x'2 `x'3 `x'4 `x'5
-	rename `x'new `x'
-}
-egen numsup=rowtotal(nisupcare nisupcash nisupchor nisuplstn nisupsugg),mi
-replace numsup=. if missing(alter_name)
+rename (altersupfunc_1-altersupfunc_5) (listen care advice chores loan)
+egen numsup=rowtotal(listen-loan),mi
 lab var numsup "Number of support functions"
-bysort SUBID: egen msupport=mean(numsup)
+bysort SUBID NC: egen msupport=mean(numsup)
 lab var msupport "Mean number of support functions in network, HI=MORE"
 
-foreach x of varlist nihassle* {
-	tostring `x',replace
-	replace `x' =substr(`x',1,1) //remove " in string
-	destring `x',replace
+egen numsup3=rowtotal(listen care advice),mi
+bysort SUBID NC: egen msupport3=mean(numsup3)
+lab var msupport3 "Mean number of support functions in network (listen, care, advice), HI=MORE"
+
+foreach x of varlist listen-loan {
+	bysort SUBID NC: egen p`x'=mean(`x') //missing means no alter
 }
-egen nihasslenew=rowmean(nihassle*)
-drop nihassle nihassle2 nihassle3 nihassle4 nihassle5
-rename nihasslenew nihassle
-revrs nihassle, replace //reverse code
-bysort SUBID: egen mhassles=mean(nihassle)
+lab var plisten "Prop. listen to you when upset"
+lab var pcare "Prop. tell you they care about what happens to you"
+lab var padvice "Prop. give suggestions when you have a problem"
+lab var pchores "Prop. help you with daily chores"
+lab var ploan "Prop. loan money when you are short of money"
+
+destring alterhassle,replace
+revrs alterhassle, replace //reverse code
+bysort SUBID NC: egen mhassles=mean(alterhassle)
 lab var mhassles "Mean hassles in network, HI=MORE)"
-recode nihassle (1=0) (2/3=1),gen(thassles)
+recode alterhassle (1=0) (2/3=1),gen(thassles)
 lab var thassles "Alter hassles, causes problems sometimes or a lot"
-bysort SUBID: egen phassles=mean(thassles)
+bysort SUBID NC: egen phassles=mean(thassles)
 lab var phassles "Proportion that hassle, cause problems in network"
 
-foreach x of varlist nistrength {
-	egen `x'new=rowmean(`x' `x'2 `x'3 `x'4 `x'5)
-	drop `x' `x'2 `x'3 `x'4 `x'5
-	rename `x'new `x'
-}
-bysort SUBID: egen mstrength=mean(nistrength)
+destring altercls110,replace
+bysort SUBID NC: egen mstrength=mean(altercls110)
 lab var mstrength "Mean tie strength in network, HI=MORE"
-bysort SUBID: egen weakest=min(nistrength)
+bysort SUBID NC: egen weakest=min(altercls110)
 lab var weakest "Minimum tie strength score"
-bysort SUBID: egen iqrstrength=iqr(nistrength)
+bysort SUBID NC: egen iqrstrength=iqr(altercls110)
 lab var iqrstrength "Interquartile range of tie strength"
-bysort SUBID: egen sdstrength=sd(nistrength)
+bysort SUBID NC: egen sdstrength=sd(altercls110)
 lab var sdstrength "Standard deveiation of tie strength"
 
-gen tfem=nifemale
-lab var tfem "Alter is female"
-drop nifemale
-bysort SUBID: egen pfem=mean(tfem)
+lab var alterfem "Alter is female"
+bysort SUBID NC: egen pfem=mean(alterfem)
 lab var pfem "Proportion female in network"
 
-*diversity measure (Cohen): 25 types total in data (nirelother nirelfinan are two extra in ENSO)
-egen othfam=rowtotal(nirelsib nirelantun nirelgprnt nirelgchld nirelothrl),mi //group into other family
-egen fri=rowtotal(nirelfrnd nirelactvt),mi //group into friend
-egen work=rowtotal(nirelemple nirelemplr nirelcowrk),mi //group into workmate
-egen church=rowtotal(nirelrabbi nirelchrch),mi //group into religious group
-egen prof=rowtotal(nirelthrpy nirelothmd nireldoc nirellwyr nirelfinan),mi //group into professional group
-recode othfam fri work church prof (1/10=1)
-foreach x of varlist othfam fri work church prof nirelpart nirelprnt nirelinlaw nirelchld nirelnghbr nirelstdnt nirelclub {
-egen u`x' = tag(SUBID `x') if `x'>0 & !missing(`x') // e.g., count multiple friends as 1 friend
-}
-egen relmiss=rowtotal(nirelother nirelchrch nirelemplr nirelfrnd nirelothrl nirelantun nirelstdnt nirelsib nirelgprnt nirelinlaw nirelgchld nirelothmd nirelrabbi nirelthrpy nirellwyr nirelprnt nirelnghbr nirelclub nirelactvt nirelfinan nirelcowrk nireldoc nirelpart nirelemple nirelchld) //114 alters are missing/0 on all relation type (6+1+107=114)
+lab var alterage "Alter age"
+bysort SUBID NC: egen mage=mean(alterage)
+lab var mage "Mean alter age"
+bysort SUBID NC: egen sdage=sd(alterage)
+lab var sdage "Standard deveiation of alter age"
 
-recode uothfam ufri uwork uchurch uprof unirelpart unirelprnt unirelinlaw unirelchld unirelnghbr unirelstdnt unirelclub (0=.) if relmiss==0 & netsize>0 //if a named alter is not specified for relation type then treat as missing
-bysort SUBID: egen diverse=total(uothfam+ufri+uwork+uchurch+uprof+unirelpart+unirelprnt+unirelinlaw+unirelchld+unirelnghbr+unirelstdnt+unirelclub),mi // cohen's 12 categories(volunteer is not in this data thus leaving us 11 of 12 Cohen's categories, and I add a group call prof as a replacement)
-drop uothfam-unirelclub othfam fri work church prof
-lab var diverse "Network diversity" 
-fre diverse
+bysort SUBID NC: egen pcollege=mean(altercollege)
+lab var pcollege "Proportion college in network"
 
-egen tkin=rowtotal(nirelsib nirelantun nirelgprnt nirelgchld nirelothrl nirelpart nirelprnt nirelinlaw nirelchld)
+destring alterprox,replace
+label define alterprox 1 "<30 mins" 2 "30-60 mins" 3 "1-2 hour" 4 ">2 hour",replace
+label values alterprox alterprox
+bysort SUBID NC: egen mprox=mean(alterprox)
+lab var mprox "Mean alter proximity"
+recode alterprox (2/4=0),gen(prox30)
+bysort SUBID NC: egen pprox=mean(prox30)
+lab var prox30 "Proportion <30 mins"
+
+destring alterhknow,replace
+recode alterhknow (1=3) (2=2) (3=1)
+label define alterhknow 1 "Not very much" 2 "Some" 3 "A lot",replace
+label values alterhknow alterhknow
+bysort SUBID NC: egen mknow=mean(alterhknow)
+lab var mknow "Mean knowledge of aging problems in network, HI=MORE"
+recode alterhknow (1 2=0) (3=1),gen(tknow)
+lab var tknow "Alter knows a lot about memory loss, confusion, or other similar problems that you might be experiencing as you age"
+bysort SUBID NC: egen pknow=mean(tknow)
+lab var pknow "Proportion knows a lot about aging"
+
+destring alterdtr,replace
+recode alterdtr (1=3) (2=2) (3=1) (-8=.)
+label define alterdtr 1 "Not very much" 2 "Most of the time" 3 "A lot",replace
+label values alterdtr alterdtr
+bysort SUBID NC: egen mtrust=mean(alterdtr)
+lab var mtrust "Mean trust in doctors in network, HI=MORE"
+recode alterdtr (1 2 =0) (3=1),gen(ttrust)
+lab var ttrust "Alter trusts doctors a lot"
+bysort SUBID NC: egen ptrust=mean(ttrust)
+lab var ptrust "Proportion who trust doctors in network"
+
+destring alterquestion,replace
+recode alterquestion (-8=.)
+label define alterquestion 1 "Rarely" 2 "Sometimes" 3 "Often",replace
+label values alterquestion alterquestion
+bysort SUBID NC: egen mquestion=mean(alterquestion)
+lab var mquestion "Mean questions doctors in network, HI=MORE"
+
+recode alterrace (1 2 4=0) (3=1),gen(white)
+bysort SUBID NC: egen pwhite=mean(white)
+lab var pwhite "Proportion White in network"
+
+gen tkin=relpartner+relparent+relsibling+relchild+relgrandp+relgrandc+relauntunc+relinlaw+relothrel
 recode tkin (1/9=1)
-replace tkin=. if missing(alter_name)
+replace tkin=. if relmiss==0
 lab var tkin "Alter is family member"
-bysort SUBID: egen pkin=mean(tkin)
+bysort SUBID NC: egen pkin=mean(tkin)
 lab var pkin "Proportion of network that is kin"
 
-gen ENSO=1
+*diversity measure (Cohen)
+egen othfam=rowtotal(relsibling relgrandp relgrandc relauntunc relothrel),mi //group into other family
+egen fri=rowtotal(relfriend relleisure),mi //group into friend
+egen work=rowtotal(relemploy relboss relcowork),mi //group into workmate
+egen church=rowtotal(relrelig relchurch),mi //group into religious group
+egen prof=rowtotal(relmental relothmed reldoctor rellawyer),mi //group into  professional group
+
+recode othfam fri work church prof (1/10=1)
+foreach x of varlist relpartner relparent relinlaw relchild othfam relneigh fri work relschool church prof relclub {
+egen u`x' = tag(SUBID NC `x') if `x'>0 & !missing(`x') // e.g., count multiple friends as 1 friend
+}
+recode urelpartner-urelclub (0=.) if relmiss==0 & netsize>0 //if a named alter is not specified for relation type then treat as missing
+bysort SUBID NC: egen diverse=total(urelpartner+urelparent+urelinlaw+urelchild+uothfam+urelneigh+ufri+uwork+urelschool+uchurch+uprof+urelclub),mi //cohen's 12 categories(volunteer is not in this data thus leaving us 11 of 12 Cohen's categories, and I add a group call prof as a replacement)
+drop relmiss urelpartner-urelclub othfam fri work church prof
+lab var diverse "Network diversity"
+
+
+/*clean alter-alter level interpretors*/
+**start here
+
+totval totnum totnum1
+bysort SUBID NC: egen npossties=netsize*(netsize-1)/2
+
+bysort SUBID: egen totval=total(tievalue),mi //for value density
+gen density=totval/npossties
+lab var density "Valued density of networks from matrix"
+
+recode tievalue (2/3=1) (0/1=0),gen(tievalue1)
+bysort SUBID: egen totnum=total(tievalue1),mi //for Binary density
+gen bdensity=totnum/npossties
+lab var bdensity "Binary density of networks from matrix"
+
+recode tievalue (1/3=1) (0=0),gen(tievalue2)
+bysort SUBID: egen totnum1=total(tievalue2),mi // for Density of networks know each other
+gen b1density=totnum1/npossties
+lab var b1density "Density of networks know each other"
+
+egen sole=rowmin(newmatrix_1_2-newmatrix_19_20) 
+recode sole (0=1) (1=0) //same as recode b1density (1=0)
+lab var sole "Sole bridge status"
+*calculate Effective size
+gen efctsize=netsize-2*totnum1/netsize
+label var efctsize "Effective size"
+
+
+
+
+
 save "ENSO-Participant-LONG-pilot-clean.dta", replace 
 *save "ENSO-Participant-LONG-clean.dta", replace 
 
