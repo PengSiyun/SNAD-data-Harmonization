@@ -1,13 +1,16 @@
 ****Author:  Siyun Peng
-****Date:    2021/02/14
-****Version: 16
-****Purpose: label and create variables for NC 
+****Date:    2021/12/08
+****Version: 17
+****Purpose: Clean NC 
 
 clear
 
+
 ***************************************************************
-**# 1 read files 
+**# 1 clean ego data 
 ***************************************************************
+
+
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Netcanvas\temp"
 
 
@@ -16,7 +19,7 @@ cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Netc
 
 multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Netcanvas\Netcanvas Focal Interviews\interviewer") clear force 
 drop id _filename networkcanvasuuid // drop unnessary variables 
-save "Netcanvas-participant-interviewer-20211112.dta", replace
+save "NC-participant-interviewer-20211112.dta", replace
 
 
 /*read ego files*/
@@ -41,67 +44,31 @@ bysort ccid: gen NC=_n
 list ccid date_snad NC  //check order by time
 drop sessionstart sessionfinish sessionexported interviewwave alterid ego_variable _filename // drop unnessary variables
 
-save "Netcanvas-participant-ego-20211112.dta", replace
+save "NC-participant-ego-20211112.dta", replace
 
 
-/*read alter files*/
 
 
+
+
+***************************************************************
+**# 2 Read alter level data
+***************************************************************
+
+
+
+*read file
 multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Netcanvas\Netcanvas Focal Interviews\alter") clear force import(stringcols(_all)) //import all variables as string
 drop if missing(networkcanvasegouuid) //empty row with no networkcanvasegouuid
 drop v57 v77 v78 _filename // drop unnessary variables
-save "Netcanvas-participant-alter-20211112.dta", replace
 
+*merge with ego level 
+merge m:1 networkcanvasegouuid using "NC-participant-ego-20211112.dta", nogen //all matched
 
-/*read alter tie files*/
-
-
-multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Netcanvas\Netcanvas Focal Interviews\alter_tie") clear force import(stringcols(_all))
-fre alteralterclose // alter do not know each other is not in the data
-destring alteralterclose,replace
-
-*impute missing in alter-alter tie due to accidental skip
-replace alteralterclose=1 if networkcanvasuuid=="5e61b348-bd81-4e29-9f04-3c0ea0201768" & missing(alteralterclose) //they are both family members
-replace alteralterclose=1 if networkcanvasuuid=="f8be72ca-3e3f-48bb-88e2-8f9489294d7a" & missing(alteralterclose) //they are both children
-replace alteralterclose=1 if networkcanvasuuid=="e33cc922-9118-46a1-863b-97fa4500c03f" & missing(alteralterclose) //they are both coworker and friends
-replace alteralterclose=2 if networkcanvasuuid=="f09f351b-0fbd-4ec7-b17c-70322c6c2c6c" & missing(alteralterclose) //they are a child and a friend
-
-*clean
-recode alteralterclose (1=3) (2=2) (3=1) 
-label define alteralterclose 1 "Not very close" 2 "Sort of close" 3 "Very close"
-label values alteralterclose alteralterclose
-bysort networkcanvasegouuid: egen totval=total(alteralterclose),mi //for value density
-
-recode alteralterclose (2/3=1) (1=0),gen(tievalue)
-bysort networkcanvasegouuid: egen totnum=total(tievalue),mi //for Binary density
-
-recode alteralterclose (1/3=1),gen(newtievalue)
-bysort networkcanvasegouuid: egen totnum1=total(newtievalue),mi // for Density of networks know each other
-drop _filename
-
-save "Netcanvas-participant-altertie-long-20211112.dta", replace
-keep networkcanvasegouuid totval totnum totnum1 
-duplicates drop networkcanvasegouuid, force
-save "Netcanvas-participant-altertie-EGOAGG-20211112.dta", replace
-
-
-
-***************************************************************
-**# 2 merge files 
-***************************************************************
-
-
-use "Netcanvas-participant-interviewer-20211112.dta",clear
-merge 1:1 networkcanvasegouuid using "Netcanvas-participant-ego-20211112.dta", nogen //only older protocols have interviewer files
-merge 1:m networkcanvasegouuid using "Netcanvas-participant-alter-20211112.dta", nogen //all matched
-merge m:1 networkcanvasegouuid using "Netcanvas-participant-altertie-EGOAGG-20211112.dta" 
-fre ccid if _merge==1 //10229,10339 are missing in altertie data due to time constrict
-drop _merge
 rename (ccid name) (SUBID alter_name)
 order SUBID alterid id
 sort SUBID alterid
 destring SUBID alterid,replace
-
 
 *make names consistent
 replace alter_name =strtrim(alter_name) //remove leading and trailing blanks
@@ -111,14 +78,15 @@ replace alter_name =strlower(alter_name) //change to lower case
 replace alter_name =stritrim(alter_name) //consecutive blanks collapsed to one blank
 
 
+
+
+***************************************************************
+**# 3 Check and fix altername and alterid across SNAD
+***************************************************************
+
+
+
 preserve
-
-
-
-
-***************************************************************
-**#3 Check and fix altername and alterid across SNAD
-***************************************************************
 
 
 /*check alterid & alter_name within each wave of NC*/
@@ -389,18 +357,15 @@ foreach x of varlist rel* {
 }
 bysort SUBID alterid: replace alterage=alterage[1]+age(date_snad[1], date_snad) if missing(alterage) & NC>1 //take T1 values+time between waves if missing
 
+save "NC-participant-alter-20211112.dta", replace
 
 
 
 ***************************************************************
-**#7 clean interpretors
+**#7 Full: clean alter level interpretors
 ***************************************************************
 
 
-/*this is not necessary if pilot data is not used*/
-
-egen pilot=rowtotal(alterim* alterhm*)
-*drop if pilot==0 | missing(pilot) //drop names that are not in health and important matter to be consistent with Pilot data 
 
 
 /*clean alter level interpretors*/
@@ -496,7 +461,7 @@ bysort SUBID NC: egen mprox=mean(alterprox)
 lab var mprox "Mean alter proximity"
 recode alterprox (2/4=0),gen(prox30)
 bysort SUBID NC: egen pprox=mean(prox30)
-lab var prox30 "Proportion <30 mins"
+lab var pprox "Proportion <30 mins"
 
 destring alterhknow,replace
 recode alterhknow (1=3) (2=2) (3=1)
@@ -554,46 +519,106 @@ bysort SUBID NC: egen diverse=total(urelpartner+urelparent+urelinlaw+urelchild+u
 drop relmiss urelpartner-urelclub othfam fri work church prof
 lab var diverse "Network diversity"
 
+drop tclose tfreq numsup numsup3 thassles prox30 tknow ttrust white tkin //drop alter level variables
+save "NC-participant-alter-clean-20211112.dta", replace
+
+
+
+
+***************************************************************
+**#8 Full: Clean alter-alter level data
+***************************************************************
+
+
+
+
+/*read alter tie files*/
+
+
+multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Netcanvas\Netcanvas Focal Interviews\alter_tie") clear force import(stringcols(_all))
+fre alteralterclose // alter do not know each other is not in the data
+destring alteralterclose,replace
+
+*impute missing in alter-alter tie due to accidental skip
+replace alteralterclose=1 if networkcanvasuuid=="5e61b348-bd81-4e29-9f04-3c0ea0201768" & missing(alteralterclose) //they are both family members
+replace alteralterclose=1 if networkcanvasuuid=="f8be72ca-3e3f-48bb-88e2-8f9489294d7a" & missing(alteralterclose) //they are both children
+replace alteralterclose=1 if networkcanvasuuid=="e33cc922-9118-46a1-863b-97fa4500c03f" & missing(alteralterclose) //they are both coworker and friends
+replace alteralterclose=2 if networkcanvasuuid=="f09f351b-0fbd-4ec7-b17c-70322c6c2c6c" & missing(alteralterclose) //they are a child and a friend
+save "NC-participant-altertie-long-20211112.dta", replace
+
 
 /*clean alter-alter level interpretors*/
-**start here
 
-totval totnum totnum1
-bysort SUBID NC: egen npossties=netsize*(netsize-1)/2
 
-bysort SUBID: egen totval=total(tievalue),mi //for value density
+recode alteralterclose (1=3) (2=2) (3=1) 
+label define alteralterclose 1 "Not very close" 2 "Sort of close" 3 "Very close"
+label values alteralterclose alteralterclose
+bysort networkcanvasegouuid: egen totval=total(alteralterclose),mi //for value density
+
+recode alteralterclose (2/3=1) (1=0),gen(tievalue)
+bysort networkcanvasegouuid: egen totnum=total(tievalue),mi //for Binary density
+
+recode alteralterclose (1/3=1),gen(newtievalue)
+bysort networkcanvasegouuid: egen totnum1=total(newtievalue),mi // for Density of networks know each other
+drop _filename
+
+keep networkcanvasegouuid totval totnum totnum1 
+duplicates drop networkcanvasegouuid, force
+save "NC-participant-altertie-EGOAGG-20211112.dta", replace
+
+
+
+/*Merge with alter level*/
+
+
+merge 1:m networkcanvasegouuid using "NC-participant-alter-clean-20211112" 
+fre SUBID if _merge==2 //10229,10339 are missing in altertie data due to time constrict
+drop _merge
+
+
+
+/*Clean density etc measures*/
+
+
+*adjust for randomization 
+destring random, replace
+bysort SUBID NC: egen trandom=total(random),mi
+bysort SUBID NC: gen npossties=trandom*(trandom-1)/2 
+bysort SUBID NC: replace npossties=netsize*(netsize-1)/2 if missing(npossties) //early NC did not implement randomization
+
 gen density=totval/npossties
 lab var density "Valued density of networks from matrix"
-
-recode tievalue (2/3=1) (0/1=0),gen(tievalue1)
-bysort SUBID: egen totnum=total(tievalue1),mi //for Binary density
 gen bdensity=totnum/npossties
 lab var bdensity "Binary density of networks from matrix"
-
-recode tievalue (1/3=1) (0=0),gen(tievalue2)
-bysort SUBID: egen totnum1=total(tievalue2),mi // for Density of networks know each other
 gen b1density=totnum1/npossties
 lab var b1density "Density of networks know each other"
-
-egen sole=rowmin(newmatrix_1_2-newmatrix_19_20) 
-recode sole (0=1) (1=0) //same as recode b1density (1=0)
+recode b1density (1=0) (.=.) (else=1),gen(sole) 
 lab var sole "Sole bridge status"
-*calculate Effective size
-gen efctsize=netsize-2*totnum1/netsize
+
+bysort SUBID NC: gen npossties_rd=trandom*(trandom-1)/2 
+bysort SUBID NC: gen npossties_full=netsize*(netsize-1)/2
+gen efctsize=netsize - 2*totnum1*(npossties_full/npossties_rd)/netsize //adjust totnum1 proportionaly to npossties_full/npossties_rd; trandom to netsize/trandom
+replace efctsize=netsize-2*totnum1/netsize if missing(efctsize)
 label var efctsize "Effective size"
+drop npossties_rd npossties_full
 
 
 
 
 
-save "ENSO-Participant-LONG-pilot-clean.dta", replace 
-*save "ENSO-Participant-LONG-clean.dta", replace 
+***************************************************************
+**#9 Full: save files 
+***************************************************************
 
-duplicates drop SUBID, force
-keep SUBID date_snad netsize-ENSO
-drop tfem tkin tclose tfreq thassles numsup //drop alter level variables
-save "ENSO-Participant-EGOAGG-pilot-clean.dta", replace 
-*save "ENSO-Participant-EGOAGG-clean.dta", replace 
+
+
+
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Netcanvas\cleaned"
+save "NC-Participant-LONG-clean-20211112.dta", replace 
+
+duplicates drop SUBID NC, force
+keep SUBID date_snad NC netsize-efctsize
+save "NC-Participant-EGOAGG-clean-20211112.dta", replace 
 
 
 
@@ -604,106 +629,316 @@ save "ENSO-Participant-EGOAGG-pilot-clean.dta", replace
 
 
 ***************************************************************
-//	#7 Clean alter-alter ties (A-B and B-A are both in the file! But this does not affect calculation of density)
+**#7b Pilot: clean alter level interpretors
 ***************************************************************
-*match with pilot of important and health matters
-multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\ENSO clean\ENSO Focal") clear force  //import multiple csv in a folder (ssc install multimport)
-destring respondent_name,force gen(SUBID) 
-drop if missing(SUBID) | SUBID==445566 //drop all test runs
-replace SUBID=10400 if SUBID==1400
-drop if SUBID==10339 //ENSO interviewer thought 10039 is a misspelling of 10339 in ENSO, thus leave incomplete data for 10339 and restart interview for 10039
-replace SUBID=10339 if SUBID==10039 //actually 10039 is the wrong number, it should be 10339
-
-
-*duplicates within each wave
-duplicates tag SUBID alter_a_name alter_b_name _filename,gen(dup)
-egen pickone=tag(SUBID) if dup>0
-list SUBID _filename if pickone==1 //10262 T1, 10327 T1, 6564 T2, 10127 T2, 6538 T3
-sort SUBID interview_id alter_a_name
-
-*manually check and drop duplicates within each wave
-drop if SUBID==10262 & interview_id==446 & _filename==1
-replace tievalue=. if SUBID==10262 & _filename==1 //every tie has value of 1=low close, this is impossible given ego is close to all alters, thus code missing 
-drop if SUBID==10327 & _filename==1 
-replace tievalue=. if SUBID==10327 & _filename==1 //every tie has value of 2, this is impossible, thus code missing (high close, low strength, missing relation type in alter data too)
-drop if SUBID==6564 & interview_id==617 & _filename==2
-drop if SUBID==10127 & interview_id!=770 & _filename==2
-drop if SUBID==6538 & interview_id==159 & _filename==3
-duplicates report SUBID alter_a_name alter_b_name _filename //no duplicate left
-
-
-*******check duplicate cases across waves  
-
-*remove place holders (e.g., T2 alters that are from previous waves are in ENSO T1 too, although they are not interviewed in T1 by ENSO)
-duplicates list SUBID alter_a_name alter_b_name //3564 in T3 is also in T4
-drop if SUBID==3564 & _filename==3
-duplicates report SUBID alter_a_name alter_b_name //no duplicate left
-
-
-*******check weird pattern in tievalue  
-egen new_tievalue=rowtotal(tievalue*),mi
-drop tievalue* tieweight* 
-rename new_tievalue tievalue
-fre tievalue
-label define alterclose 0 "Dont know each other" 1 "Not very close" 2 "Sort of close" 3 "Very close"
-label values tievalue alterclose
-bysort SUBID: egen tievalue_min=min(tievalue)
-bysort SUBID: egen tievalue_max=max(tievalue)
-bysort SUBID: gen issue=1 if tievalue_min==tievalue_max & !missing(tievalue_min, tievalue_max)
-drop pickone
-egen pickone=tag(SUBID) if issue==1
-fre pickone //44 SUBIDs have issues!
-fre SUBID if issue==1 //too many 
-sort issue SUBID
-order SUBID tievalue tievalue_min tievalue_max issue
-
-replace tievalue=. if SUBID==3429 | SUBID==3477 | SUBID==3677 //stopped here
-
-keep SUBID tievalue alter_a_name alter_b_name
 
 
 
-*merge with alter data pilot vs. full to clean
 
-*this is not nesscessary for full data
-merge m:1 SUBID using "ENSO-Participant-LONG-pilot-clean.dta"
-keep if _merge==3 //keep alters that are important or health matters
-keep survey_id-tievalue //only keep variables from alter-alter ties
+*drop names that are not in health and important matter to be consistent with Pilot data 
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Netcanvas\temp"
+use "NC-participant-alter-20211112.dta", clear
+egen pilot=rowtotal(alterim* alterhm*)
+drop if pilot==0 | missing(pilot) 
 
-bysort SUBID: egen npossties=count(tievalue)
-bysort SUBID: egen totval=total(tievalue),mi
+/*clean alter level interpretors*/
+
+
+bysort SUBID NC: egen netsize=count(name_gen)
+lab var netsize "Total number of alters mentioned" 
+
+destring altercloseego,replace
+recode altercloseego (1=3) (2=2) (3=1)
+label define altercloseego 1 "Not very close" 2 "Sort of close" 3 "Very close"
+label values altercloseego altercloseego
+recode altercloseego (1 2=0) (3=1),gen(tclose)
+lab var tclose "Alter is very close"
+bysort SUBID NC: egen pclose=mean(tclose)
+lab var pclose "Proportion very close in network"
+bysort SUBID NC: egen mclose=mean(altercloseego)
+lab var mclose "Mean closeness in network, HI=MORE"
+
+destring alterfreqcon,replace
+recode alterfreqcon (1=3) (2=2) (3=1)
+label define alterfreqcon 1 "Hardly ever" 2 "Occcasionally" 3 "Often"
+label values alterfreqcon alterfreqcon
+recode alterfreqcon (1 2=0) (3=1),gen(tfreq)
+lab var tfreq "Alter sees or talks to ego often"
+bysort SUBID NC: egen pfreq=mean(tfreq)
+lab var pfreq "Proportion often in contact in network"
+bysort SUBID NC: egen mfreq=mean(alterfreqcon)
+lab var mfreq "Mean freq of contact in network, HI=MORE"
+bysort SUBID NC: egen sdfreq=sd(alterfreqcon)
+lab var sdfreq "Standard deviation of freq of contact in network"
+
+foreach x of varlist altersupfunc_* {
+	replace `x'="0" if `x'=="false" | `x'=="FALSE"
+	replace `x'="1" if `x'=="true" | `x'=="TRUE"
+	destring `x',replace
+}
+rename (altersupfunc_1-altersupfunc_5) (listen care advice chores loan)
+egen numsup=rowtotal(listen-loan),mi
+lab var numsup "Number of support functions"
+bysort SUBID NC: egen msupport=mean(numsup)
+lab var msupport "Mean number of support functions in network, HI=MORE"
+
+egen numsup3=rowtotal(listen care advice),mi
+bysort SUBID NC: egen msupport3=mean(numsup3)
+lab var msupport3 "Mean number of support functions in network (listen, care, advice), HI=MORE"
+
+foreach x of varlist listen-loan {
+	bysort SUBID NC: egen p`x'=mean(`x') //missing means no alter
+}
+lab var plisten "Prop. listen to you when upset"
+lab var pcare "Prop. tell you they care about what happens to you"
+lab var padvice "Prop. give suggestions when you have a problem"
+lab var pchores "Prop. help you with daily chores"
+lab var ploan "Prop. loan money when you are short of money"
+
+destring alterhassle,replace
+revrs alterhassle, replace //reverse code
+bysort SUBID NC: egen mhassles=mean(alterhassle)
+lab var mhassles "Mean hassles in network, HI=MORE)"
+recode alterhassle (1=0) (2/3=1),gen(thassles)
+lab var thassles "Alter hassles, causes problems sometimes or a lot"
+bysort SUBID NC: egen phassles=mean(thassles)
+lab var phassles "Proportion that hassle, cause problems in network"
+
+destring altercls110,replace
+bysort SUBID NC: egen mstrength=mean(altercls110)
+lab var mstrength "Mean tie strength in network, HI=MORE"
+bysort SUBID NC: egen weakest=min(altercls110)
+lab var weakest "Minimum tie strength score"
+bysort SUBID NC: egen iqrstrength=iqr(altercls110)
+lab var iqrstrength "Interquartile range of tie strength"
+bysort SUBID NC: egen sdstrength=sd(altercls110)
+lab var sdstrength "Standard deveiation of tie strength"
+
+lab var alterfem "Alter is female"
+bysort SUBID NC: egen pfem=mean(alterfem)
+lab var pfem "Proportion female in network"
+
+lab var alterage "Alter age"
+bysort SUBID NC: egen mage=mean(alterage)
+lab var mage "Mean alter age"
+bysort SUBID NC: egen sdage=sd(alterage)
+lab var sdage "Standard deveiation of alter age"
+
+bysort SUBID NC: egen pcollege=mean(altercollege)
+lab var pcollege "Proportion college in network"
+
+destring alterprox,replace
+label define alterprox 1 "<30 mins" 2 "30-60 mins" 3 "1-2 hour" 4 ">2 hour",replace
+label values alterprox alterprox
+bysort SUBID NC: egen mprox=mean(alterprox)
+lab var mprox "Mean alter proximity"
+recode alterprox (2/4=0),gen(prox30)
+bysort SUBID NC: egen pprox=mean(prox30)
+lab var pprox "Proportion <30 mins"
+
+destring alterhknow,replace
+recode alterhknow (1=3) (2=2) (3=1)
+label define alterhknow 1 "Not very much" 2 "Some" 3 "A lot",replace
+label values alterhknow alterhknow
+bysort SUBID NC: egen mknow=mean(alterhknow)
+lab var mknow "Mean knowledge of aging problems in network, HI=MORE"
+recode alterhknow (1 2=0) (3=1),gen(tknow)
+lab var tknow "Alter knows a lot about memory loss, confusion, or other similar problems that you might be experiencing as you age"
+bysort SUBID NC: egen pknow=mean(tknow)
+lab var pknow "Proportion knows a lot about aging"
+
+destring alterdtr,replace
+recode alterdtr (1=3) (2=2) (3=1) (-8=.)
+label define alterdtr 1 "Not very much" 2 "Most of the time" 3 "A lot",replace
+label values alterdtr alterdtr
+bysort SUBID NC: egen mtrust=mean(alterdtr)
+lab var mtrust "Mean trust in doctors in network, HI=MORE"
+recode alterdtr (1 2 =0) (3=1),gen(ttrust)
+lab var ttrust "Alter trusts doctors a lot"
+bysort SUBID NC: egen ptrust=mean(ttrust)
+lab var ptrust "Proportion who trust doctors in network"
+
+destring alterquestion,replace
+recode alterquestion (-8=.)
+label define alterquestion 1 "Rarely" 2 "Sometimes" 3 "Often",replace
+label values alterquestion alterquestion
+bysort SUBID NC: egen mquestion=mean(alterquestion)
+lab var mquestion "Mean questions doctors in network, HI=MORE"
+
+recode alterrace (1 2 4=0) (3=1),gen(white)
+bysort SUBID NC: egen pwhite=mean(white)
+lab var pwhite "Proportion White in network"
+
+gen tkin=relpartner+relparent+relsibling+relchild+relgrandp+relgrandc+relauntunc+relinlaw+relothrel
+recode tkin (1/9=1)
+replace tkin=. if relmiss==0
+lab var tkin "Alter is family member"
+bysort SUBID NC: egen pkin=mean(tkin)
+lab var pkin "Proportion of network that is kin"
+
+*diversity measure (Cohen)
+egen othfam=rowtotal(relsibling relgrandp relgrandc relauntunc relothrel),mi //group into other family
+egen fri=rowtotal(relfriend relleisure),mi //group into friend
+egen work=rowtotal(relemploy relboss relcowork),mi //group into workmate
+egen church=rowtotal(relrelig relchurch),mi //group into religious group
+egen prof=rowtotal(relmental relothmed reldoctor rellawyer),mi //group into  professional group
+
+recode othfam fri work church prof (1/10=1)
+foreach x of varlist relpartner relparent relinlaw relchild othfam relneigh fri work relschool church prof relclub {
+egen u`x' = tag(SUBID NC `x') if `x'>0 & !missing(`x') // e.g., count multiple friends as 1 friend
+}
+recode urelpartner-urelclub (0=.) if relmiss==0 & netsize>0 //if a named alter is not specified for relation type then treat as missing
+bysort SUBID NC: egen diverse=total(urelpartner+urelparent+urelinlaw+urelchild+uothfam+urelneigh+ufri+uwork+urelschool+uchurch+uprof+urelclub),mi //cohen's 12 categories(volunteer is not in this data thus leaving us 11 of 12 Cohen's categories, and I add a group call prof as a replacement)
+drop relmiss urelpartner-urelclub othfam fri work church prof
+lab var diverse "Network diversity"
+
+drop tclose tfreq numsup numsup3 thassles prox30 tknow ttrust white tkin //drop alter level variables
+save "NC-participant-alter-pilot-clean-20211112.dta", replace
+
+
+
+
+***************************************************************
+**#8b Pilot: Clean alter-alter level data
+***************************************************************
+
+
+
+
+
+
+/*Only keep alters from important matters*/
+
+
+*grab selected alterid from alter level data
+use "NC-participant-alter-pilot-clean-20211112",clear
+gen networkcanvassourceuuid = networkcanvasuuid //networkcanvasuuid is alterid  
+gen networkcanvastargetuuid = networkcanvasuuid
+keep networkcanvassourceuuid networkcanvastargetuuid networkcanvasegouuid
+save "NC-participant-pilotmatch",replace
+
+*merge alterid with alter-alter level data
+use "NC-participant-altertie-long-20211112",clear
+merge m:1 networkcanvasegouuid networkcanvassourceuuid using "NC-participant-pilotmatch",keepusing(networkcanvassourceuuid)
+keep if _merge==3 //keep selected alters for networkcanvassourceuuid
+drop _merge
+merge m:1 networkcanvasegouuid networkcanvastargetuuid using "NC-participant-pilotmatch",keepusing(networkcanvastargetuuid)
+keep if _merge==3 //keep selected alters for networkcanvassourceuuid
+drop _merge
+
+
+
+/*clean alter-alter level interpretors*/
+
+
+recode alteralterclose (1=3) (2=2) (3=1) 
+label define alteralterclose 1 "Not very close" 2 "Sort of close" 3 "Very close"
+label values alteralterclose alteralterclose
+bysort networkcanvasegouuid: egen totval=total(alteralterclose),mi //for value density
+
+recode alteralterclose (2/3=1) (1=0),gen(tievalue)
+bysort networkcanvasegouuid: egen totnum=total(tievalue),mi //for Binary density
+
+recode alteralterclose (1/3=1),gen(newtievalue)
+bysort networkcanvasegouuid: egen totnum1=total(newtievalue),mi // for Density of networks know each other
+drop _filename
+
+keep networkcanvasegouuid totval totnum totnum1 
+duplicates drop networkcanvasegouuid, force
+save "NC-participant-altertie-EGOAGG-pilot-20211112.dta", replace
+
+
+
+/*Merge with alter level*/
+
+
+merge 1:m networkcanvasegouuid using "NC-participant-alter-pilot-clean-20211112" 
+list SUBID networkcanvasuuid alterid if random=="1" & _merge==2 //alters from important matters not randomly chosen, only 1 alter from important matters was randomly chosen, or alters from important matters did not know each other
+drop _merge
+
+**start here: do I need to worry about random=="1" & _merge==2 ?
+
+/*Clean density etc measures*/
+
+
+*adjust for randomization 
+destring random, replace
+bysort SUBID NC: egen trandom=total(random),mi
+bysort SUBID NC: gen npossties=trandom*(trandom-1)/2 
+bysort SUBID NC: replace npossties=netsize*(netsize-1)/2 if missing(npossties) //early NC did not implement randomization
+
 gen density=totval/npossties
 lab var density "Valued density of networks from matrix"
-
-gen newtievalue=tievalue
-recode tievalue (2/3=1)(0/1=0)
-bysort SUBID: egen totnum=total(tievalue),mi
 gen bdensity=totnum/npossties
 lab var bdensity "Binary density of networks from matrix"
-
-recode newtievalue (1/3=1)(0=0)
-bysort SUBID: egen totnum1=total(newtievalue),mi
 gen b1density=totnum1/npossties
 lab var b1density "Density of networks know each other"
+recode b1density (1=0) (.=.) (else=1),gen(sole) 
+lab var sole "Sole bridge status"
 
-rename created_on date_snad
-replace date_snad=substr(date_snad, 1, 10) //only keep YMD
-replace date_snad= subinstr(date_snad, "-", "", .) //drop -
-gen _date_ = date(date_snad,"YMD")
-drop date_snad
-rename _date_ date_snad
-format date_snad %dM_d,_CY
+bysort SUBID NC: gen npossties_rd=trandom*(trandom-1)/2 
+bysort SUBID NC: gen npossties_full=netsize*(netsize-1)/2
+gen efctsize=netsize - 2*totnum1*(npossties_full/npossties_rd)/netsize //adjust totnum1 proportionaly to npossties_full/npossties_rd; trandom to netsize/trandom
+replace efctsize=netsize-2*totnum1/netsize if missing(efctsize)
+label var efctsize "Effective size"
+drop npossties_rd npossties_full
 
-keep SUBID date_snad density bdensity b1density
-/*
-foreach x of varlist density bdensity b1density {
-	rename `x' `x'1
-}
-*/
-duplicates drop SUBID, force
-merge 1:1 SUBID using "ENSO-Participant-T1-Clean-EGOAGG-pilot.dta"
-drop _merge // all 22 subjects with health and important matter alters matched.
-gen time=1
-gen ENSO=1
-save "ENSO-Participant-T1-Clean-EGOAGG-pilot.dta", replace
+
+
+
+
+***************************************************************
+**#9 Full: save files 
+***************************************************************
+
+
+
+
+*save files
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Netcanvas\cleaned"
+save "NC-Participant-LONG-clean-20211112.dta", replace 
+
+duplicates drop SUBID NC, force
+keep SUBID date_snad NC netsize-efctsize
+save "NC-Participant-EGOAGG-clean-20211112.dta", replace 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+***************************************************************
+**#9b Pilot: merge and save files 
+***************************************************************
+
+
+
+merge m:1 networkcanvasegouuid using "NC-participant-altertie-EGOAGG-20211112.dta" 
+fre ccid if _merge==1 //10229,10339 are missing in altertie data due to time constrict
+drop _merge
+sort SUBID alterid
+
+
+*save files
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Netcanvas\cleaned"
+save "NC-Participant-LONG-pilot-clean-20211112.dta", replace 
+
+duplicates drop SUBID NC, force
+keep SUBID date_snad NC netsize-efctsize
+save "NC-Participant-EGOAGG-pilot-clean-20211112.dta", replace 
+
+
+
+
+
+
 
