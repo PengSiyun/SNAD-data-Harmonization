@@ -1,7 +1,7 @@
 ****Author:  Siyun Peng
-****Date:    2021/12/08
+****Date:    2021/12/09
 ****Version: 17
-****Purpose: Clean NC 
+****Purpose: Clean NC full & pilot matched
 
 clear
 
@@ -11,13 +11,13 @@ clear
 ***************************************************************
 
 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Netcanvas\temp"
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\temp"
 
 
 /*read interviewer files*/
 
 
-multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Netcanvas\Netcanvas Focal Interviews\interviewer") clear force 
+multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\Netcanvas Focal Interviews\interviewer") clear force 
 drop id _filename networkcanvasuuid // drop unnessary variables 
 save "NC-participant-interviewer-20211112.dta", replace
 
@@ -25,7 +25,7 @@ save "NC-participant-interviewer-20211112.dta", replace
 /*read ego files*/
 
 
-multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Netcanvas\Netcanvas Focal Interviews\ego") clear force import(stringcols(_all)) //import all variables as string
+multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\Netcanvas Focal Interviews\ego") clear force import(stringcols(_all)) //import all variables as string
 
 *convert date
 list ccid session* if missing(sessionfinish)
@@ -58,7 +58,7 @@ save "NC-participant-ego-20211112.dta", replace
 
 
 *read file
-multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Netcanvas\Netcanvas Focal Interviews\alter") clear force import(stringcols(_all)) //import all variables as string
+multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\Netcanvas Focal Interviews\alter") clear force import(stringcols(_all)) //import all variables as string
 drop if missing(networkcanvasegouuid) //empty row with no networkcanvasegouuid
 drop v57 v77 v78 _filename // drop unnessary variables
 
@@ -113,7 +113,7 @@ save "NC-alterid-match",replace
 
 *same name but different alterid
 
-import excel using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\ENSO clean\UniqueID  W12345-Focal-20210215", clear first 
+import excel using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\UniqueID  W12345-Focal-20210215", clear first 
 keep SUBID TIEID_uniq name 
 rename (name TIEID_uniq) (alter_name alterid)
 duplicates drop SUBID alter_name,force
@@ -123,7 +123,7 @@ keep if _merge==3
 list SUBID alter_name alterid* if alterid != alterid_nc //none should exist, otherwise fix
 
 *same alterid but different name
-import excel using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\ENSO clean\UniqueID  W12345-Focal-20210215", clear first 
+import excel using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\UniqueID  W12345-Focal-20210215", clear first 
 keep SUBID TIEID_uniq name 
 rename (TIEID_uniq name) (alterid alter_name)
 duplicates drop SUBID alterid,force
@@ -198,7 +198,7 @@ drop prevalterimcat_*
 
 fre prevalter 
 drop if prevalter!=1 & name_gen==0
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Netcanvas\cleaned\NC-participant-alter-LONG-prevalters.dta",replace
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned\NC-participant-alter-LONG-prevalters.dta",replace
 
 /*drop alters from previous wave but not mentioned in this wave*/
 
@@ -235,7 +235,7 @@ egen relmiss=rowtotal(alterrel*) //209 alters are missing/0 on all relation type
 rename (altercollege alterage alterrace) (alter_college alter_age alter_race)
 
 *merge NC with ENSO
-merge 1:1 SUBID alterid using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\ENSO clean\temp\ENSO-Participant-alter-LONG-clean.dta",keepusing(nirel* tfem alter_race alter_age alter_college) update //update missing values in tfem alter_race alter_age alter_college of master data with values in using data
+merge 1:1 SUBID alterid using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\temp\ENSO-Participant-alter-LONG-clean.dta",keepusing(nirel* tfem alter_race alter_age alter_college) update //update missing values in tfem alter_race alter_age alter_college of master data with values in using data
 drop if _merge==2 //drop ENSO alters did not match with NC old alters
 drop _merge
 
@@ -535,7 +535,7 @@ save "NC-participant-alter-clean-20211112.dta", replace
 /*read alter tie files*/
 
 
-multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Netcanvas\Netcanvas Focal Interviews\alter_tie") clear force import(stringcols(_all))
+multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\Netcanvas Focal Interviews\alter_tie") clear force import(stringcols(_all))
 fre alteralterclose // alter do not know each other is not in the data
 destring alteralterclose,replace
 
@@ -613,7 +613,7 @@ drop npossties_rd npossties_full
 
 
 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Netcanvas\cleaned"
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned"
 save "NC-Participant-LONG-clean-20211112.dta", replace 
 
 duplicates drop SUBID NC, force
@@ -636,7 +636,7 @@ save "NC-Participant-EGOAGG-clean-20211112.dta", replace
 
 
 *drop names that are not in health and important matter to be consistent with Pilot data 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Netcanvas\temp"
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\temp"
 use "NC-participant-alter-20211112.dta", clear
 egen pilot=rowtotal(alterim* alterhm*)
 drop if pilot==0 | missing(pilot) 
@@ -856,7 +856,6 @@ merge 1:m networkcanvasegouuid using "NC-participant-alter-pilot-clean-20211112"
 list SUBID networkcanvasuuid alterid if random=="1" & _merge==2 //alters from important matters not randomly chosen, only 1 alter from important matters was randomly chosen, or alters from important matters did not know each other
 drop _merge
 
-**start here: do I need to worry about random=="1" & _merge==2 ?
 
 /*Clean density etc measures*/
 
@@ -888,57 +887,16 @@ drop npossties_rd npossties_full
 
 
 ***************************************************************
-**#9 Full: save files 
+**#9b Pilot: save files 
 ***************************************************************
 
 
 
 
 *save files
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Netcanvas\cleaned"
-save "NC-Participant-LONG-clean-20211112.dta", replace 
-
-duplicates drop SUBID NC, force
-keep SUBID date_snad NC netsize-efctsize
-save "NC-Participant-EGOAGG-clean-20211112.dta", replace 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-***************************************************************
-**#9b Pilot: merge and save files 
-***************************************************************
-
-
-
-merge m:1 networkcanvasegouuid using "NC-participant-altertie-EGOAGG-20211112.dta" 
-fre ccid if _merge==1 //10229,10339 are missing in altertie data due to time constrict
-drop _merge
-sort SUBID alterid
-
-
-*save files
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Netcanvas\cleaned"
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned"
 save "NC-Participant-LONG-pilot-clean-20211112.dta", replace 
 
 duplicates drop SUBID NC, force
 keep SUBID date_snad NC netsize-efctsize
 save "NC-Participant-EGOAGG-pilot-clean-20211112.dta", replace 
-
-
-
-
-
-
-

@@ -9,8 +9,8 @@ clear
 //	#1 Unzip files into folders
 ***************************************************************
 
-local sourcedir "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Netcanvas\SNAD Informant Interviews" //download and save zip files in here
-local unzipdir "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Netcanvas\Netcanvas Informant Interviews"
+local sourcedir "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\SNAD Informant Interviews" //download and save zip files in here
+local unzipdir "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\Netcanvas Informant Interviews"
 cap mkdir "`unzipdir'" //create a new directory
 
 /*
