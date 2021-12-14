@@ -98,7 +98,7 @@ rename (nofriends_w1___1 embarassed_behaviorr) (nofriends embarassed_behavior)
 
 /*append demo*/
 
-*preserve
+preserve
 
 keep if redcap_event_name=="demographics_arm_1" //keep demo line
 keep SUBID first_name last_name date_of_birth deceased-education_father2
@@ -116,17 +116,19 @@ foreach x of varlist * {
 }
 sort SUBID _append
 duplicates drop SUBID,force //drop old R01
-
-
-**start here: check conflict and fix it in the new R01
-foreach x of varlist gender race  {
-  bysort SUBID: egen `x'_t=mean(`x')
-}
-list SUBID first_name last_name gender _append if gender_t==1.5
-
 drop _append
 
 
+*check conflict and fix it in the new R01
+/*
+foreach x of varlist gender race school military children step education_mother1 education_father1 marital kind_business1 kind_business2 kind_business kind2_business {
+  bysort SUBID: egen `x'_t=mean(`x')
+}
+fre *_t
+list SUBID first_name last_name school _append if school_t==3.5
+*/
+
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\Cleaned\REDcap-R01-participant-demographics.dta",replace
 
 restore
 
@@ -134,16 +136,19 @@ restore
 /*append the rest*/
 
 
+*prepare for append
 drop if redcap_event_name=="demographics_arm_1" //drop demo line
-drop first_name-education_father2
+drop first_name-demographics_complete //drop demo variables
+tostring oliveoil-alcoholser,replace
+destring rey_sum,replace
+
 append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-participant.dta"
-
-
-
-************************************************************
-**# 4. save
-************************************************************
-
+drop time //wave indicator in old R01
+sort SUBID date_snad
+bysort SUBID: gen time=_n //create new wave indicator
 
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\Cleaned\REDcap-R01-participant.dta",replace
+
+
+
 
