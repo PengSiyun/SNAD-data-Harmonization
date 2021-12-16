@@ -76,6 +76,7 @@ bysort SUBID: gen time=_n
 
 *create match data
 keep SUBID date_snad time 
+egen tot_wave=max(time)
 reshape wide date_snad, i(SUBID) j(time)
 save "SNAD-MatchData.dta", replace //match all SNAD ego regardless of they have important/health matter
 
@@ -107,100 +108,85 @@ label values married_oldred_demo married
 recode gender_red sex_enso (1=0) (2=1)
 replace female=gender_red if missing(female)
 replace female=sex_enso if missing(female)
+drop gender_red sex_enso
 
-**start here
+recode race_red (5=1) (.=.) (else=0),gen(white_red)
+replace white=white_red if missing(white)
+drop race_red race white_red
 
-replace dem_military=veteran_enso if missing(dem_military)
-rename dem_military veteran
+rename death deceased_iadc
 
-replace dem_biochild=biochild_enso if missing(dem_biochild)
-replace dem_nonbio=othchild_enso if missing(dem_nonbio)
-replace kids=dem_biochild+dem_nonbio if missing(kids)
+replace military_red=veteran_enso if missing(military_red)
+rename military_red veteran
+drop veteran_enso
+
+replace children_red=biochild_enso if missing(children_red)
+replace step_red=othchild_enso if missing(step_red)
+egen kids_snad=rowtotal(children_red step_red),mi
+replace kids=kids_snad if missing(kids)
+drop kids_snad children_red biochild_enso step_red othchild_enso
 
 recode grade (0/11=1) (12=2) (13/15=3) (16=4) (17/30=5), gen(edu)
-label values edu dem_education_w1enso_
-replace edu=dem_education if missing(edu)
+label values edu school_red
+replace edu=school_red if missing(edu)
 replace edu=educat_enso if missing(edu)
+drop school_red educat_enso
 
-replace birthmnth=month(date_of_birth) if missing(birthmnth)
-replace birthyr=year(date_of_birth) if missing(birthyr)
-
-drop dem_marital married_enso dem_sex sex_enso veteran_enso biochild_enso othchild_enso dem_education educat_enso ///
-empstat_enso emphrs_enso empstat_other_enso //current employment is not demographic
+tostring birthyr birthmnth,replace
+destring birthmnth,gen(month)
+gen birthmnth2="0"+ birthmnth if month<10
+replace birthmnth2=birthmnth if missing(birthmnth2)
+gen dob=birthyr+birthmnth2+"15" // no days, so assume it is 15th
+destring dob,replace force
+todate dob, gen(dobdate) p(yyyymmdd) f(%dd_m_cy) //install todate if not alreday;ssc install todate  
+replace date_of_birth_red=dobdate if missing(date_of_birth_red) //IADC does not have days info, so Redcap is better
+drop birthyr birthmnth month birthmnth2 dob dobdate
+rename date_of_birth_red dobdate
 
 save "Demographics.dta", replace
 
 
 
+
 ***************************************************************
-**# 4 Match IADC with SNAD
+**# 4 Match IADC clinical data with SNAD
 ***************************************************************
 
 
 
 
-use "IADC-Long-CleanA.dta", clear
-*create variable for AD
-gen ad=primarysubtype
-replace ad= "Alzheimers disease" if contributel=="Alzheimers disease" //code as AD if other condition says AD even primary subtype is not AD 
-gen adtype=1 if ad== "Alzheimers disease"	  
-replace	adtype=0 if !missing(ad) & adtype!=1	   
-label define ad 0 "Non AD" 1 "AD"
-label values adtype ad
-*create diagnosis variable + data clean
-encode diag,gen(diagnosis) //convert string to numeric
-recode diagnosis (4 7 8=1) (1 2 5 6 =2) (3=3)
-lab def diagnosisnew 1 "Normal" 2 "MCI" 3 "Dementia"
-lab val diagnosis diagnosisnew
-lab var diagnosis "Normal, MCI, or dementia"
-
-label var CCI_INFTOT "Informant CCI Total score"
-rename age age_i
-rename ageatvisit ageiadc
+use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\IADRC clean\Clean data\IADC-Long-Clean.dta", clear
 
 
 *drop cases of IADC that are 180 days apart from SNAD at any wave
 merge m:1 SUBID using "SNAD-MatchData.dta" 
-fre SUBID if _merge==1 //201 people in IADRC not in SNAD 
-fre SUBID if _merge==2 //1 peole with SNAD but no IADC
-order date_snad5 date_snad4 date_snad3 date_snad2 date_snad1, after(visitdate)
+fre SUBID if _merge==1 //216 cases in IADRC not in SNAD 
+fre SUBID if _merge==2 //21 peole with SNAD but no IADC
+order date_snad*, after(visitdate)
+
+*extract total number of waves in SNAD
+sum tot_wave
+local num=`r(max)' 
 
 gen match=.
-replace match=1 if visitdate==date_snad1 & !missing(visitdate)
-replace match=2 if visitdate==date_snad2 & !missing(visitdate)
-replace match=3 if visitdate==date_snad3 & !missing(visitdate)
-replace match=4 if visitdate==date_snad4 & !missing(visitdate)
-replace match=5 if visitdate==date_snad5 & !missing(visitdate)
+forvalues i=1/`num' {
+	replace match=`i' if visitdate==date_snad`i' & !missing(visitdate) //exact match
+	gen diff`i'=abs(visitdate-date_snad`i') //calculate difference between visits
+}
 
 order match, after(visitdate)
 
-gen diff1=abs(visitdate-date_snad1)
-gen diff2=abs(visitdate-date_snad2)
-gen diff3=abs(visitdate-date_snad3)
-gen diff4=abs(visitdate-date_snad4)
-gen diff5=abs(visitdate-date_snad5)
+*match within 180 days
+egen minval = rowmin(diff*) //SNAD date closest to IADC date
+forvalues i=1/`num' {
+	replace diff`i'=. if minval!=diff`i' //only keep the matched wave
+}
 
-egen minval = rowmin(diff1 diff2 diff3 diff4 diff5) //SNAD date closest to IADC date
-replace diff1=. if minval!=diff1
-replace diff2=. if minval!=diff2
-replace diff3=. if minval!=diff3
-replace diff4=. if minval!=diff4
-replace diff5=. if minval!=diff5
+forvalues i=1/`num' {
+	fre diff`i' if match==.
+	replace match=`i' if diff`i'<=180
+}
 
-fre diff1 if match==.
-replace match=1 if diff1<=180
-
-fre diff2 if match==.
-replace match=2 if diff2<=180
-
-fre diff3 if match==.
-replace match=3 if diff3<=180
-
-fre diff4 if match==.
-replace match=4 if diff4<=180
-
-fre diff5 if match==.
-replace match=5 if diff5<=180
 
 duplicates list SUBID match if !missing(match) //3 mismatch
 list SUBID visitdate date_snad* diff* match if SUBID==3805 & minval<=180
@@ -212,21 +198,33 @@ replace match=. if diff1==170 & SUBID==10179
 
 drop if match==.
 
-fre SUBID if _merge==3 //N=654
+fre SUBID if _merge==3 //N=756
 rename match time
-rename visitdate iadcdate
-drop _merge minval diff1 diff2 diff3 diff4 diff5
+gen date_snad=.
+forvalues i=1/`num' {
+	replace date_snad=date_snad`i' if time==`i'
+	drop date_snad`i'
+}
+format date_snad %td
+rename visitdate date_iadc
+drop _merge minval diff1 diff2 diff3 diff4 diff5 diff6
+
 *prepare for merge with mail-in from Redcap
 tostring oliveoil-alcoholdrinks veg,replace
 
-save "IADC-Long-CleanB.dta", replace
+save "IADC-Long-Clean-snadMatch.dta", replace
+
+
 
 
 ***************************************************************
 **# 5 Match MRI with SNAD
 ***************************************************************
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data"
-use "IADC-CleanA.dta" ,replace
+
+
+
+
+use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\IADRC clean\Neuroimaging-CleanA.dta" ,replace
 
 merge m:1 SUBID using "SNAD-MatchData.dta"
 drop if _merge==1 //drop people did not do SNAD
@@ -237,45 +235,32 @@ save "Neuroimaging-CleanA2.dta" ,replace
 
 *drop cases of IADC that are 1 year apart from SNAD at any wave
 
-keep SUBID date_snad* scanage-globalctx_thick //drop non-MRI variables
+keep SUBID tot_wave date_snad* scanage-globalctx_thick //drop non-MRI variables
 destring icv-globalctx_thick,replace
 
+*extract total number of waves in SNAD
+sum tot_wave
+local num=`r(max)' 
+
 gen matchmri=.
-replace matchmri=1 if date_mri==date_snad1 & !missing(date_mri)
-replace matchmri=2 if date_mri==date_snad2 & !missing(date_mri)
-replace matchmri=3 if date_mri==date_snad3 & !missing(date_mri)
-replace matchmri=4 if date_mri==date_snad4 & !missing(date_mri)
-replace matchmri=5 if date_mri==date_snad5 & !missing(date_mri)
+forvalues i=1/`num' {
+	replace matchmri=`i' if date_mri==date_snad`i' & !missing(date_mri) //exact match
+	gen diffmri`i'=abs(date_mri-date_snad`i') //calculate difference between visits
+}
 
-gen diffmri1=abs(date_mri-date_snad1)
-gen diffmri2=abs(date_mri-date_snad2)
-gen diffmri3=abs(date_mri-date_snad3)
-gen diffmri4=abs(date_mri-date_snad4)
-gen diffmri5=abs(date_mri-date_snad5)
+egen minval = rowmin(diffmri*) //SNAD date closest to Neuroimaging date
+forvalues i=1/`num' {
+	replace diffmri`i'=. if minval!=diffmri`i' //only keep the matched wave
+}
 
-egen minval = rowmin(diffmri1 diffmri2 diffmri3 diffmri4 diffmri5) //SNAD date closest to Neuroimaging date
-replace diffmri1=. if minval!=diffmri1
-replace diffmri2=. if minval!=diffmri2
-replace diffmri3=. if minval!=diffmri3
-replace diffmri4=. if minval!=diffmri4
-replace diffmri5=. if minval!=diffmri5
+*match within 365 days
+forvalues i=1/`num' {
+	fre diffmri`i' if matchmri==. & diffmri`i'<400
+	replace matchmri=`i' if diffmri`i'<=365 
+}
 
-fre diffmri1 if matchmri==. & diffmri1<400
-replace matchmri=1 if diffmri1<=365 // or 186 for half a year
 
-fre diffmri2 if matchmri==. & diffmri2<400
-replace matchmri=2 if diffmri2<=365 // or 181 for half a year
-
-fre diffmri3 if matchmri==. & diffmri3<400
-replace matchmri=3 if diffmri3<=365 // or 181 for half a year
-
-fre diffmri4 if matchmri==. & diffmri4<400
-replace matchmri=4 if diffmri4<=365 // or 181 for half a year
-
-fre diffmri5 if matchmri==. & diffmri5<400
-replace matchmri=5 if diffmri5<=365 // or 181 for half a year
-
-duplicates list SUBID matchmri if !missing(matchmri) //8 mismatch
+duplicates list SUBID matchmri if !missing(matchmri) //9 mismatch
 
 list SUBID matchmri diffmri* date_mri date_snad* if SUBID==5032 & minval<=365
 replace matchmri=. if diffmri1==337 & SUBID==5032 
@@ -294,129 +279,136 @@ list SUBID matchmri diffmri* date_mri date_snad* if SUBID==10088 & minval<=365
 replace matchmri=. if diffmri1==329 & SUBID==10088  
 list SUBID matchmri diffmri* date_mri date_snad* if SUBID==10101 & minval<=365
 replace matchmri=. if diffmri1==350 & SUBID==10101  
+list SUBID matchmri diffmri* date_mri date_snad* if SUBID==10154 & minval<=365
+replace matchmri=4 if diffmri4==274 & SUBID==10154  
 
 di date("20140514","YMD") //19857=one year before SNAD
 fre matchmri date_mri if date_mri>19857 //231 out of 312
 
 rename matchmri time
-drop date_snad* diffmri* minval //drop non-MRI data
+gen date_snad=.
+forvalues i=1/`num' {
+	replace date_snad=date_snad`i' if time==`i'
+	drop date_snad`i'
+}
+format date_snad %td
+
+drop diffmri* minval //drop non-MRI data
 drop if missing(time)
-save "MRI-Clean-20201001.dta" ,replace
+save "MRI-Clean-snadMatch.dta" ,replace
+
+
 
 
 ***************************************************************
 **# 6 Match TauDate_ with SNAD
 ***************************************************************
 
-use "Neuroimaging-CleanA2-20201001.dta" ,replace
-keep SUBID date_snad1 date_snad2 date_snad3 date_snad4 date_snad5 date_tau AV1451_crus_EntCtx_t-AV1451_crus_GlobalCtx_t 
 
+
+
+use "Neuroimaging-CleanA2.dta" ,replace
+keep SUBID tot_wave date_snad* tau-av1451_crus_globalctx 
+
+*extract total number of waves in SNAD
+sum tot_wave
+local num=`r(max)' 
 gen matchtau=.
-replace matchtau=1 if date_tau==date_snad1 & !missing(date_tau)
-replace matchtau=2 if date_tau==date_snad2 & !missing(date_tau)
-replace matchtau=3 if date_tau==date_snad3 & !missing(date_tau)
-replace matchtau=4 if date_tau==date_snad4 & !missing(date_tau)
-replace matchtau=5 if date_tau==date_snad5 & !missing(date_tau)
+forvalues i=1/`num' {
+	replace matchtau=`i' if date_tau==date_snad`i' & !missing(date_tau) //exact match
+	gen difftau`i'=abs(date_tau-date_snad`i') //calculate difference between visits
+}
 
-gen difftau1=abs(date_tau-date_snad1)
-gen difftau2=abs(date_tau-date_snad2)
-gen difftau3=abs(date_tau-date_snad3)
-gen difftau4=abs(date_tau-date_snad4)
-gen difftau5=abs(date_tau-date_snad5)
+egen minval = rowmin(difftau*) //SNAD date closest to Neuroimaging date
+forvalues i=1/`num' {
+	replace difftau`i'=. if minval!=difftau`i' //only keep matched wave
+}
 
-egen minval = rowmin(difftau1 difftau2 difftau3 difftau4 difftau5) //SNAD date closest to Neuroimaging date
-replace difftau1=. if minval!=difftau1
-replace difftau2=. if minval!=difftau2
-replace difftau3=. if minval!=difftau3
-replace difftau4=. if minval!=difftau4
-replace difftau5=. if minval!=difftau5
-
-fre difftau1 if matchtau==.
-replace matchtau=1 if difftau1<=365  // or 180 for half a year
-
-fre difftau2 if matchtau==.
-replace matchtau=2 if difftau2<=365 // or 180 for half a year
-
-fre difftau3 if matchtau==.
-replace matchtau=3 if difftau3<=365 // or 180 for half a year
-
-fre difftau4 if matchtau==.
-replace matchtau=4 if difftau4<=365 // or 180 for half a year
-
-fre difftau5 if matchtau==.
-replace matchtau=5 if difftau5<=365 // or 180 for half a year
+*match within 365 days
+forvalues i=1/`num' {
+	fre difftau`i' if matchtau==.
+	replace matchtau=`i' if difftau`i'<=365  // or 365 for half a year
+}
 
 duplicates list SUBID matchtau if !missing(matchtau) //0 mismatch
 
 di date("20140514","YMD") //19857=one year before SNAD
 fre matchtau date_tau if date_tau>19857 //90 out of 108
 rename  matchtau time
+gen date_snad=.
+forvalues i=1/`num' {
+	replace date_snad=date_snad`i' if time==`i'
+	drop date_snad`i'
+}
+format date_snad %td
+
 drop if missing(time)
 drop minval difftau* 
-save "TAU-Clean-20201001.dta" ,replace
+save "TAU-Clean-snadMatch.dta" ,replace
+
+
 
 
 ***************************************************************
 **# 7 Match AmyDate_ with SNAD
 ***************************************************************
 
-use "Neuroimaging-CleanA2-20201001.dta" ,replace
-keep SUBID date_snad1 date_snad2 date_snad3 date_snad4 date_snad5 date_amy AbPos_t GlCtx_Cent_CL_t // Amy_Cent_LateralParietal_ Amy_Cent_Precuneus_ not included in ths data Shannon sent
+
+
+
+use "Neuroimaging-CleanA2.dta" ,replace
+keep SUBID tot_wave date_snad* amyloid-glctx_cent_cl 
+
+*extract total number of waves in SNAD
+sum tot_wave
+local num=`r(max)' 
 gen matchamy=.
-replace matchamy=1 if date_amy==date_snad1 & !missing(date_amy)
-replace matchamy=2 if date_amy==date_snad2 & !missing(date_amy)
-replace matchamy=3 if date_amy==date_snad3 & !missing(date_amy)
-replace matchamy=4 if date_amy==date_snad4 & !missing(date_amy)
-replace matchamy=5 if date_amy==date_snad5 & !missing(date_amy)
+forvalues i=1/`num' {
+	replace matchamy=`i' if date_amy==date_snad`i' & !missing(date_amy) //exact match
+	gen diffamy`i'=abs(date_amy-date_snad`i') //calculate difference between visits
+}
 
-gen diffamy1=abs(date_amy-date_snad1)
-gen diffamy2=abs(date_amy-date_snad2)
-gen diffamy3=abs(date_amy-date_snad3)
-gen diffamy4=abs(date_amy-date_snad4)
-gen diffamy5=abs(date_amy-date_snad5)
+egen minval = rowmin(diffamy*) //SNAD date closest to Neuroimaging date
+forvalues i=1/`num' {
+	replace diffamy`i'=. if minval!=diffamy`i' //only keep matched wave
+}
+
+*match within 365 days
+forvalues i=1/`num' {
+	fre diffamy`i' if matchamy==.
+	replace matchamy=`i' if diffamy`i'<=365  // or 180 for half a year
+}
 
 
-egen minval = rowmin(diffamy1 diffamy2 diffamy3 diffamy4 diffamy5) //SNAD date closest to Neuroimaging date
-replace diffamy1=. if minval!=diffamy1
-replace diffamy2=. if minval!=diffamy2
-replace diffamy3=. if minval!=diffamy3
-replace diffamy4=. if minval!=diffamy4
-replace diffamy5=. if minval!=diffamy5
+duplicates list SUBID matchamy if !missing(matchamy) //check and fix 1 duplicates
 
-fre diffamy1 if matchamy==.
-replace matchamy=1 if diffamy1<=365  // or 180 for half a year
-
-fre diffamy2 if matchamy==.
-replace matchamy=2 if diffamy2<=365 // or 180 for half a year
-
-fre diffamy3 if matchamy==.
-replace matchamy=3 if diffamy3<=365 // or 180 for half a year
-
-fre diffamy4 if matchamy==.
-replace matchamy=4 if diffamy4<=365 // or 180 for half a year
-
-fre diffamy4 if matchamy==.
-replace matchamy=5 if diffamy5<=365 // or 180 for half a year
-
-duplicates list SUBID matchamy if !missing(matchamy) //check and fix 2 duplicates
-
-list SUBID matchamy diff* date_amy date_snad* if SUBID==3908 & !missing(date_amy)
-replace matchamy=2 if diffamy1==50 & SUBID==3908
 list SUBID matchamy diff* date_amy date_snad* if SUBID==6417 & !missing(date_amy)
 replace matchamy=2 if diffamy1==100 & SUBID==6417
 
 di date("20140514","YMD") //19857=one year before SNAD
 fre matchamy date_amy if date_amy>19857 //104 out of 136
 rename matchamy time
+gen date_snad=.
+forvalues i=1/`num' {
+	replace date_snad=date_snad`i' if time==`i'
+	drop date_snad`i'
+}
+format date_snad %td
+
 drop if missing(time)
 
 drop minval diffamy*
-save "AMY-Clean-20201001.dta" ,replace
+save "AMY-Clean-snadMatch.dta" ,replace
+
+
 
 
 ***************************************************************
 **# 8 Match Old REDCap_R01 with SNAD
 ***************************************************************
+
+**start here
+
 
 use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-participant.dta",clear
 merge m:1 SUBID using "SNAD-MatchData.dta"
@@ -459,14 +451,6 @@ drop if _merge==1 //drop 16 cases have no SNAD data
 drop _merge date_snad1 date_snad2 date_snad3 date_snad4 date_snad5 date_iadc //date_iadc is from snad and contain many missing
 
 *create age based on SNAD date
-tostring birthyr birthmnth,replace
-destring birthmnth,gen(month)
-gen birthmnth2="0"+ birthmnth if month<10
-replace birthmnth2=birthmnth if missing(birthmnth2)
-gen dob=birthyr+birthmnth2+"15"
-destring dob,replace force
-*ssc install todate //install todate if not alreday 
-todate dob, gen(dobdate) p(yyyymmdd) f(%dd_m_cy)
 personage dobdate date_snad, gen(agesnad) //install personage if not alreday 
 
 save "SNAD-Participant-T12345-EGOAGG-mergeIADRC.dta",replace 
@@ -479,14 +463,6 @@ list SUBID enrolldate date_snad if _merge==2 // 1 people interviewed with SNAD b
 drop if _merge==1 //drop 87 cases not having network data
 
 *create age based on SNAD date
-tostring birthyr birthmnth,replace
-destring birthmnth,gen(month)
-gen birthmnth2="0"+ birthmnth if month<10
-replace birthmnth2=birthmnth if missing(birthmnth2)
-gen dob=birthyr+birthmnth2+"15"
-destring dob,replace force
-*ssc install todate //install todate if not alreday 
-todate dob, gen(dobdate) p(yyyymmdd) f(%dd_m_cy)
 personage dobdate date_snad, gen(agesnad) //install personage if not alreday 
 
 *add Redcap data
