@@ -184,7 +184,7 @@ forvalues i=1/`num' {
 
 forvalues i=1/`num' {
 	fre diff`i' if match==.
-	replace match=`i' if diff`i'<=180
+	replace match=`i' if diff`i'<=180 & missing(match)
 }
 
 
@@ -199,10 +199,9 @@ replace match=. if diff1==170 & SUBID==10179
 drop if match==.
 
 fre SUBID if _merge==3 //N=756
-rename match time
 gen date_snad=.
 forvalues i=1/`num' {
-	replace date_snad=date_snad`i' if time==`i'
+	replace date_snad=date_snad`i' if match==`i'
 	drop date_snad`i'
 }
 format date_snad %td
@@ -256,7 +255,7 @@ forvalues i=1/`num' {
 *match within 365 days
 forvalues i=1/`num' {
 	fre diffmri`i' if matchmri==. & diffmri`i'<400
-	replace matchmri=`i' if diffmri`i'<=365 
+	replace matchmri=`i' if diffmri`i'<=365 & missing(matchmri)
 }
 
 
@@ -285,16 +284,15 @@ replace matchmri=4 if diffmri4==274 & SUBID==10154
 di date("20140514","YMD") //19857=one year before SNAD
 fre matchmri date_mri if date_mri>19857 //231 out of 312
 
-rename matchmri time
 gen date_snad=.
 forvalues i=1/`num' {
-	replace date_snad=date_snad`i' if time==`i'
+	replace date_snad=date_snad`i' if matchmri==`i'
 	drop date_snad`i'
 }
 format date_snad %td
 
 drop diffmri* minval //drop non-MRI data
-drop if missing(time)
+drop if missing(matchmri)
 save "MRI-Clean-snadMatch.dta" ,replace
 
 
@@ -327,22 +325,21 @@ forvalues i=1/`num' {
 *match within 365 days
 forvalues i=1/`num' {
 	fre difftau`i' if matchtau==.
-	replace matchtau=`i' if difftau`i'<=365  // or 365 for half a year
+	replace matchtau=`i' if difftau`i'<=365 & missing(matchtau)
 }
 
 duplicates list SUBID matchtau if !missing(matchtau) //0 mismatch
 
 di date("20140514","YMD") //19857=one year before SNAD
 fre matchtau date_tau if date_tau>19857 //90 out of 108
-rename  matchtau time
 gen date_snad=.
 forvalues i=1/`num' {
-	replace date_snad=date_snad`i' if time==`i'
+	replace date_snad=date_snad`i' if matchtau==`i'
 	drop date_snad`i'
 }
 format date_snad %td
 
-drop if missing(time)
+drop if missing(matchtau)
 drop minval difftau* 
 save "TAU-Clean-snadMatch.dta" ,replace
 
@@ -376,7 +373,7 @@ forvalues i=1/`num' {
 *match within 365 days
 forvalues i=1/`num' {
 	fre diffamy`i' if matchamy==.
-	replace matchamy=`i' if diffamy`i'<=365  // or 180 for half a year
+	replace matchamy=`i' if diffamy`i'<=365 & missing(matchamy) 
 }
 
 
@@ -387,15 +384,14 @@ replace matchamy=2 if diffamy1==100 & SUBID==6417
 
 di date("20140514","YMD") //19857=one year before SNAD
 fre matchamy date_amy if date_amy>19857 //104 out of 136
-rename matchamy time
 gen date_snad=.
 forvalues i=1/`num' {
-	replace date_snad=date_snad`i' if time==`i'
+	replace date_snad=date_snad`i' if matchamy==`i'
 	drop date_snad`i'
 }
 format date_snad %td
 
-drop if missing(time)
+drop if missing(matchamy)
 
 drop minval diffamy*
 save "AMY-Clean-snadMatch.dta" ,replace
@@ -404,33 +400,60 @@ save "AMY-Clean-snadMatch.dta" ,replace
 
 
 ***************************************************************
-**# 8 Match Old REDCap_R01 with SNAD
+**# 8 Match REDCap_R01 with SNAD
 ***************************************************************
 
-**start here
 
 
-use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-participant.dta",clear
+
+use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\Cleaned\REDcap-R01-participant.dta",clear
 merge m:1 SUBID using "SNAD-MatchData.dta"
-drop if _merge==1 //drop 16 people in Redcap not complete network (12 people interviewed in NetCanvas, 4 people are missing in ENSO): 6477,10394,10397,10420
-drop if _merge==2 //drop people did not do old REDCap
-order SUBID redcap_date date_snad1 date_snad2 date_snad3 date_snad4 date_snad5
-rename redcap_date date_red
+drop if _merge==1 //drop 4 people in Redcap not complete network: 6477,10045,10397,10484
+drop if _merge==2 //drop people did not do REDCap
+order SUBID date_red date_snad*
 
+*extract total number of waves in SNAD
+sum tot_wave
+local num=`r(max)' 
 gen matchred=.
-replace matchred=1 if date_red==date_snad1 & !missing(date_red)
-replace matchred=2 if date_red==date_snad2 & !missing(date_red)
-replace matchred=3 if date_red==date_snad3 & !missing(date_red)
-replace matchred=4 if date_red==date_snad4 & !missing(date_red)
-replace matchred=5 if date_red==date_snad5 & !missing(date_red)
+forvalues i=1/`num' {
+	replace matchred=`i' if date_red==date_snad`i' & !missing(date_red) //exact match
+	gen diffred`i'=abs(date_red-date_snad`i') //calculate difference between visits
+}
 
-fre time if missing(matchred) //33 not exact match: 4 in T1 of R01, all 29 T2 was done in NetCanvas
-list SUBID time date_red date_snad1 date_snad2 date_snad3 date_snad4 date_snad5 if missing(matchred) & time==1 // 6409,10021 interviewed in NETcanvas; 3517,3594 network data not found anywhere.
+egen minval = rowmin(diffred*) //SNAD date closest to REDCap date
+forvalues i=1/`num' {
+	replace diffred`i'=. if minval!=diffred`i' //only keep matched wave
+}
+
+*match within 60 days (Network data collection may be completed later due to time)
+forvalues i=1/`num' {
+	fre diffred`i' if matchred==.
+	replace matchred=`i' if diffred`i'<=60 & missing(matchred)
+}
+
+duplicates list SUBID matchred if !missing(matchred) //0 duplicates
+
+*check interviews lag>60 days
+fre SUBID if missing(matchred) //3 not matched
+list SUBID date_red date_snad* if missing(matchred)
+list matchred date_red date_snad* diffred* if SUBID==6418 //NC interview not found
+list matchred date_red diffred* if SUBID==10250
+replace matchred=4 if SUBID==10250 & diffred4==147 
+list matchred date_red diffred* if SUBID==10394 //ENSO interview not finished
 
 drop time
-rename matchred time
-drop if missing(time)
-save "red-Clean-20210630.dta" ,replace
+
+gen date_snad=.
+forvalues i=1/`num' {
+	replace date_snad=date_snad`i' if matchred==`i'
+	drop date_snad`i'
+}
+format date_snad %td
+drop if missing(matchred)
+
+save "red-Clean-snadMatch.dta",replace
+
 
 
 
@@ -439,49 +462,41 @@ save "red-Clean-20210630.dta" ,replace
 ***************************************************************
 
 
+
+
 *load Demographics info
 use "Demographics.dta", clear 
 
-/*
-****************add SNAD data (this is not compatible with pilot because network measures have elastic ties in ENSO)
-preserve
-merge 1:1 SUBID time using "SNAD-Participant-T12345-EGOAGG-clean.dta" 
-list SUBID enrolldate date_snad if _merge==2 // 9 people interviewed with SNAD but not IADC (Need to get IADC in the future)
-drop if _merge==1 //drop 16 cases have no SNAD data
-drop _merge date_snad1 date_snad2 date_snad3 date_snad4 date_snad5 date_iadc //date_iadc is from snad and contain many missing
-
-*create age based on SNAD date
-personage dobdate date_snad, gen(agesnad) //install personage if not alreday 
-
-save "SNAD-Participant-T12345-EGOAGG-mergeIADRC.dta",replace 
-restore
-*/
-
-****************add SNAD data (pilot match)
-merge 1:m SUBID using "SNAD-Participant-T12345-EGOAGG-pilot-clean.dta" 
-list SUBID enrolldate date_snad if _merge==2 // 1 people interviewed with SNAD but not IADC (10234 did not finish enrollment in IADRC)
-drop if _merge==1 //drop 87 cases not having network data
-
-*create age based on SNAD date
-personage dobdate date_snad, gen(agesnad) //install personage if not alreday 
-
 *add Redcap data
-merge 1:1 SUBID time using "red-Clean-20210630.dta", nogen keep(match master) //117 matched
+merge 1:m SUBID using "red-Clean-snadMatch.dta", nogen 
 
 *add IADC data
-merge 1:1 SUBID time using "IADC-Long-CleanB.dta", nogen keep(match master match_update match_conflict) update //6 cases missing IADC data due to >180 days apart from SNAD at least one wave; update: when in conflict, prefer Redcap over IADRC for mail-in packet
+merge 1:1 SUBID date_snad using "IADC-Long-Clean-snadMatch.dta", nogen update // update: when in conflict, prefer Redcap over IADRC for mail-in packet
 
 *add Neuroimaging data
-merge 1:1 SUBID time using "MRI-Clean-20201001.dta",nogen keep(match master) //233 matched
+merge 1:1 SUBID date_snad using "MRI-Clean-snadMatch.dta",nogen
+merge 1:1 SUBID date_snad using "TAU-Clean-snadMatch.dta",nogen 
+merge 1:1 SUBID date_snad using "AMY-Clean-snadMatch.dta",nogen 
+drop _merge
 
-merge 1:1 SUBID time using "TAU-Clean-20201001.dta",nogen keep(match master) //91 matched
+*add SNAD data (Full)
+preserve
 
-merge 1:1 SUBID time using "AMY-Clean-20201001.dta",nogen keep(match master) //106 matched
+merge 1:1 SUBID date_snad using "SNAD-Participant-EGOAGG-clean" 
+drop if _merge==1 //drop cases have no R01 SNAD data
+personage dobdate date_snad, gen(agesnad) //create age based on SNAD date; install personage if not alreday 
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-R01-preexlusion-20211217",replace
 
-drop _merge date_snad1 date_snad2 date_snad3 date_snad4 date_snad5 date_iadc //date_iadc is from snad and contain many missing
+restore
+
+*add SNAD data (pilot match)
+merge 1:1 SUBID date_snad using "SNAD-Participant-EGOAGG-pilotmatch-clean.dta" 
+drop if _merge==1 //drop cases have no SNAD data
+personage dobdate date_snad, gen(agesnad) //create age based on SNAD date; install personage if not alreday 
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-pilotmatch-preexlusion-20211217",replace
 
 
-save "SNAD-Participant-T12345-EGOAGG-pilot-mergeIADRC.dta",replace
+
 
 
 
@@ -489,26 +504,28 @@ save "SNAD-Participant-T12345-EGOAGG-pilot-mergeIADRC.dta",replace
 **# 10 Exclusion criteria for all analyses 
 ***************************************************************
 
+
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data"
+
 *Drop people who should not be in the study based on exlusion criteria for SAND: MoCA<10, age<45, Prion disease, and bipolar at T1
 
-*********pilot
-use "SNAD-Participant-T12345-EGOAGG-pilot-mergeIADRC.dta",clear
+
+/*R01 only*/
+
+
+use "SNAD-Analysis-R01-preexlusion-20211217",clear
+drop if agesnad<45 | MOCATOTS<10 
+drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease" 
+save "SNAD-Analysis-R01-20211217", replace
+
+
+/*Pilot matched*/
+
+
+use "SNAD-Analysis-pilotmatch-preexlusion-20211217",clear
 
 drop if agesnad<45 | MOCATOTS<10 
 drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease" 
+save "SNAD-Analysis-pilotmatch-20211217", replace
 
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\SNAD-Analysis-T12345-20210915-Imaging from Shannon.dta", replace
-
-*merge old imaging data with shannon's new version (need to add old imaging to T3)
-use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\SNAD-Analysis-T1T2-20200311-old imaging",replace 
-keep SUBID time ICV_-Amy_Cent_Precuneus_
-foreach x of varlist ICV_-Amy_Cent_Precuneus_ {
-	rename `x' `x'old
-}
-destring SUBID,replace
-
-merge 1:1 SUBID time using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\SNAD-Analysis-T12345-20210915-Imaging from Shannon.dta"
-drop if _merge==1 //drop unmatched cases from old imaging (mostly empty cases)
-drop _merge 
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\SNAD-Analysis-T12345-20210915-all imaging.dta", replace
 
