@@ -4,7 +4,8 @@
 ****Purpose: clean W2 data for REDcap R01 Participant  
 
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\temp" //home
-use "REDcap-R01-w2",clear
+*do "REDcapold-R01-w2-import" //import w2 
+
 *Interview date
 gen redcap_date = dofc(gift_date) //remove hours and minutes
 format redcap_date %td
@@ -181,6 +182,7 @@ foreach x of varlist health_-ladder_ marital_ employment_ workhours_ {
 save "REDcap-R01-w2-participant-reformated",replace
 
 
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old" //reset directory for rule-all do file
 
 
 

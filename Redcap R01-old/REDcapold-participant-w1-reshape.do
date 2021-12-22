@@ -4,7 +4,8 @@
 ****Purpose: clean W1 data for REDcap R01 Participant  
 
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\temp" //home
-use "REDcap-R01-w1",clear
+*do "REDcapold-R01-w1-import" //import w1 excel from Redcap into stata
+
 *Interview date
 gen redcap_date = dofc(gift_date) //remove hours and minutes
 format redcap_date %td
@@ -173,6 +174,8 @@ rename *_w1 *_
 rename *_w1enso *_
 
 save "REDcap-R01-w1-participant-reformated",replace
+
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old" //reset directory for rule-all do file
 
 
 

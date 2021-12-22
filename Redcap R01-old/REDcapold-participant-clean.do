@@ -10,9 +10,15 @@ append using "REDcap-R01-w1-participant-reformated",gen(time)
 recode time (0=2) (1=1)
 duplicates report SUBID //29 focal did 2 waves
 
+
+
 ************************************************************
 **# 1. reorder and rename variables
 ************************************************************
+
+
+
+rename date_snad date_red
 order marriage_other,after(marriage)
 order nofriends no_friends_,after(friends)
 rename no_friends_ nofriends_feel
@@ -48,7 +54,12 @@ replace moca_raw=subinstr(moca_raw,"/30","",1) //turn 16/30 into 16
 rename (trailseconds_ trailsecond_) (trail_a_time trail_b_time)
 egen rey_sum=rowtotal(reycorrect_ reycorrect2_ reycorrect3_ reycorrect4_ reycorrect5_),mi
 
-*get delayed Rey from Hope (delayed_rey_sum)
+*input delayed rey from paper record
+gen delayed_rey_sum=5 if SUBID==910000
+replace delayed_rey_sum=2 if SUBID==910001
+replace delayed_rey_sum=1 if SUBID==910002
+replace delayed_rey_sum=3 if SUBID==910005
+
 *how to create sum score of facial memory, emotion cognition?
 *how to obtain qualtrics data for facial memory?
 
@@ -79,8 +90,9 @@ longest_job-long_live15 kind_business kind2_business grade_mother grade_father e
 }
 
 duplicates drop SUBID,force //same as keep time==1
-rename (long_business long_business2 long2_business long2_business2) (year_start1 year_end1 year_start2 year_end2) //consistent with new R01
-
+rename (long_business long_business2 long2_business long2_business2 longest_job job_activity kind_business other_describe longest2_job job2_activity kind2_business other_describe2) (year_start1 year_end1 year_start2 year_end2 longest_job1 job_activity1 kind_business1 other_describe1 longest_job2 job_activity2 kind_business2 other_describe2) //consistent with new R01
+rename (grade_mother grade_father education_mother education_father) ///
+       (education_mother2 education_father2 education_mother1 education_father1)
 *Harmonize variables that collected from multiple sections
 replace demographics_sex=gender if missing(demographics_sex)
 replace dem_education=school if missing(dem_education)
@@ -101,7 +113,7 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\R
 restore
 
 drop first_name last_name date_of_birth ///
-demographics_sex dem_education dem_military dem_marital dem_biochild dem_nonbio ///
+demographics_sex dem_education dem_military dem_biochild dem_nonbio ///
 race gender school military marital children step ///
 longest_job-long_live15 kind_business kind2_business grade_mother grade_father education_mother education_father family_finances //drop demographics 
 
