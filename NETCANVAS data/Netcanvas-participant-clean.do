@@ -276,7 +276,7 @@ rename (alter_college) (tcollege)
 
 *merge NC with pilots
 preserve
-use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\SNAD-Participant-T1234-CleanB-LONG",replace
+use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot clean\clean data\SNAD-Participant-T1234-CleanB-LONG",replace
 keep SUBID alterid time rel* tfem tcollege
 
 *Only keep 1 wave 
