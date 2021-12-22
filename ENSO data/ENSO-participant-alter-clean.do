@@ -4,16 +4,16 @@
 ****Purpose: clean alter data for ENSO 
 
 clear
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\ENSO clean\temp" //home
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\temp" //home
 
 ***************************************************************
-//	#1 Remove duplicates in ENSO participant alter data
+**# 1 Remove duplicates in ENSO participant alter data
 ***************************************************************
 /*Things to fix later: 
 None
 */
 
-multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\ENSO clean\ENSO Focal\Alter") clear force  //import multiple csv in a folder (ssc install multimport)
+multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\ENSO Focal\Alter") clear force  //import multiple csv in a folder (ssc install multimport)
 destring respondent_name,force gen(SUBID) 
 drop if missing(SUBID) | SUBID==445566 //drop all test runs
 *Fix typo in ENSO SUBID
@@ -114,47 +114,23 @@ drop if missing(nihassle) & SUBID==10216
 drop if SUBID==6302 & alter_name=="Jere S"
 drop if SUBID==10373 & alter_name=="Jennifer"
 
+*clean date_snad
+replace created_on=substr(created_on, 1, 10) //only keep MDY
+replace created_on= subinstr(created_on, "-", "", .) //drop -
+gen date_snad = date(created_on,"YMD")
+format date_snad %dM_d,_CY
+
 save "ENSO-Participant-alter-LONG.dta",replace
 
 
-************************************************************
-// 2. Replace interview date with REDCAP data (ENSO date is not accurate)
-************************************************************
-use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\SNAD-Redcap-R01-20210215",clear
-replace ccid_gc= subinstr(ccid_gc, "a", "", .) //drop a (10325a to 10325)
-destring ccid_gc,gen(SUBID) // ccid_gc is focal who completed interview
-drop if missing(SUBID)
-*convert date
-format gift_date %tc
-gen date_snad = dofc(gift_date) // convert "21apr2015 14:31:18" to "21apr2015" 
-format date_snad %dM_d,_CY
-list date_snad gift_date //double check
-save "SNAD-Redcap-R01-20210215-temp",replace
-
-*merge ENSO with Redcap R01
-keep date_snad SUBID
-merge 1:m SUBID using "ENSO-Participant-alter-LONG.dta"
-fre SUBID if _merge==1 // 3517, 3594, 6409, 6477, 10394, 10397, 10428: 7 in completed Redcap but not in ENSO (10428 was interviewed by NETcanvas), where are the 7?
-fre SUBID if _merge==2 //  8 in ENSO not in completed Redcap (6242, 6406, 6574, 10194, 10229, 10259, 10304, 10347 in pilot but not in R01 Redcap, but 6574, 10259, 10347 have alter info, which contradict Redcap record)
-drop if _merge==1
-
-*find date for ENSO 8 not found in Redcap R01 + 1 giftcard ccid for not completed focal
-replace created_on=substr(created_on, 1, 10) //only keep MDY
-replace created_on= subinstr(created_on, "-", "", .) //drop -
-gen _date_ = date(created_on,"YMD")
-format _date_ %dM_d,_CY
-replace date_snad=_date_ if missing(date_snad) //fill in ENSO date if not found in REDCAP
-replace date_snad=daily("02oct2019", "DMY") if SUBID==3568
-replace date_snad=daily("01oct2019", "DMY") if SUBID==10347
-replace date_snad=daily("08jul2020", "DMY") if SUBID==10127
-
-drop _merge created_on modified_on _date_
 
 
 
 ************************************************************
-// 3. Mark alters with no name generators info 
+**# 2. Mark alters with no name generators info 
 ************************************************************
+
+
 
 *clean name generators
 foreach x of varlist hlthburdn hlthcount hlthencrg impburdn impforce impmat ///
@@ -207,7 +183,7 @@ T1: 6377, 10150, 10352, 10353, 10360, 10382 (drop 6377, 10150, 10352, 10353, che
 T2: 10023
 7 in total, they all contain inaccurate data
 
-multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\ENSO clean\ENSO Focal\2020 October\October Enso SNAD raw exports\Alter") clear force  
+multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\ENSO Focal\2020 October\October Enso SNAD raw exports\Alter") clear force  
 destring respondent_name,force gen(SUBID) 
 keep if SUBID==6377 | SUBID==10150 | SUBID==10352 | SUBID==10353 | SUBID==10360 | SUBID==10382 | SUBID==10023 // only keep 7 focals that are missing in Ben's CSV files
 drop if _filename!=1 & (SUBID==6377 | SUBID==10150 | SUBID==10352 | SUBID==10353 | SUBID==10360 | SUBID==10382) //dropped one T1 focal that is wrongfully in T2 (SUBID==10150)
@@ -228,9 +204,13 @@ T3: 10075
 
 **stoped here & need to fill in generators***
 
+
+
 ************************************************************
-//4 make relation type variables consistent accross waves
+**# 3 make relation type variables consistent accross waves
 ************************************************************
+
+
 
 * Change ENSO T4's different format of alter relation type
 
@@ -296,7 +276,7 @@ drop nicollege*
 save "ENSO-Participant-alter-LONG.dta", replace 
 
 *merge with uniqueID
-import excel using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\ENSO clean\UniqueID  W12345-Focal-20210215", clear first 
+import excel using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\UniqueID  W12345-Focal-20210215", clear first 
 keep SUBID TIEID_uniq name 
 rename (name TIEID_uniq) (alter_name alterid)
 merge m:1 SUBID alter_name using "ENSO-Participant-alter-LONG.dta"
@@ -305,6 +285,7 @@ duplicates drop SUBID alter_name alterid,force //drop duplicates due to merge
 duplicates tag SUBID alterid,gen(dup) //ENSO alters have the same alterid
 list SUBID alter_name alterid if dup==1 //find and fix alterid in raw file
 drop _merge dup
+egen relmiss=rowtotal(nirel*) //551 alters are missing/0 on all relation type
 
 save "ENSO-Participant-alter-LONG.dta", replace 
 
@@ -312,162 +293,55 @@ save "ENSO-Participant-alter-LONG.dta", replace
 
 
 ***********************************************************************
-// 5. old alters' relation type, generators, and other demo (i.e., gender, college) need to retrive from pilot wave
+**# 4. old alters' relation type, generators, and other demo (i.e., gender, college) need to retrive from pilot wave
 ***********************************************************************
 
-/*keep alters that are old or missing on alter demo*/
-
-egen relmiss=rowtotal(nirel*) //551 alters are missing/0 on all relation type
-fre relmiss name_gen nifemale // 90 missing generator; at least 465 missing on gender
-keep if exinput==1 | relmiss==0 | name_gen==0 | missing(nifemale) | missing(alter_college) //keep all 795 alters that are old or missing on gender, generator or relation type (should just use exinput to identify old alters, but I am not confident in the data quality, so I check all missing on gender, generator, and relation type)
-save "ENSO-oldalters",replace
 
 /*retrive alter demo from pilot data*/
 
-import excel using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\ENSO clean\UniqueID  W12345-Focal-20210215", clear first 
-drop if time=="ENSO"
-keep SUBID TIEID_uniq name 
-rename (name TIEID_uniq) (alter_name alterid)
+use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot clean\clean data\SNAD-Participant-T1234-CleanB-LONG",replace
+keep SUBID alterid time imd imr imb hmd hmr hmb rel* tfem tcollege
 
-*make names consistent
-replace alter_name =strtrim(alter_name) //remove leading and trailing blanks
-replace alter_name =subinstr(alter_name, ".", "",.) //remove .
-replace alter_name =strlower(alter_name) //change to lower case
-replace alter_name =stritrim(alter_name) //consecutive blanks collapsed to one blank
+*Only keep 1 wave 
+tostring SUBID alterid,replace
+gen id=SUBID+alterid
+destring SUBID alterid,replace
+reshape wide imd imr imb hmd hmr hmb rel* tfem tcollege,i(id) j(time)
+drop id
+foreach x in imd imr imb hmd hmr hmb tfem tcollege relpartner relparent relsibling relchild relgrandp relgrandc relauntunc relinlaw relothrel relcowork relneigh relfriend relboss relemploy relschool rellawyer reldoctor relothmed relmental relrelig relchurch relclub relleisure {
+	replace `x'4=`x'3 if missing(`x'4) 
+	replace `x'4=`x'2 if missing(`x'4)
+	replace `x'4=`x'1 if missing(`x'4)
+	rename `x'4 `x'
+	drop `x'1 `x'2 `x'3
+} //use the most recent wave demo info
 
-*merge with ENSO
-merge m:1 SUBID alter_name using "ENSO-oldalters"
-keep if _merge==3
-
-*correct names in pilot to be the same as ENSO (identified by merge ENSO section below)
-replace alter_name="aly c" if alter_name=="allison c" & SUBID==3477
-replace alter_name="chris w" if alter_name=="chris b" & SUBID==3477
-replace alter_name="sheryl s" if alter_name=="shirley h" & SUBID==3477
-replace alter_name="dr john knoll" if alter_name=="dr john kroll" & SUBID==3537
-replace alter_name="sondra m" if alter_name=="sandra m" & SUBID==3568
-replace alter_name="tracy a" if alter_name=="traacy a" & SUBID==3568
-replace alter_name="larry ad" if alter_name=="larry a d" & SUBID==3738
-replace alter_name="stephanie h" if alter_name=="stehanie h" & SUBID==6388
-replace alter_name="cynthia b" if alter_name=="cindy b" & SUBID==6404
-replace alter_name="dr randy s" if alter_name=="randy s" & SUBID==6418
-replace alter_name="mc" if alter_name=="m c" & SUBID==6480
-replace alter_name="joyce d" if alter_name=="joice d" & SUBID==6538
-replace alter_name="carla s" if alter_name=="crala s" & SUBID==6545
-replace alter_name="mary ann f" if alter_name=="mary f" & SUBID==10022
-replace alter_name="solomon m" if alter_name=="soloman m" & SUBID==10022
-replace alter_name="dr hellman" if alter_name=="dr matt hellman" & SUBID==10023
-replace alter_name="roxie t" if alter_name=="ruthie t" & SUBID==10063
-replace alter_name="amartllis l" if alter_name=="amaryllis l" & SUBID==10105
-replace alter_name="carmen g" if alter_name=="carmen d" & SUBID==10105
-replace alter_name="jackie b" if alter_name=="jackie h" & SUBID==10284
-
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\SNAD-Participant-T1234-CleanB-LONG-20201001",replace
-
-*merge ENSO with pilot
-keep SUBID alter_name time imd imr imb hmd hmr hmb rel* tfem tcollege
-merge m:1 SUBID alter_name using "ENSO-oldalters.dta"
-*this is to identify misspelling between pilot and ENSO
-fre SUBID if _merge==2 & SUBID>10338  // 399 ENSO alters with missing demo did not match with pilot
-
-list alter_name _merge if SUBID==3429 & _merge!=3
-list alter_name _merge if SUBID==3477 & _merge!=3
-list alter_name _merge if SUBID==3537 & _merge!=3
-list alter_name _merge if SUBID==3568 & _merge!=3
-list alter_name _merge if SUBID==6125 & _merge!=3 
-list alter_name _merge if SUBID==6159 & _merge!=3 
-list alter_name _merge if SUBID==6377 & _merge!=3 
-list alter_name _merge if SUBID==6418 & _merge!=3 
-list alter_name _merge if SUBID==6480 & _merge!=3 
-list alter_name _merge if SUBID==6502 & _merge!=3 
-list alter_name _merge if SUBID==6512 & _merge!=3 
-list alter_name _merge if SUBID==6517 & _merge!=3 
-list alter_name _merge if SUBID==6530 & _merge!=3 
-list alter_name _merge if SUBID==6538 & _merge!=3 
-list alter_name _merge if SUBID==6541 & _merge!=3 
-list alter_name _merge if SUBID==6564 & _merge!=3 
-list alter_name _merge if SUBID==6568 & _merge!=3 
-list alter_name _merge if SUBID==6572 & _merge!=3 
-list alter_name _merge if SUBID==6574 & _merge!=3 
-list alter_name _merge if SUBID==10000 & _merge!=3 
-list alter_name _merge if SUBID==10004 & _merge!=3 
-list alter_name _merge if SUBID==10018 & _merge!=3 
-list alter_name _merge if SUBID==10037 & _merge!=3 
-list alter_name _merge if SUBID==10062 & _merge!=3 
-list alter_name _merge if SUBID==10063 & _merge!=3 
-list alter_name _merge if SUBID==10064 & _merge!=3 
-list alter_name _merge if SUBID==10067 & _merge!=3 
-list alter_name _merge if SUBID==10125 & _merge!=3 
-list alter_name _merge if SUBID==10150 & _merge!=3 
-list alter_name _merge if SUBID==10163 & _merge!=3 
-list alter_name _merge if SUBID==10194 & _merge!=3 
-list alter_name _merge if SUBID==10225 & _merge!=3 
-list alter_name _merge if SUBID==10237 & _merge!=3 
-list alter_name _merge if SUBID==10276 & _merge!=3 
-list alter_name _merge if SUBID==10295 & _merge!=3 
-list alter_name _merge if SUBID==10329 & _merge!=3 
-list alter_name _merge if SUBID==10332 & _merge!=3 
-list alter_name _merge if SUBID==10339 & _merge!=3 
-list alter_name _merge if SUBID==10345 & _merge!=3 
-list alter_name _merge if SUBID==10346 & _merge!=3 
-list alter_name _merge if SUBID==10347 & _merge!=3 
-list alter_name _merge if SUBID==10352 & _merge!=3 
-list alter_name _merge if SUBID==10353 & _merge!=3 
-list alter_name _merge if SUBID==10360 & _merge!=3 
-list alter_name _merge if SUBID==10382 & _merge!=3 
-list alter_name _merge if SUBID==10405 & _merge!=3 
-
-keep if _merge==3 //drop pilot alters did not match with ENSO old alters
+merge 1:1 SUBID alterid using "ENSO-Participant-alter-LONG.dta" 
+drop if _merge==1 //drop pilot alters did not match with ENSO old alters
 drop _merge
-save "ENSO-Participant-alter-retrive-raw",replace
 
 /*retrive generator info*/
 
-use "ENSO-Participant-alter-retrive-raw",clear
 replace impmat=imd if name_gen==0
 replace impforce=imr if name_gen==0
 replace impburdn=imb if name_gen==0
 replace hlthcount=hmd if name_gen==0
 replace hlthencrg=hmr if name_gen==0
 replace hlthburdn=hmb if name_gen==0
-
-*chose one wave of pilot info to keep
-egen miss=rowtotal(imp* hlth*)
-duplicates tag SUBID alter_name,gen(dup)
-drop if dup>0 & miss==0 // drop pilot wave with no info
-gsort SUBID alter_name -time //sort time descending, so that first occurence is latest time
-duplicates drop SUBID alter_name,force //keep first occurence of duplicates
-drop miss dup time imd imr imb hmd hmr hmb rel* tfem nifemale nirel* alter_college //drop variables from pilot, gender, edu, & relation type
-save "ENSO-Participant-alter-retrive-generator",replace
+drop imd imr imb hmd hmr hmb
 
 /*retrive gender info*/
 
-use "ENSO-Participant-alter-retrive-raw",clear
 replace nifemale=tfem if missing(nifemale)
-
-*chose one wave of pilot info to keep
-duplicates tag SUBID alter_name,gen(dup)
-drop if dup>0 & missing(nifemale) // drop pilot wave with no info
-gsort SUBID alter_name -time //sort time descending, so that first occurence is latest time
-duplicates drop SUBID alter_name,force //keep first occurence of duplicates
-keep nifemale SUBID alter_name //keep the retrived gender data
-save "ENSO-Participant-alter-retrive-gender",replace
+drop tfem
 
 /*retrive education info*/
 
-use "ENSO-Participant-alter-retrive-raw",clear
 replace alter_college=tcollege if missing(alter_college)
-
-*chose one wave of pilot info to keep
-duplicates tag SUBID alter_name,gen(dup)
-drop if dup>0 & missing(alter_college) // drop pilot wave with no info
-gsort SUBID alter_name -time //sort time descending, so that first occurence is latest time
-duplicates drop SUBID alter_name,force //keep first occurence of duplicates
-keep alter_college SUBID alter_name //keep the retrived gender data
-save "ENSO-Participant-alter-retrive-edu",replace
+drop tcollege
 
 /*retrive relation type info*/
 
-use "ENSO-Participant-alter-retrive-raw",clear
 replace nirelothrl=relothrel if relmiss==0
 replace nirelchrch=relchurch if relmiss==0
 replace nirelemplr=relboss if relmiss==0
@@ -491,38 +365,241 @@ replace nireldoc=reldoctor if relmiss==0
 replace nirelchld=relchild if relmiss==0
 replace nirelprnt=relparent if relmiss==0
 replace nirelactvt=relleisure if relmiss==0
-
-*chose one wave of pilot info to keep
-egen miss=rowtotal(nirel*)
-duplicates tag SUBID alter_name,gen(dup)
-drop if dup>0 & miss==0 // drop pilot wave with no info
-gsort SUBID alter_name -time //sort time descending, so that first occurence is latest time
-duplicates drop SUBID alter_name,force //keep first occurence of duplicates
-keep nirel* SUBID alter_name //keep the retrived relation type data
-save "ENSO-Participant-alter-retrive-reltype",replace
+drop rel*
 
 
-*merge all retrived data 
-merge 1:1 SUBID alter_name using "ENSO-Participant-alter-retrive-gender",nogen
-merge 1:1 SUBID alter_name using "ENSO-Participant-alter-retrive-generator",nogen
-merge 1:1 SUBID alter_name using "ENSO-Participant-alter-retrive-edu",nogen
-duplicates list SUBID alter_name //no duplicate
 
 
-*append retrived data with ENSO
-append using "ENSO-Participant-alter-LONG.dta"  
-duplicates drop SUBID alter_name,force //drop duplicates from using data
+************************************************************
+**# 5a. clean the variable names across 5 ENSO waves - FULL 
+************************************************************
+
+
+
+preserve
+
+*******clean name interpretors 
+bysort SUBID: egen netsize=count(alter_name)
+lab var netsize "Total number of alters mentioned" 
+
+bysort SUBID: egen pcollege=mean(alter_college)
+lab var pcollege "Proportion college in network"
+
+foreach x of varlist nitrust* {
+	tostring `x',replace
+	replace `x' =substr(`x',1,1) //remove " in string
+	destring `x',replace
+}
+destring nirace5 niage,replace force
+encode niqdoc4,gen(niqdoc4_copy)
+drop niqdoc4
+recode niqdoc4_copy (4=3) (5=1) (6=2),gen(niqdoc4)
+drop niqdoc4_copy
+foreach x of varlist nirace niage nilive niqdoc nitrust nimemloss {
+	egen `x'new=rowmean(`x' `x'2 `x'3 `x'4 `x'5)
+	drop `x' `x'2 `x'3 `x'4 `x'5
+	rename `x'new `x'
+}
+rename (nirace niage) (alter_race alter_age)
+bysort SUBID: egen mage=mean(alter_age)
+lab var mage "Mean age in network"
+bysort SUBID: egen sdage=sd(alter_age)
+lab var sdage "Standard deveiation of alter age"
+
+label define alter_race 1 "Asian" 2 "African American" 3 "White" 4 "Other"
+label values alter_race alter_race
+recode alter_race (1 2 4=0) (3=1),gen(white)
+bysort SUBID: egen pwhite=mean(white)
+lab var pwhite "Proportion White in network"
+
+rename nilive alterprox
+label define alterprox 1 "<30 mins" 2 "30-60 mins" 3 "1-2 hour" 4 ">2 hour"
+label values alterprox alterprox
+bysort SUBID: egen mprox=mean(alterprox)
+lab var mprox "Mean alter proximity"
+recode alterprox (2/4=0),gen(prox30)
+bysort SUBID: egen pprox=mean(prox30)
+lab var prox30 "Proportion <30 mins"
+
+rename nimemloss alterhknow
+recode alterhknow (1=3) (2=2) (3=1)
+label define alterhknow 1 "Not very much" 2 "Some" 3 "A lot"
+label values alterhknow alterhknow
+bysort SUBID: egen mknow=mean(alterhknow)
+lab var mknow "Mean knowledge of aging problems in network, HI=MORE"
+recode alterhknow (1 2=0) (3=1),gen(tknow)
+lab var tknow "Alter knows a lot about memory loss, confusion, or other similar problems that you might be experiencing as you age"
+bysort SUBID: egen pknow=mean(tknow)
+lab var pknow "Proportion knows a lot about aging"
+
+rename nitrust alterdtr
+recode alterdtr (1=3) (2=2) (3=1)
+label define alterdtr 1 "Not very much" 2 "Most of the time" 3 "A lot"
+label values alterdtr alterdtr
+bysort SUBID: egen mtrust=mean(alterdtr)
+lab var mtrust "Mean trust in doctors in network, HI=MORE"
+recode alterdtr (1 2 =0) (3=1),gen(ttrust)
+lab var ttrust "Alter trusts doctors a lot"
+bysort SUBID: egen ptrust=mean(ttrust)
+lab var ptrust "Proportion who trust doctors in network"
+
+rename niqdoc alterquestion
+label define alterquestion 1 "Rarely" 2 "Sometimes" 3 "Often"
+label values alterquestion alterquestion
+bysort SUBID: egen mquestion=mean(alterquestion)
+lab var mquestion "Mean questions doctors in network, HI=MORE"
+
+foreach x of varlist niclose* {
+	tostring `x',replace
+	replace `x' =substr(`x',1,1) //remove " in string
+	destring `x',replace
+}
+egen niclosenew=rowmean(niclose*)
+drop niclose niclose2 niclose3 niclose4 niclose5
+rename niclosenew niclose
+gen tclose=niclose
+recode tclose (2/3=0)
+lab var tclose "Alter is very close"
+bysort SUBID: egen pclose=mean(tclose)
+lab var pclose "Proportion very close in network"
+gen howcloser=niclose
+recode howcloser (1=3)(3=1)
+bysort SUBID: egen mclose=mean(howcloser)
+lab var mclose "Mean closeness in network, HI=MORE"
+drop howcloser 
+
+foreach x of varlist nitalk {
+	egen `x'new=rowmean(`x' `x'2 `x'3 `x'4 `x'5)
+	drop `x' `x'2 `x'3 `x'4 `x'5
+	rename `x'new `x'
+}
+gen tfreq=nitalk
+recode tfreq (2/3=0)
+lab var tfreq "Alter sees or talks to ego often"
+bysort SUBID: egen pfreq=mean(tfreq)
+lab var pfreq "Proportion often in contact in network"
+gen seetalkr=nitalk
+recode seetalkr (1=3)(3=1)
+bysort SUBID: egen mfreq=mean(seetalkr)
+lab var mfreq "Mean freq of contact in network, HI=MORE"
+bysort SUBID: egen sdfreq=sd(seetalkr)
+lab var sdfreq "Standard deviation of freq of contact in network"
+drop seetalkr
+
+foreach x of varlist nisupcare nisupcash nisupchor nisuplstn nisupsugg {
+	egen `x'new=rowmean(`x' `x'2 `x'3 `x'4 `x'5)
+	drop `x' `x'2 `x'3 `x'4 `x'5
+	rename `x'new `x'
+}
+egen numsup=rowtotal(nisupcare nisupcash nisupchor nisuplstn nisupsugg),mi
+replace numsup=. if missing(alter_name)
+lab var numsup "Number of support functions"
+bysort SUBID: egen msupport=mean(numsup)
+lab var msupport "Mean number of support functions in network, HI=MORE"
+
+egen numsup3=rowtotal(nisupcare nisuplstn nisupsugg),mi
+replace numsup3=. if missing(name)
+bysort SUBID: egen msupport3=mean(numsup3)
+lab var msupport3 "Mean number of support functions in network (listen, care, advice), HI=MORE"
+
+foreach x of varlist nisupcare nisupcash nisupchor nisuplstn nisupsugg {
+	replace `x'=. if missing(alter_name)
+	bysort SUBID: egen p`x'=mean(`x') //missing means no alter
+}
+rename (pnisupcare pnisupcash pnisupchor pnisuplstn pnisupsugg) ///
+       (pcare ploan pchores plisten padvice)
+lab var plisten "Prop. listen to you when upset"
+lab var pcare "Prop. tell you they care about what happens to you"
+lab var padvice "Prop. give suggestions when you have a problem"
+lab var pchores "Prop. help you with daily chores"
+lab var ploan "Prop. loan money when you are short of money"
+
+foreach x of varlist nihassle* {
+	tostring `x',replace
+	replace `x' =substr(`x',1,1) //remove " in string
+	destring `x',replace
+}
+egen nihasslenew=rowmean(nihassle*)
+drop nihassle nihassle2 nihassle3 nihassle4 nihassle5
+rename nihasslenew nihassle
+revrs nihassle, replace //reverse code
+bysort SUBID: egen mhassles=mean(nihassle)
+lab var mhassles "Mean hassles in network, HI=MORE)"
+recode nihassle (1=0) (2/3=1),gen(thassles)
+lab var thassles "Alter hassles, causes problems sometimes or a lot"
+bysort SUBID: egen phassles=mean(thassles)
+lab var phassles "Proportion that hassle, cause problems in network"
+
+foreach x of varlist nistrength {
+	egen `x'new=rowmean(`x' `x'2 `x'3 `x'4 `x'5)
+	drop `x' `x'2 `x'3 `x'4 `x'5
+	rename `x'new `x'
+}
+bysort SUBID: egen mstrength=mean(nistrength)
+lab var mstrength "Mean tie strength in network, HI=MORE"
+bysort SUBID: egen weakest=min(nistrength)
+lab var weakest "Minimum tie strength score"
+bysort SUBID: egen iqrstrength=iqr(nistrength)
+lab var iqrstrength "Interquartile range of tie strength"
+bysort SUBID: egen sdstrength=sd(nistrength)
+lab var sdstrength "Standard deveiation of tie strength"
+
+gen tfem=nifemale
+lab var tfem "Alter is female"
+drop nifemale
+bysort SUBID: egen pfem=mean(tfem)
+lab var pfem "Proportion female in network"
+
+*diversity measure (Cohen): 25 types total in data (nirelother nirelfinan are two extra in ENSO)
+egen othfam=rowtotal(nirelsib nirelantun nirelgprnt nirelgchld nirelothrl),mi //group into other family
+egen fri=rowtotal(nirelfrnd nirelactvt),mi //group into friend
+egen work=rowtotal(nirelemple nirelemplr nirelcowrk),mi //group into workmate
+egen church=rowtotal(nirelrabbi nirelchrch),mi //group into religious group
+egen prof=rowtotal(nirelthrpy nirelothmd nireldoc nirellwyr nirelfinan),mi //group into professional group
+recode othfam fri work church prof (1/10=1)
+foreach x of varlist othfam fri work church prof nirelpart nirelprnt nirelinlaw nirelchld nirelnghbr nirelstdnt nirelclub {
+egen u`x' = tag(SUBID `x') if `x'>0 & !missing(`x') // e.g., count multiple friends as 1 friend
+}
+egen relmiss=rowtotal(nirelother nirelchrch nirelemplr nirelfrnd nirelothrl nirelantun nirelstdnt nirelsib nirelgprnt nirelinlaw nirelgchld nirelothmd nirelrabbi nirelthrpy nirellwyr nirelprnt nirelnghbr nirelclub nirelactvt nirelfinan nirelcowrk nireldoc nirelpart nirelemple nirelchld) //114 alters are missing/0 on all relation type (6+1+107=114)
+
+recode uothfam ufri uwork uchurch uprof unirelpart unirelprnt unirelinlaw unirelchld unirelnghbr unirelstdnt unirelclub (0=.) if relmiss==0 & netsize>0 //if a named alter is not specified for relation type then treat as missing
+bysort SUBID: egen diverse=total(uothfam+ufri+uwork+uchurch+uprof+unirelpart+unirelprnt+unirelinlaw+unirelchld+unirelnghbr+unirelstdnt+unirelclub),mi // cohen's 12 categories(volunteer is not in this data thus leaving us 11 of 12 Cohen's categories, and I add a group call prof as a replacement)
+drop uothfam-unirelclub othfam fri work church prof
+lab var diverse "Network diversity" 
+fre diverse
+
+egen tkin=rowtotal(nirelsib nirelantun nirelgprnt nirelgchld nirelothrl nirelpart nirelprnt nirelinlaw nirelchld)
+recode tkin (1/9=1)
+replace tkin=. if missing(alter_name)
+lab var tkin "Alter is family member"
+bysort SUBID: egen pkin=mean(tkin)
+lab var pkin "Proportion of network that is kin"
+
+gen ENSO=1
+save "ENSO-Participant-alter-LONG-clean.dta", replace 
+
+duplicates drop SUBID, force
+keep SUBID date_snad netsize-ENSO
+drop tfem tkin tclose tfreq thassles numsup white alter_race alter_age numsup numsup3 prox30 tknow ttrust //drop alter level variables
+save "ENSO-Participant-alter-EGOAGG-clean.dta", replace 
+
+
+
+
 
 
 
 
 
 ************************************************************
-// 6. clean the variable names across 5 ENSO waves
-******************************************************
+**# 5b. clean the variable names across 5 ENSO waves - Pilot match 
+************************************************************
 
 
-*this is not necessary if pilot data is not used
+
+restore
+
+*pilot match
 egen pilot=rowtotal(hlthburdn hlthcount hlthencrg impburdn impforce impmat),mi
 drop if pilot==0 | missing(pilot) //drop names that are not in health and important matter to be consistent with Pilot data 
 
@@ -533,8 +610,17 @@ lab var netsize "Total number of alters mentioned"
 bysort SUBID: egen pcollege=mean(alter_college)
 lab var pcollege "Proportion college in network"
 
+foreach x of varlist nitrust* {
+	tostring `x',replace
+	replace `x' =substr(`x',1,1) //remove " in string
+	destring `x',replace
+}
 destring nirace5 niage,replace force
-foreach x of varlist nirace niage {
+encode niqdoc4,gen(niqdoc4_copy)
+drop niqdoc4
+recode niqdoc4_copy (4=3) (5=1) (6=2),gen(niqdoc4)
+drop niqdoc4_copy
+foreach x of varlist nirace niage nilive niqdoc nitrust nimemloss {
 	egen `x'new=rowmean(`x' `x'2 `x'3 `x'4 `x'5)
 	drop `x' `x'2 `x'3 `x'4 `x'5
 	rename `x'new `x'
@@ -542,6 +628,8 @@ foreach x of varlist nirace niage {
 rename (nirace niage) (alter_race alter_age)
 bysort SUBID: egen mage=mean(alter_age)
 lab var mage "Mean age in network"
+bysort SUBID: egen sdage=sd(alter_age)
+lab var sdage "Standard deveiation of alter age"
 
 label define alter_race 1 "Asian" 2 "African American" 3 "White" 4 "Other"
 label values alter_race alter_race
@@ -549,6 +637,42 @@ recode alter_race (1 2 4=0) (3=1),gen(white)
 bysort SUBID: egen pwhite=mean(white)
 lab var pwhite "Proportion White in network"
 
+rename nilive alterprox
+label define alterprox 1 "<30 mins" 2 "30-60 mins" 3 "1-2 hour" 4 ">2 hour"
+label values alterprox alterprox
+bysort SUBID: egen mprox=mean(alterprox)
+lab var mprox "Mean alter proximity"
+recode alterprox (2/4=0),gen(prox30)
+bysort SUBID: egen pprox=mean(prox30)
+lab var prox30 "Proportion <30 mins"
+
+rename nimemloss alterhknow
+recode alterhknow (1=3) (2=2) (3=1)
+label define alterhknow 1 "Not very much" 2 "Some" 3 "A lot"
+label values alterhknow alterhknow
+bysort SUBID: egen mknow=mean(alterhknow)
+lab var mknow "Mean knowledge of aging problems in network, HI=MORE"
+recode alterhknow (1 2=0) (3=1),gen(tknow)
+lab var tknow "Alter knows a lot about memory loss, confusion, or other similar problems that you might be experiencing as you age"
+bysort SUBID: egen pknow=mean(tknow)
+lab var pknow "Proportion knows a lot about aging"
+
+rename nitrust alterdtr
+recode alterdtr (1=3) (2=2) (3=1)
+label define alterdtr 1 "Not very much" 2 "Most of the time" 3 "A lot"
+label values alterdtr alterdtr
+bysort SUBID: egen mtrust=mean(alterdtr)
+lab var mtrust "Mean trust in doctors in network, HI=MORE"
+recode alterdtr (1 2 =0) (3=1),gen(ttrust)
+lab var ttrust "Alter trusts doctors a lot"
+bysort SUBID: egen ptrust=mean(ttrust)
+lab var ptrust "Proportion who trust doctors in network"
+
+rename niqdoc alterquestion
+label define alterquestion 1 "Rarely" 2 "Sometimes" 3 "Often"
+label values alterquestion alterquestion
+bysort SUBID: egen mquestion=mean(alterquestion)
+lab var mquestion "Mean questions doctors in network, HI=MORE"
 
 foreach x of varlist niclose* {
 	tostring `x',replace
@@ -678,10 +802,11 @@ lab var pkin "Proportion of network that is kin"
 
 gen ENSO=1
 save "ENSO-Participant-alter-LONG-pilot-clean.dta", replace 
-*save "ENSO-Participant-alter-LONG-clean.dta", replace 
 
 duplicates drop SUBID, force
 keep SUBID date_snad netsize-ENSO
-drop tfem tkin tclose tfreq thassles numsup white alter_race alter_age //drop alter level variables
+drop tfem tkin tclose tfreq thassles numsup white alter_race alter_age numsup numsup3 prox30 tknow ttrust //drop alter level variables
 save "ENSO-Participant-alter-EGOAGG-pilot-clean.dta", replace 
-*save "ENSO-Participant-alter-EGOAGG-clean.dta", replace 
+
+
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Code" //reset directory for rule-all do file

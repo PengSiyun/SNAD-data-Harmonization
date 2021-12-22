@@ -4,12 +4,12 @@
 ****Purpose: label and create variables for ENSO
 
 clear
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\ENSO clean" //home
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean" //home
 
 ***************************************************************
 //	#1 Clean ENSO participant network data 
 ***************************************************************
-multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\ENSO clean\October Enso Focal raw exports") clear force //import multiple csv in a folder (ssc install multimport)
+multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\October Enso Focal raw exports") clear force //import multiple csv in a folder (ssc install multimport)
 destring respondent_name,replace force
 drop if missing(respondent_name)
 rename respondent_name SUBID
@@ -66,19 +66,19 @@ replace name =strlower(name) //change to lower case
 replace name =stritrim(name) //consecutive blanks collapsed to one blank
 sort SUBID name time
 order SUBID name time date_snad rel* TIEID
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\ENSO clean\Alter names W12345-duplicate names.dta",replace
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Alter names W12345-duplicate names.dta",replace
 
 ************merge uniqueID file with duplicate names file******************
 import excel using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\Drop ties\clean-Alter names W1234.xlsx",firstrow clear
 keep SUBID name TIEID_uniq duplicate
-merge m:m SUBID name using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\ENSO clean\Alter names W12345-duplicate names.dta" 
+merge m:m SUBID name using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Alter names W12345-duplicate names.dta" 
 
 bysort SUBID: egen t1=mean(TIEID_uniq) //missing=ENSO respodents who never did pilot
 bysort SUBID: replace TIEID_uniq=_n if missing(t1) //create unique id for those ENSO cases
 replace duplicate="0" if missing(t1)
 drop t1
 sort SUBID time TIEID_uniq name
-export excel using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\Peng\ENSO clean\clean-Alter names W12345.xlsx",firstrow(variables) sheet("sheet1") replace missing(".")
+export excel using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\clean-Alter names W12345.xlsx",firstrow(variables) sheet("sheet1") replace missing(".")
 
 /* need to fix problems in other waves before doing the below
 bysort SUBID: egen netsize=count(name)
