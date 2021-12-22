@@ -4,14 +4,15 @@
 ****Version: 17
 ****Purpose: Harmonize data from IADRC and SNAD -participant
 clear
-*cd "C:\Users\siypeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data" //office
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data"
 
 
 
 ***************************************************************
 **# 1 Append Pilot participant T1, T2, T3, T4+ ENSO+ NC
 ***************************************************************
+
+
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot clean\temp"
 use "SNAD-Participant-T1-CleanB-EGOAGG-120419.dta", clear
 append using "SNAD-Participant-T2-CleanB-EGOAGG-062519.dta"
 append using "SNAD-Participant-T3-CleanB-EGOAGG-062519.dta"
@@ -32,6 +33,7 @@ label var source "Data source"
 sort SUBID date_snad
 bysort SUBID: gen time=_n
 
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data"
 save "SNAD-Participant-EGOAGG-pilotmatch-clean.dta", replace 
 
 
@@ -61,7 +63,7 @@ save "SNAD-Participant-EGOAGG-clean.dta", replace
 
 /*create match data for IADRC*/
 
-
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot clean\temp"
 use "SNAD-Participant-T1-CleanB-EGOAGG-120419.dta", clear
 append using "SNAD-Participant-T2-CleanB-EGOAGG-062519.dta"
 append using "SNAD-Participant-T3-CleanB-EGOAGG-062519.dta"
@@ -78,6 +80,7 @@ bysort SUBID: gen time=_n
 keep SUBID date_snad time 
 egen tot_wave=max(time)
 reshape wide date_snad, i(SUBID) j(time)
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data"
 save "SNAD-MatchData.dta", replace //match all SNAD ego regardless of they have important/health matter
 
 
@@ -127,7 +130,7 @@ replace kids=kids_snad if missing(kids)
 drop kids_snad children_red biochild_enso step_red othchild_enso
 
 recode grade (0/11=1) (12=2) (13/15=3) (16=4) (17/30=5), gen(edu)
-label values edu school_red
+label values edu education_mother1_
 replace edu=school_red if missing(edu)
 replace edu=educat_enso if missing(edu)
 drop school_red educat_enso
@@ -279,7 +282,7 @@ replace matchmri=. if diffmri1==329 & SUBID==10088
 list SUBID matchmri diffmri* date_mri date_snad* if SUBID==10101 & minval<=365
 replace matchmri=. if diffmri1==350 & SUBID==10101  
 list SUBID matchmri diffmri* date_mri date_snad* if SUBID==10154 & minval<=365
-replace matchmri=4 if diffmri4==274 & SUBID==10154  
+replace matchmri=3 if diffmri4==274 & SUBID==10154  
 
 di date("20140514","YMD") //19857=one year before SNAD
 fre matchmri date_mri if date_mri>19857 //231 out of 312
@@ -464,14 +467,19 @@ save "red-Clean-snadMatch.dta",replace
 
 
 
-*load Demographics info
-use "Demographics.dta", clear 
-
-*add Redcap data
-merge 1:m SUBID using "red-Clean-snadMatch.dta", nogen 
+*load Redcap data
+use "red-Clean-snadMatch.dta", clear 
 
 *add IADC data
-merge 1:1 SUBID date_snad using "IADC-Long-Clean-snadMatch.dta", nogen update // update: when in conflict, prefer Redcap over IADRC for mail-in packet
+merge 1:1 SUBID date_snad using "IADC-Long-Clean-snadMatch.dta", nogen update // Redcap as master: when in conflict, prefer Redcap over IADRC for mail-in packet
+
+*harmonize cognitive test from Redcap vs. IADC: e.g., moca for new recuit&discontinued is only collected in Redcap. (need to harmonize mail-in pack)
+destring moca_raw,replace
+replace MOCATOTS=moca_raw if missing(MOCATOTS)
+replace Trailatime=trail_a_time if missing(Trailatime)
+replace Trailbtime=trail_b_time if missing(Trailbtime)
+replace calcavltsum=rey_sum if missing(calcavltsum)
+replace ReyDeCorAB=delayed_rey_sum if missing(ReyDeCorAB)
 
 *add Neuroimaging data
 merge 1:1 SUBID date_snad using "MRI-Clean-snadMatch.dta",nogen
@@ -479,21 +487,40 @@ merge 1:1 SUBID date_snad using "TAU-Clean-snadMatch.dta",nogen
 merge 1:1 SUBID date_snad using "AMY-Clean-snadMatch.dta",nogen 
 drop _merge
 
-*add SNAD data (Full)
+
+/*add SNAD data (Full)*/
+
+
 preserve
 
 merge 1:1 SUBID date_snad using "SNAD-Participant-EGOAGG-clean" 
 drop if _merge==1 //drop cases have no R01 SNAD data
+drop _merge 
+
+*add Demographics info
+merge m:1 SUBID using "Demographics.dta" 
+drop if _merge==2 //Demo data not matched with network data
+drop _merge 
 personage dobdate date_snad, gen(agesnad) //create age based on SNAD date; install personage if not alreday 
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-R01-preexlusion-20211217",replace
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-R01-preexlusion-20211222",replace
 
 restore
 
-*add SNAD data (pilot match)
+
+/*add SNAD data (pilot match)*/
+
+
 merge 1:1 SUBID date_snad using "SNAD-Participant-EGOAGG-pilotmatch-clean.dta" 
 drop if _merge==1 //drop cases have no SNAD data
+drop _merge
+
+*add Demographics info
+merge m:1 SUBID using "Demographics.dta"
+drop if _merge==2 //Demo data not matched with network data
+drop _merge 
+
 personage dobdate date_snad, gen(agesnad) //create age based on SNAD date; install personage if not alreday 
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-pilotmatch-preexlusion-20211217",replace
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-pilotmatch-preexlusion-20211222",replace
 
 
 
@@ -507,25 +534,25 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean d
 
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data"
 
-*Drop people who should not be in the study based on exlusion criteria for SAND: MoCA<10, age<45, Prion disease, and bipolar at T1
+*Drop people who should not be in the study based on exlusion criteria for SAND: MoCA<10, age<45, Prion disease, and bipolar
 
 
 /*R01 only*/
 
 
-use "SNAD-Analysis-R01-preexlusion-20211217",clear
-drop if agesnad<45 | MOCATOTS<10 
-drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease" 
-save "SNAD-Analysis-R01-20211217", replace
+use "SNAD-Analysis-R01-preexlusion-20211222",clear
+drop if agesnad<45 | MOCATOTS<10
+drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
+save "SNAD-Analysis-R01-20211222", replace
 
 
 /*Pilot matched*/
 
 
-use "SNAD-Analysis-pilotmatch-preexlusion-20211217",clear
+use "SNAD-Analysis-pilotmatch-preexlusion-20211222",clear
 
-drop if agesnad<45 | MOCATOTS<10 
-drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease" 
-save "SNAD-Analysis-pilotmatch-20211217", replace
+drop if agesnad<45 | MOCATOTS<10
+drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
+save "SNAD-Analysis-pilotmatch-20211222", replace
 
 
