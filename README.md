@@ -1,6 +1,6 @@
 # SNAD-data-Harmonization
 
-Goal: Harmonize 5+ years of social network data, clinical data, and neuroimaging data from 6 sources
+Goal: Harmonize 5+ years of social network data, clinical data, and neuroimaging data from 6 sources and softwares
 
 Run "Rule_all_participant" do file will excute all necessary do files in order to produce cleaned data
 
