@@ -1,16 +1,14 @@
 ****Author:  Siyun Peng
 ****Date:    2022/01/11
 ****Version: 17
-****Purpose: clean REDcap R01 Informant  
+****Purpose: clean REDcap old R01 Informant  
 
-*to do: cwpuzzle in t2 is a collapse measure of cwpuzzle+puzzlegame+cardgame
+
 
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\temp" //home
-use "REDcap-R01-w2-participant-reformated",clear
-tostring workhours_, replace force
-append using "REDcap-R01-w1-participant-reformated",gen(time)
+use "REDcap-R01-w2-informant-reformated",clear
+append using "REDcap-R01-w1-informant-reformated",gen(time)
 recode time (0=2) (1=1)
-duplicates report SUBID //29 focal did 2 waves
 
 
 
@@ -20,104 +18,72 @@ duplicates report SUBID //29 focal did 2 waves
 
 
 
-rename date_snad date_red
-order marriage_other,after(marriage)
-order nofriends no_friends_,after(friends)
-rename no_friends_ nofriends_feel
-order  activities_hear, after(drvisit_) 
-rename (drvisit_ doctor_) (hearing_drvisit vision_drvisit)
-order other_relation,after(person_relationship_)
-order patient_name,after(assisting_adult_)
-order require_expanded,after(require_care_)
-rename (person_relationship_ other_relation) (patient_relation patient_relation_other)
-order contacts_phone,before(social_media1___1_)
+rename redcap_date date_red
+rename (grade_mother2 grade_father2 education_mother2 education_father2 dem_martial) (grade_mother grade_father education_mother education_father dem_marital)
+rename no_friends* nofriends*feel
+order patient2,after(assisting_adult2_)
 foreach x in twitter instagram pinterest facebook linkedin snapchat whatsapp reddit tumblr skype {
-	order followers_`x',after(sm_`x'1_)
+	order followers_`x',after(sm_`x'2_)
 }
 order sm_other,after(followers_skype)
-order volunteer_hours, after(volunteer_often)
-order other_specify, after(volunteer_why)
-order volunteer_other,after(volunteer_act___14_)
-order religion_other,after(what_religion)
+order religion_other2,after(what_religion)
 
+*cwpuzzle in t2 is a combined measure of cwpuzzle+puzzlegame+cardgame
+list SUBID cwpuzzles_f2_ cwpuzzles_d2_ puzzlegame_f2_ puzzlegame_d2_ cardgame_f2_ cardgame_d2_ if time==2 & !missing(cwpuzzles_f2_) //all 3 only do crossword in T1; no change is needed
 
-************************************************************
-**# 2. rename multiple choices that is not clear
-************************************************************
-rename (volunteer_act___2_ volunteer_act___3_ volunteer_act___4_ volunteer_act___5_ volunteer_act___6_ volunteer_act___7_ volunteer_act___8_ volunteer_act___9_ volunteer_act___10_ volunteer_act___11_ volunteer_act___12_ volunteer_act___13_ volunteer_act___14_) ///
-       (volunteer_act___coach_ volunteer_act___teach_ volunteer_act___mentor_ volunteer_act___usher_ volunteer_act___food_ volunteer_act___cloth_ volunteer_act___fund_ volunteer_act___med_ volunteer_act___office_ volunteer_act___manage_ volunteer_act___art_ volunteer_act___drive_ volunteer_act___other_)
-
-************************************************************
-**# 3. Create sum scores
-************************************************************
-
-rename total_score_ moca_raw
-replace moca_raw=subinstr(moca_raw,"/30","",1) //turn 16/30 into 16
-rename (trailseconds_ trailsecond_) (trail_a_time trail_b_time)
-egen rey_sum=rowtotal(reycorrect_ reycorrect2_ reycorrect3_ reycorrect4_ reycorrect5_),mi
-
-*input delayed rey from paper record
-gen delayed_rey_sum=5 if SUBID==910000
-replace delayed_rey_sum=2 if SUBID==910001
-replace delayed_rey_sum=1 if SUBID==910002
-replace delayed_rey_sum=3 if SUBID==910005
-
-*how to create sum score of facial memory, emotion cognition?
-*how to obtain qualtrics data for facial memory?
-
-*remove _ in the end to be consistent with IADRC mail-in
-rename city_ city2
+*remove _ in the end 
 rename *_ *
 
+ 
+	   
+************************************************************
+**# 2. Create sum scores
+************************************************************
+
+
+
+replace moca_total=subinstr(moca_total,"/30","",1) //turn 16/30 into 16
+replace moca_total=subinstr(moca_total,"/2019","",1) //turn 16/2019 into 16
+
+
+
 
 ************************************************************
-**# 4. Isolate demographics
+**# 3. Isolate demographics
 ************************************************************
 
 
 preserve
 
-keep SUBID time first_name last_name date_of_birth ///
-demographics_sex dem_education dem_military dem_marital dem_biochild dem_nonbio ///
-race gender school military marital children step ///
-longest_job-long_live15 kind_business kind2_business grade_mother grade_father education_mother education_father family_finances //1st line: demo in Demographics; 2nd line: demo in Missing ENSO; 3rd line: demo in wave1 of stress and qol; 4th line: variables that are in demo of new R01
+keep SUBID time name_informant ///
+demographics_sex dem_education dem_military dem_marital dem_biochild dem_nonbio dem_employment dem_jobhours ///
+grade_mother grade_father education_mother education_father //1st line: demo in Demographics; 2-3 lines: demo in Missing ENSO; 4 line: demo in wave1 of stress and qol
 
 *If missing values occurred in T1 demo, then they could be replaced by T2
 sort SUBID time
-foreach x of varlist first_name last_name date_of_birth ///
-demographics_sex dem_education dem_military dem_marital dem_biochild dem_nonbio ///
-race gender school military marital children step ///
-longest_job-long_live15 kind_business kind2_business grade_mother grade_father education_mother education_father family_finances {
+foreach x of varlist name_informant ///
+demographics_sex dem_education dem_military dem_marital dem_biochild dem_nonbio dem_employment dem_jobhours ///
+grade_mother grade_father education_mother education_father {
 	bysort SUBID: replace `x'=`x'[2] if missing(`x') 
 }
 
 duplicates drop SUBID,force //same as keep time==1
-rename (long_business long_business2 long2_business long2_business2 longest_job job_activity kind_business other_describe longest2_job job2_activity kind2_business other_describe2) (year_start1 year_end1 year_start2 year_end2 longest_job1 job_activity1 kind_business1 other_describe1 longest_job2 job_activity2 kind_business2 other_describe2) //consistent with new R01
+
+*to be consistent with New R01 data
 rename (grade_mother grade_father education_mother education_father) ///
-       (education_mother2 education_father2 education_mother1 education_father1)
-*Harmonize variables that collected from multiple sections
-replace demographics_sex=gender if missing(demographics_sex)
-replace dem_education=school if missing(dem_education)
-recode military (1=1) (2=0)
-replace dem_military=military if missing(dem_military)
-replace dem_marital=marital if missing(dem_marital)
-replace dem_biochild=children if missing(dem_biochild)
-replace dem_nonbio=subinstr(dem_nonbio, " step children", "",.)
-destring dem_nonbio,replace
-replace dem_nonbio=step if missing(dem_nonbio)
+       (education_mother2 education_father2 education_mother1 education_father1)  
+rename (demographics_sex dem_education dem_military dem_marital dem_biochild dem_nonbio) (gender school military marital children step) 
 
-drop gender school military marital children step time
-rename (demographics_sex dem_education dem_military dem_marital dem_biochild dem_nonbio) (gender school military marital children step) //consistent with new R01
-
-tostring long_live*,replace 
-
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-participant-demographics.dta",replace
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-informant-demographics.dta",replace
 restore
 
-drop first_name last_name date_of_birth ///
-demographics_sex dem_education dem_military dem_biochild dem_nonbio ///
-race gender school military marital children step ///
-longest_job-long_live15 kind_business kind2_business grade_mother grade_father education_mother education_father family_finances //drop demographics 
+drop name_informant ///
+demographics_sex dem_education dem_military dem_marital dem_biochild dem_nonbio dem_employment dem_jobhours ///
+grade_mother grade_father education_mother education_father //drop demographics 
 
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-participant.dta",replace
+*check wave indicator
+duplicates report SUBID //8 informant did 2 waves, 10339a only in T2
+replace time=1 if SUBID=="10339a"
+
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-informant.dta",replace
 
