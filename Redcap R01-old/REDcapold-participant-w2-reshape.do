@@ -3,8 +3,9 @@
 ****Version: 16
 ****Purpose: clean W2 data for REDcap R01 Participant  
 
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old" //home
+do "REDcapold-R01-w2-import" //import w2 
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\temp" //home
-*do "REDcapold-R01-w2-import" //import w2 
 
 *Interview date
 gen redcap_date = dofc(gift_date) //remove hours and minutes

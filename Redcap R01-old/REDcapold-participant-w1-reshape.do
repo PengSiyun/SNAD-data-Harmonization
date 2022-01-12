@@ -3,8 +3,9 @@
 ****Version: 16
 ****Purpose: clean W1 data for REDcap R01 Participant  
 
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old" //home
+do "REDcapold-R01-w1-import" //import w1 excel from Redcap into stata
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\temp" //home
-*do "REDcapold-R01-w1-import" //import w1 excel from Redcap into stata
 
 *Interview date
 gen redcap_date = dofc(gift_date) //remove hours and minutes
@@ -77,7 +78,7 @@ foreach x in _stress_and_qu _social_activi _physical_acti _caregiving _facial_me
 /*collapse the 5 waves*/
 *manually collapse variables that cannot be handled by loop below
 
-*other variable have variable name (e.g. marriage) in its name
+*Variables that does not consistent wave indicator
 egen marriage=rowmean(marriage_w1 marriage_w2 marriage_w3 marriage_b05645 marriage_w5) 
 local lbl : variable label marriage_w1 //save variable label
 label var marriage "`lbl'" //apply variable label
