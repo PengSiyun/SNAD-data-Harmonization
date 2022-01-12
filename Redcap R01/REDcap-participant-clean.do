@@ -3,8 +3,9 @@
 ****Version: 17
 ****Purpose: clean REDcap R01 Participant  
 
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01" //home
+do "REDcap-R01-Participant-import" //import excel from Redcap into stata
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\temp" //home
-*do "REDcap-R01-Participant-import" //import excel from Redcap into stata
 
 *to do: 
 *how to create sum score of facial memory, emotion cognition?
@@ -69,6 +70,7 @@ order date_iadc,after(date_red)
 
 *race
 gen race=.
+order race,before(race___1)
 replace race=6 if race___6==1 //other
 replace race=5 if race___5==1 //White
 replace race=4 if race___4==1 //pacific islander
@@ -102,7 +104,7 @@ rename (nofriends_w1___1 embarassed_behaviorr) (nofriends embarassed_behavior)
 preserve
 
 keep if redcap_event_name=="demographics_arm_1" //keep demo line
-keep SUBID first_name last_name date_of_birth deceased-education_father2
+keep SUBID-zip_code deceased-education_father2
 
 *prepare for append
 replace step= "0" if step=="o"
