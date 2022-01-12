@@ -14,8 +14,7 @@ clear
 
 
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot missing demo clean"
-do "Pilot-participant-missingdemo-import" //import excel from Redcap into stata
-do "Pilot-participant-missingdemo-clean" //clean
+do "Pilot-participant-missingdemo-clean" //import & clean
 
 
 **********************************************************************
@@ -25,18 +24,15 @@ do "Pilot-participant-missingdemo-clean" //clean
 
 *clean old R01 created by Evan (Evan creates separate Redcap projects for each wave of R01; in each R01 wave, waves were created to track participant's pilot waves+R01 waves. It is an inefficient system, a new R01 project was created to streamline the process)
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old"
-do "REDcapold-R01-w1-import" //import w1 excel from Redcap into stata
-do "REDcapold-participant-w1-reshape" //reshape w1: 1st time R01 participants were assgined to different waves depending on their pilot participantions. Reshape this to represent 1 R01 wave.
-do "REDcapold-R01-w2-import" //import w2 
-do "REDcapold-participant-w2-reshape" //reshape w2
+do "REDcapold-participant-w1-reshape" //import & reshape w1: 1st time R01 participants were assgined to different waves depending on their pilot participantions. Reshape this to represent 1 R01 wave.
+do "REDcapold-participant-w2-reshape" //import & reshape w2
 do "REDcapold-participant-clean" //clean reshaped data
 
 
 
 *clean new R01 created by Peng
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01"
-do "REDcap-R01-Participant-import" //import excel from Redcap into stata
-do "REDcap-participant-clean" //clean
+do "REDcap-participant-clean" //import & clean
 
 
 **********************************************************************
