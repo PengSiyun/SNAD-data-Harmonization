@@ -64,7 +64,7 @@ bysort SUBID: egen tievalue_max=max(tievalue)
 bysort SUBID: gen issue=1 if tievalue_min==tievalue_max & !missing(tievalue_min, tievalue_max)
 drop pickone
 egen pickone=tag(SUBID) if issue==1
-fre SUBID if pickone==1 //46 SUBIDs have issues!
+fre SUBID if pickone==1 //46 SUBIDs have issues! (missing data is better than wrong data)
 
 *for me to handcheck with other waves from other softwares
 preserve
@@ -72,8 +72,8 @@ keep if issue==1 & pickone==1
 keep SUBID tievalue
 export excel "alter-tie-issue",replace 
 restore
-replace issue=. if SUBID==10022 | SUBID==10062 | SUBID==10284 | SUBID==10327 //those 4 have no issue verified by excel handcheck 
-replace tievalue=. if issue==1 //code tievalue for 42 SUBIDs as missing
+replace issue=. if SUBID==10062 | SUBID==10284 //those 2 have no issue verified by excel handcheck 
+replace tievalue=. if issue==1 //code tievalue for 44 SUBIDs as missing
 
 *check interviewer pattern
 preserve
