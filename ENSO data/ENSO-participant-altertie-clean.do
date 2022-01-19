@@ -9,7 +9,7 @@ cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENS
 
 
 ***************************************************************
-//	#1 Check issues in alter-alter ties (A-B and B-A are both in the file! But this does not affect calculation of density)
+**# 1 Check issues in alter-alter ties (A-B and B-A are both in the file! But this does not affect calculation of density)
 ***************************************************************
 multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\ENSO Focal") clear force  //import multiple csv in a folder (ssc install multimport)
 destring respondent_name,force gen(SUBID) 
@@ -92,7 +92,7 @@ save "ENSO-participant-altertie-long.dta",replace
 
 
 ***************************************************************
-//	#2 Clean alter-alter ties full data (A-B and B-A are both in the file! But this does not affect calculation of density)
+**# 2a Clean alter-alter ties full data (A-B and B-A are both in the file! But this does not affect calculation of density)
 ***************************************************************
 bysort SUBID: egen npossties=count(tievalue)
 
@@ -121,7 +121,7 @@ save "ENSO-participant-altertie-EGOAGG-clean.dta", replace
 
 
 ***************************************************************
-//	#3 Clean alter-alter ties pilot data (A-B and B-A are both in the file! But this does not affect calculation of density)
+**# 2b Clean alter-alter ties pilot data (A-B and B-A are both in the file! But this does not affect calculation of density)
 ***************************************************************
 *prepare alter data with pilot generator
 use "ENSO-Participant-alter-LONG-pilot-clean.dta",clear
@@ -173,5 +173,62 @@ replace totnum1=totnum1/2 //it is double counting, so need to divide by 2
 keep SUBID *density sole totnum1
 duplicates drop SUBID, force
 save "ENSO-participant-altertie-EGOAGG-pilot-clean.dta", replace
+
+
+
+
+***************************************************************
+**# 2c Clean alter-alter ties NC match data (A-B and B-A are both in the file! But this does not affect calculation of density)
+***************************************************************
+*prepare alter data with NC latest generator
+use "ENSO-Participant-alter-LONG-match-clean.dta",clear
+rename alter_name alter_a_name
+keep SUBID alter_a_name
+save "ENSO-Participant-alter-LONG-NCmatch-altertie",replace
+
+*prepare alter tie data to merge
+use "ENSO-participant-altertie-long.dta",clear
+*make names consistent
+foreach x of varlist alter_a_name alter_b_name {
+    replace `x' =strtrim(`x') //remove leading and trailing blanks
+    replace `x' =subinstr(`x', ".", "",.) //remove .
+    replace `x' =strlower(`x') //change to lower case
+    replace `x' =stritrim(`x') //consecutive blanks collapsed to one blank
+}
+
+merge m:1 SUBID alter_a_name using "ENSO-Participant-alter-LONG-NCmatch-altertie"
+fre SUBID if _merge==2 //6388 not in alter tie data
+keep if _merge==3 //keep alters in alter_a_name that are  important or health matters 
+drop alter_a_name _merge
+rename alter_b_name alter_a_name
+
+merge m:1 SUBID alter_a_name using "ENSO-Participant-alter-LONG-NCmatch-altertie"
+fre SUBID if _merge==2 //6388 + 4 SUBID with netsize=1
+keep if _merge==3 //keep alters in alter_b_name that are important or health matters 
+
+bysort SUBID: egen npossties=count(tievalue)
+
+bysort SUBID: egen totval=total(tievalue),mi //for value density
+gen density=totval/npossties
+lab var density "Valued density of networks from matrix"
+
+recode tievalue (2/3=1) (0/1=0),gen(tievalue1)
+bysort SUBID: egen totnum=total(tievalue1),mi //for Binary density
+gen bdensity=totnum/npossties
+lab var bdensity "Binary density of networks from matrix"
+
+recode tievalue (1/3=1) (0=0),gen(tievalue2)
+bysort SUBID: egen totnum1=total(tievalue2),mi // for Density of networks know each other
+gen b1density=totnum1/npossties
+lab var b1density "Density of networks know each other"
+
+recode b1density (1=0) (.=.) (else=1),gen(sole) 
+lab var sole "Sole bridge status"
+
+save "ENSO-participant-altertie-long-match-clean.dta", replace
+replace totnum1=totnum1/2 //it is double counting, so need to divide by 2
+keep SUBID *density sole totnum1
+duplicates drop SUBID, force
+save "ENSO-participant-altertie-EGOAGG-match-clean.dta", replace
 
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Code" //reset directory for rule-all do file
