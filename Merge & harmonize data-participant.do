@@ -8,7 +8,7 @@ clear
 
 
 ***************************************************************
-**# 1 Append Pilot participant T1, T2, T3, T4+ ENSO+ NC
+**# 1a Append Pilot participant T1, T2, T3, T4+ ENSO+ NC
 ***************************************************************
 
 
@@ -39,8 +39,35 @@ save "SNAD-Participant-EGOAGG-pilotmatch-clean.dta", replace
 
 
 
+
+
 ***************************************************************
-**# 2 Append full participant ENSO+NC
+**# 1b Append ENSO+ NC matched data (workdays and weekends generators are dropped at early of 2021)
+***************************************************************
+
+
+use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-EGOAGG-match-clean.dta", clear
+append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned\NC-Participant-EGOAGG-match-clean-20211112.dta"
+
+*gen source indicator
+gen source=1 if ENSO==1
+replace source=2 if !missing(NC)
+label define source 1 "ENSO" 2 "NC"
+label values source source
+label var source "Data source"
+
+*gen time indicator
+sort SUBID date_snad
+bysort SUBID: gen time=_n
+
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data"
+save "SNAD-Participant-EGOAGG-match-clean.dta", replace 
+
+
+
+
+***************************************************************
+**# 1c Append full participant ENSO+NC
 ***************************************************************
 
 
@@ -502,10 +529,10 @@ merge m:1 SUBID using "Demographics.dta"
 drop if _merge==2 //Demo data not matched with network data
 drop _merge 
 personage dobdate date_snad, gen(agesnad) //create age based on SNAD date; install personage if not alreday 
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-R01-preexlusion-20211222",replace
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-R01full-preexlusion-20211222",replace
 
 restore
-
+preserve
 
 /*add SNAD data (pilot match)*/
 
@@ -523,6 +550,23 @@ personage dobdate date_snad, gen(agesnad) //create age based on SNAD date; insta
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-pilotmatch-preexlusion-20211222",replace
 
 
+restore
+
+
+/*add SNAD data (NC latest match)*/
+
+
+merge 1:1 SUBID date_snad using "SNAD-Participant-EGOAGG-match-clean.dta" 
+drop if _merge==1 //drop cases have no SNAD data
+drop _merge
+
+*add Demographics info
+merge m:1 SUBID using "Demographics.dta"
+drop if _merge==2 //Demo data not matched with network data
+drop _merge 
+
+personage dobdate date_snad, gen(agesnad) //create age based on SNAD date; install personage if not alreday 
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-R01match-preexlusion-20211222",replace
 
 
 
@@ -540,10 +584,10 @@ cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean dat
 /*R01 only*/
 
 
-use "SNAD-Analysis-R01-preexlusion-20211222",clear
+use "SNAD-Analysis-R01full-preexlusion-20211222",clear
 drop if agesnad<45 | MOCATOTS<10
 drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
-save "SNAD-Analysis-R01-20211222", replace
+save "SNAD-Analysis-R01full-20211222", replace
 
 
 /*Pilot matched*/
@@ -554,5 +598,15 @@ use "SNAD-Analysis-pilotmatch-preexlusion-20211222",clear
 drop if agesnad<45 | MOCATOTS<10
 drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
 save "SNAD-Analysis-pilotmatch-20211222", replace
+
+
+/*R01 matched*/
+
+
+use "SNAD-Analysis-R01match-preexlusion-20211222",clear
+
+drop if agesnad<45 | MOCATOTS<10
+drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
+save "SNAD-Analysis-R01match-20211222", replace
 
 
