@@ -202,14 +202,16 @@ T3: 10075
 */
 
 
-**stoped here & need to fill in generators***
 
 
 
 ************************************************************
-**# 3 make relation type variables consistent accross waves
+**# 3 make relation type and demo variables consistent accross waves
 ************************************************************
 
+
+
+/*relation type*/
 
 
 * Change ENSO T4's different format of alter relation type
@@ -263,19 +265,29 @@ replace nirelinlaw=1 if nirelother_txt=="Daughter's boyfriend"
 replace nirelothmd=1 if nirelother_txt=="Massage TH"
 
 drop *txt*
-*make names consistent
+
+
+/*make names consistent*/
+
+
 replace alter_name =strtrim(alter_name) //remove leading and trailing blanks
 replace alter_name =subinstr(alter_name, ".", "",.) //remove .
 replace alter_name =strlower(alter_name) //change to lower case
 replace alter_name =stritrim(alter_name) //consecutive blanks collapsed to one blank
 
-*make college consistent
+
+/*make college consistent*/
+
+
 recode nicollege* (1=1) (0 2=0) (99=.)
 egen alter_college=rowmean(nicollege*)
 drop nicollege*
 save "ENSO-Participant-alter-LONG.dta", replace 
 
-*merge with uniqueID
+
+/*merge with uniqueID*/
+
+
 import excel using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\UniqueID  W12345-Focal-20210215", clear first 
 keep SUBID TIEID_uniq name 
 rename (name TIEID_uniq) (alter_name alterid)
