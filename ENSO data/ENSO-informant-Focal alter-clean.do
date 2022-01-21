@@ -56,7 +56,7 @@ foreach x of varlist fclose* ftalk* sclose* stalk* fimp* fhlth* fanyelse* fpartn
 * ENSO alter with no alter info (Focal)
 egen fclose=rowmean(fclose*)
 egen ftalk=rowmean(ftalk*)
-egen fstrength=rowmean(fstrength*) //strength have too much values of 1 which should be missing
+egen fstrength=rowmean(fstrength*) 
 egen falter_mi=rowmean(fclose ftalk)
 sum falter_mi fclose ftalk fstrength
 
@@ -192,7 +192,7 @@ egen relmiss=rowtotal(frel*) //119 alters are missing/0 on all relation type
 
 save "ENSO-Informant-Focal alter-LONG.dta",replace
 
-**start here
+
 
 
 ***********************************************************************
@@ -204,16 +204,17 @@ save "ENSO-Informant-Focal alter-LONG.dta",replace
 
 /*retrive alter demo from pilot data*/
 
-use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot clean\clean data\SNAD-Partner-T1234-CleanB-LONG",replace
-keep SUBID alterid time imd imr imb hmd hmr hmb rel* tfem tcollege
+use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot clean\clean data\SNAD-Partner-T1234-Clean-LONG",replace
+keep SUBID alterid time rel* tfem tcollege
+rename alterid_i alterid
 
 *Only keep 1 wave 
 tostring SUBID alterid,replace
 gen id=SUBID+alterid
 destring SUBID alterid,replace
-reshape wide imd imr imb hmd hmr hmb rel* tfem tcollege,i(id) j(time)
+reshape wide rel* tfem tcollege,i(id) j(time)
 drop id
-foreach x in imd imr imb hmd hmr hmb tfem tcollege relpartner relparent relsibling relchild relgrandp relgrandc relauntunc relinlaw relothrel relcowork relneigh relfriend relboss relemploy relschool rellawyer reldoctor relothmed relmental relrelig relchurch relclub relleisure {
+foreach x in tfem_i tcollege_i relpartner_i relparent_i relsibling_i relchild_i relgrandp_i relgrandc_i relauntunc_i relinlaw_i relothrel_i relcowork_i relneigh_i relfriend_i relboss_i relemploy_i relschool_i rellawyer_i reldoctor_i relothmed_i relmental_i relrelig_i relchurch_i relclub_i relleisure_i {
 	replace `x'4=`x'3 if missing(`x'4) 
 	replace `x'4=`x'2 if missing(`x'4)
 	replace `x'4=`x'1 if missing(`x'4)
@@ -221,14 +222,14 @@ foreach x in imd imr imb hmd hmr hmb tfem tcollege relpartner relparent relsibli
 	drop `x'1 `x'2 `x'3
 } //use the most recent wave demo info
 
-merge 1:1 SUBID alterid using "ENSO-Participant-alter-LONG.dta" 
+merge 1:1 SUBID alterid using "ENSO-Informant-Focal alter-LONG.dta" 
 drop if _merge==1 //drop pilot alters did not match with ENSO old alters
 drop _merge
 
 
 /*retrive gender info*/
 
-replace nifemale=tfem if missing(nifemale)
+replace alter_female=tfem if missing(alter_female)
 drop tfem
 
 /*retrive education info*/
@@ -238,29 +239,29 @@ drop tcollege
 
 /*retrive relation type info*/
 
-replace nirelothrl=relothrel if relmiss==0
-replace nirelchrch=relchurch if relmiss==0
-replace nirelemplr=relboss if relmiss==0
-replace nirelcowrk=relcowork if relmiss==0
-replace nirelemple=relemploy if relmiss==0
-replace nirelfrnd=relfriend if relmiss==0
-replace nirelantun=relauntunc if relmiss==0
-replace nirelstdnt=relschool if relmiss==0
-replace nirelsib=relsibling if relmiss==0
-replace nirelgprnt=relgrandp if relmiss==0
-replace nirelinlaw=relinlaw if relmiss==0
-replace nirelgchld=relgrandc if relmiss==0
-replace nirelothmd=relothmed if relmiss==0
-replace nirelrabbi=relrelig if relmiss==0
-replace nirelthrpy=relmental if relmiss==0
-replace nirellwyr=rellawyer if relmiss==0
-replace nirelpart=relpartner if relmiss==0
-replace nirelnghbr=relneigh if relmiss==0
-replace nirelclub=relclub if relmiss==0
-replace nireldoc=reldoctor if relmiss==0
-replace nirelchld=relchild if relmiss==0
-replace nirelprnt=relparent if relmiss==0
-replace nirelactvt=relleisure if relmiss==0
+replace frelothrl=relothrel if relmiss==0
+replace frelchrch=relchurch if relmiss==0
+replace frelemplr=relboss if relmiss==0
+replace frelcowrk=relcowork if relmiss==0
+replace frelemple=relemploy if relmiss==0
+replace frelfrnd=relfriend if relmiss==0
+replace frelantun=relauntunc if relmiss==0
+replace frelstdnt=relschool if relmiss==0
+replace frelsib=relsibling if relmiss==0
+replace frelgprnt=relgrandp if relmiss==0
+replace frelinlaw=relinlaw if relmiss==0
+replace frelgchld=relgrandc if relmiss==0
+replace frelothrmd=relothmed if relmiss==0
+replace frelrabbi=relrelig if relmiss==0
+replace frelthrpy=relmental if relmiss==0
+replace frellwyr=rellawyer if relmiss==0
+replace frelpart=relpartner if relmiss==0
+replace frelnghbr=relneigh if relmiss==0
+replace frelclub=relclub if relmiss==0
+replace freldoc=reldoctor if relmiss==0
+replace frelchld=relchild if relmiss==0
+replace frelprnt=relparent if relmiss==0
+replace frelactvt=relleisure if relmiss==0
 drop rel*
 
 
@@ -272,6 +273,9 @@ drop rel*
 ************************************************************
 
 
+*drop INFORMANT variables
+drop s*
+
 *******clean name interpretors 
 bysort SUBID: egen netsize=count(alter_name)
 lab var netsize "Total number of alters mentioned" 
@@ -279,22 +283,34 @@ lab var netsize "Total number of alters mentioned"
 bysort SUBID: egen pcollege=mean(alter_college)
 lab var pcollege "Proportion college in network"
 
+/* strust squedoc; ftrust, fquedoc not asked (look at codebook to make sure all interpretors are cleaned) 
 foreach x of varlist nitrust* {
 	tostring `x',replace
 	replace `x' =substr(`x',1,1) //remove " in string
 	destring `x',replace
 }
-destring nirace5 niage,replace force
-encode niqdoc4,gen(niqdoc4_copy)
-drop niqdoc4
-recode niqdoc4_copy (4=3) (5=1) (6=2),gen(niqdoc4)
-drop niqdoc4_copy
-foreach x of varlist nirace niage nilive niqdoc nitrust nimemloss {
-	egen `x'new=rowmean(`x' `x'2 `x'3 `x'4 `x'5)
-	drop `x' `x'2 `x'3 `x'4 `x'5
+*/
+
+replace frace2=subinstr(frace2,`"""', "", 1) //remove " in string
+replace frace3="3" if frace3=="âWhiteâ:â3â"
+replace frace4="1" if frace4=="âAsianâ:â1â"
+replace frace4="2" if frace4=="âAfrican American/Blackâ:â2â"
+replace frace4="3" if frace4=="âWhiteâ:â3â"
+replace frace4="4" if frace4=="âOtherâ:â4â "
+
+replace flive3="1" if flive3=="âLess than 30 minutes awayâ:â1â"
+replace flive3="2" if flive3=="â30 minutes to an hour awayâ:â2â"
+replace flive3="4" if flive3=="âMore than 2 hours awayâ:â4â"
+
+destring frace* fage* flive*,replace
+
+foreach x in frace fage flive {
+	egen `x'new=rowmean(`x'1 `x'2 `x'3 `x'4 `x'5)
+	drop `x'1 `x'2 `x'3 `x'4 `x'5
 	rename `x'new `x'
-}
-rename (nirace niage) (alter_race alter_age)
+} //add strust squedoc here
+
+rename (frace fage) (alter_race alter_age)
 bysort SUBID: egen mage=mean(alter_age)
 lab var mage "Mean age in network"
 bysort SUBID: egen sdage=sd(alter_age)
@@ -306,7 +322,7 @@ recode alter_race (1 2 4=0) (3=1),gen(white)
 bysort SUBID: egen pwhite=mean(white)
 lab var pwhite "Proportion White in network"
 
-rename nilive alterprox
+rename flive alterprox
 label define alterprox 1 "<30 mins" 2 "30-60 mins" 3 "1-2 hour" 4 ">2 hour"
 label values alterprox alterprox
 bysort SUBID: egen mprox=mean(alterprox)
@@ -315,17 +331,7 @@ recode alterprox (2/4=0),gen(prox30)
 bysort SUBID: egen pprox=mean(prox30)
 lab var prox30 "Proportion <30 mins"
 
-rename nimemloss alterhknow
-recode alterhknow (1=3) (2=2) (3=1)
-label define alterhknow 1 "Not very much" 2 "Some" 3 "A lot"
-label values alterhknow alterhknow
-bysort SUBID: egen mknow=mean(alterhknow)
-lab var mknow "Mean knowledge of aging problems in network, HI=MORE"
-recode alterhknow (1 2=0) (3=1),gen(tknow)
-lab var tknow "Alter knows a lot about memory loss, confusion, or other similar problems that you might be experiencing as you age"
-bysort SUBID: egen pknow=mean(tknow)
-lab var pknow "Proportion knows a lot about aging"
-
+/*
 rename nitrust alterdtr
 recode alterdtr (1=3) (2=2) (3=1)
 label define alterdtr 1 "Not very much" 2 "Most of the time" 3 "A lot"
@@ -342,37 +348,26 @@ label define alterquestion 1 "Rarely" 2 "Sometimes" 3 "Often"
 label values alterquestion alterquestion
 bysort SUBID: egen mquestion=mean(alterquestion)
 lab var mquestion "Mean questions doctors in network, HI=MORE"
+*/
 
-foreach x of varlist niclose* {
-	tostring `x',replace
-	replace `x' =substr(`x',1,1) //remove " in string
-	destring `x',replace
-}
-egen niclosenew=rowmean(niclose*)
-drop niclose niclose2 niclose3 niclose4 niclose5
-rename niclosenew niclose
-gen tclose=niclose
+drop fclose? ftalk? fstrength? //fsclose: informant's closeness to FOCAL alters
+gen tclose=fclose
 recode tclose (2/3=0)
 lab var tclose "Alter is very close"
 bysort SUBID: egen pclose=mean(tclose)
 lab var pclose "Proportion very close in network"
-gen howcloser=niclose
+gen howcloser=fclose
 recode howcloser (1=3)(3=1)
 bysort SUBID: egen mclose=mean(howcloser)
 lab var mclose "Mean closeness in network, HI=MORE"
 drop howcloser 
 
-foreach x of varlist nitalk {
-	egen `x'new=rowmean(`x' `x'2 `x'3 `x'4 `x'5)
-	drop `x' `x'2 `x'3 `x'4 `x'5
-	rename `x'new `x'
-}
-gen tfreq=nitalk
+gen tfreq=ftalk
 recode tfreq (2/3=0)
 lab var tfreq "Alter sees or talks to ego often"
 bysort SUBID: egen pfreq=mean(tfreq)
 lab var pfreq "Proportion often in contact in network"
-gen seetalkr=nitalk
+gen seetalkr=ftalk
 recode seetalkr (1=3)(3=1)
 bysort SUBID: egen mfreq=mean(seetalkr)
 lab var mfreq "Mean freq of contact in network, HI=MORE"
@@ -380,27 +375,36 @@ bysort SUBID: egen sdfreq=sd(seetalkr)
 lab var sdfreq "Standard deviation of freq of contact in network"
 drop seetalkr
 
-foreach x of varlist nisupcare nisupcash nisupchor nisuplstn nisupsugg {
-	egen `x'new=rowmean(`x' `x'2 `x'3 `x'4 `x'5)
-	drop `x' `x'2 `x'3 `x'4 `x'5
+bysort SUBID: egen mstrength=mean(fstrength)
+lab var mstrength "Mean tie strength in network, HI=MORE"
+bysort SUBID: egen weakest=min(fstrength)
+lab var weakest "Minimum tie strength score"
+bysort SUBID: egen iqrstrength=iqr(fstrength)
+lab var iqrstrength "Interquartile range of tie strength"
+bysort SUBID: egen sdstrength=sd(fstrength)
+lab var sdstrength "Standard deveiation of tie strength"
+
+foreach x in fsupcare fsupcash fsupchor fsuplstn fsupsugg {
+	egen `x'new=rowmean(`x'1 `x'2 `x'3 `x'4 `x'5)
+	drop `x'1 `x'2 `x'3 `x'4 `x'5
 	rename `x'new `x'
 }
-egen numsup=rowtotal(nisupcare nisupcash nisupchor nisuplstn nisupsugg),mi
+egen numsup=rowtotal(fsupcare fsupcash fsupchor fsuplstn fsupsugg),mi
 replace numsup=. if missing(alter_name)
 lab var numsup "Number of support functions"
 bysort SUBID: egen msupport=mean(numsup)
 lab var msupport "Mean number of support functions in network, HI=MORE"
 
-egen numsup3=rowtotal(nisupcare nisuplstn nisupsugg),mi
-replace numsup3=. if missing(name)
+egen numsup3=rowtotal(fsupcare fsuplstn fsupsugg),mi
+replace numsup3=. if missing(alter_name)
 bysort SUBID: egen msupport3=mean(numsup3)
 lab var msupport3 "Mean number of support functions in network (listen, care, advice), HI=MORE"
 
-foreach x of varlist nisupcare nisupcash nisupchor nisuplstn nisupsugg {
+foreach x of varlist fsupcare fsupcash fsupchor fsuplstn fsupsugg {
 	replace `x'=. if missing(alter_name)
 	bysort SUBID: egen p`x'=mean(`x') //missing means no alter
 }
-rename (pnisupcare pnisupcash pnisupchor pnisuplstn pnisupsugg) ///
+rename (pfsupcare pfsupcash pfsupchor pfsuplstn pfsupsugg) ///
        (pcare ploan pchores plisten padvice)
 lab var plisten "Prop. listen to you when upset"
 lab var pcare "Prop. tell you they care about what happens to you"
@@ -408,61 +412,45 @@ lab var padvice "Prop. give suggestions when you have a problem"
 lab var pchores "Prop. help you with daily chores"
 lab var ploan "Prop. loan money when you are short of money"
 
-foreach x of varlist nihassle* {
-	tostring `x',replace
-	replace `x' =substr(`x',1,1) //remove " in string
-	destring `x',replace
-}
-egen nihasslenew=rowmean(nihassle*)
-drop nihassle nihassle2 nihassle3 nihassle4 nihassle5
-rename nihasslenew nihassle
-revrs nihassle, replace //reverse code
-bysort SUBID: egen mhassles=mean(nihassle)
+replace fhassle3="3" if fhassle3=="âNot reallyâ:â3â"
+replace fhassle3="2" if fhassle3=="âSometimesâ:â2â"
+destring fhassle3,replace
+
+egen fhassle=rowmean(fhassle*)
+drop fhassle?
+revrs fhassle, replace //reverse code
+bysort SUBID: egen mhassles=mean(fhassle)
 lab var mhassles "Mean hassles in network, HI=MORE)"
-recode nihassle (1=0) (2/3=1),gen(thassles)
+recode fhassle (1=0) (2/3=1),gen(thassles)
 lab var thassles "Alter hassles, causes problems sometimes or a lot"
 bysort SUBID: egen phassles=mean(thassles)
 lab var phassles "Proportion that hassle, cause problems in network"
 
-foreach x of varlist nistrength {
-	egen `x'new=rowmean(`x' `x'2 `x'3 `x'4 `x'5)
-	drop `x' `x'2 `x'3 `x'4 `x'5
-	rename `x'new `x'
-}
-bysort SUBID: egen mstrength=mean(nistrength)
-lab var mstrength "Mean tie strength in network, HI=MORE"
-bysort SUBID: egen weakest=min(nistrength)
-lab var weakest "Minimum tie strength score"
-bysort SUBID: egen iqrstrength=iqr(nistrength)
-lab var iqrstrength "Interquartile range of tie strength"
-bysort SUBID: egen sdstrength=sd(nistrength)
-lab var sdstrength "Standard deveiation of tie strength"
-
-gen tfem=nifemale
+gen tfem=alter_female
 lab var tfem "Alter is female"
-drop nifemale
+drop alter_female
 bysort SUBID: egen pfem=mean(tfem)
 lab var pfem "Proportion female in network"
 
 *diversity measure (Cohen): 25 types total in data (nirelother nirelfinan are two extra in ENSO)
-egen othfam=rowtotal(nirelsib nirelantun nirelgprnt nirelgchld nirelothrl),mi //group into other family
-egen fri=rowtotal(nirelfrnd nirelactvt),mi //group into friend
-egen work=rowtotal(nirelemple nirelemplr nirelcowrk),mi //group into workmate
-egen church=rowtotal(nirelrabbi nirelchrch),mi //group into religious group
-egen prof=rowtotal(nirelthrpy nirelothmd nireldoc nirellwyr nirelfinan),mi //group into professional group
+egen othfam=rowtotal(frelsib frelantun frelgprnt frelgchld frelothrl),mi //group into other family
+egen fri=rowtotal(frelfrnd frelactvt),mi //group into friend
+egen work=rowtotal(frelemple frelemplr frelcowrk),mi //group into workmate
+egen church=rowtotal(frelrabbi frelchrch),mi //group into religious group
+egen prof=rowtotal(frelthrpy frelothrmd freldoc frellwyr frelfince),mi //group into professional group
 recode othfam fri work church prof (1/10=1)
-foreach x of varlist othfam fri work church prof nirelpart nirelprnt nirelinlaw nirelchld nirelnghbr nirelstdnt nirelclub {
+foreach x of varlist othfam fri work church prof frelpart frelprnt frelinlaw frelchld frelnghbr frelstdnt frelclub {
 egen u`x' = tag(SUBID `x') if `x'>0 & !missing(`x') // e.g., count multiple friends as 1 friend
 }
-egen relmiss=rowtotal(nirelother nirelchrch nirelemplr nirelfrnd nirelothrl nirelantun nirelstdnt nirelsib nirelgprnt nirelinlaw nirelgchld nirelothmd nirelrabbi nirelthrpy nirellwyr nirelprnt nirelnghbr nirelclub nirelactvt nirelfinan nirelcowrk nireldoc nirelpart nirelemple nirelchld) //114 alters are missing/0 on all relation type (6+1+107=114)
+egen relmiss=rowtotal(frelother frelchrch frelemplr frelfrnd frelothrl frelantun frelstdnt frelsib frelgprnt frelinlaw frelgchld frelothrmd frelrabbi frelthrpy frellwyr frelprnt frelnghbr frelclub frelactvt frelfince frelcowrk freldoc frelpart frelemple frelchld) //6 alters are missing/0 on all relation type
 
-recode uothfam ufri uwork uchurch uprof unirelpart unirelprnt unirelinlaw unirelchld unirelnghbr unirelstdnt unirelclub (0=.) if relmiss==0 & netsize>0 //if a named alter is not specified for relation type then treat as missing
-bysort SUBID: egen diverse=total(uothfam+ufri+uwork+uchurch+uprof+unirelpart+unirelprnt+unirelinlaw+unirelchld+unirelnghbr+unirelstdnt+unirelclub),mi // cohen's 12 categories(volunteer is not in this data thus leaving us 11 of 12 Cohen's categories, and I add a group call prof as a replacement)
-drop uothfam-unirelclub othfam fri work church prof
+recode uothfam ufri uwork uchurch uprof ufrelpart ufrelprnt ufrelinlaw ufrelchld ufrelnghbr ufrelstdnt ufrelclub (0=.) if relmiss==0 & netsize>0 //if a named alter is not specified for relation type then treat as missing
+bysort SUBID: egen diverse=total(uothfam+ufri+uwork+uchurch+uprof+ufrelpart+ufrelprnt+ufrelinlaw+ufrelchld+ufrelnghbr+ufrelstdnt+ufrelclub),mi // cohen's 12 categories(volunteer is not in this data thus leaving us 11 of 12 Cohen's categories, and I add a group call prof as a replacement)
+drop uothfam-ufrelclub othfam fri work church prof
 lab var diverse "Network diversity" 
 fre diverse
 
-egen tkin=rowtotal(nirelsib nirelantun nirelgprnt nirelgchld nirelothrl nirelpart nirelprnt nirelinlaw nirelchld)
+egen tkin=rowtotal(frelsib frelantun frelgprnt frelgchld frelothrl frelpart frelprnt frelinlaw frelchld)
 recode tkin (1/9=1)
 replace tkin=. if missing(alter_name)
 lab var tkin "Alter is family member"
@@ -470,11 +458,10 @@ bysort SUBID: egen pkin=mean(tkin)
 lab var pkin "Proportion of network that is kin"
 
 gen ENSO=1
-save "ENSO-Participant-alter-LONG-clean.dta", replace 
-
+save "ENSO-Informant-Focal alter-LONG-clean.dta", replace 
 duplicates drop SUBID, force
-keep SUBID date_snad netsize-ENSO
-drop tfem tkin tclose tfreq thassles numsup white alter_race alter_age numsup numsup3 prox30 tknow ttrust //drop alter level variables
-save "ENSO-Participant-alter-EGOAGG-clean.dta", replace 
+keep SUBID created_on netsize-ENSO
+drop tfem tkin tclose tfreq thassles numsup white alter_race alter_age numsup numsup3 prox30 //drop alter level variables
+save "ENSO-Informant-Focal alter-EGOAGG-clean.dta", replace 
 
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Code" //reset directory for rule-all do file
