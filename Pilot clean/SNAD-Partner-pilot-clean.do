@@ -1192,6 +1192,18 @@ rename trustdoctors_hc4 trustdoctors30
 rename difficult_hc4 difficult30
 rename strong_hc4 strong30
 
+*name generators are not created in REDcap T1
+forvalues i=1/7 {
+	gen imd`i' = 1 if !missing(name_ia`i')
+	gen hmd`i' = 1 if !missing(name_ha`i')
+}
+forvalues i=1/4 {
+	gen imr`i' = 1 if !missing(name_ib`i')
+	gen hmr`i' = 1 if !missing(name_hb`i')
+	gen imb`i' = 1 if !missing(name_ic`i')
+	gen hmb`i' = 1 if !missing(name_hc`i')
+}
+
 rename name_ia1 name1
 rename name_ia2 name2
 rename name_ia3 name3
@@ -1663,16 +1675,6 @@ rename	matrix_hc3_hc4	matrix_29_30
 
 drop if set_study_id_complete==0 //drop people did not do interviews (this indicator is accurate)
 
-/* name1-name15 are important matter, name16-name30 are health matter
-egen imd=rownonmiss(name1-name15), strok //strok specifies name is string variables
-egen hmd=rownonmiss(name16-name30), strok 
-recode (imd hmd) (0=0) (1/15=1) 
-bysort SUBID: egen pimd=mean(imd)
-replace hmd=. if missing(name)
-bysort SUBID: egen phmd=mean(hmd)
-lab var pimd "Proportion important matters discussants"
-lab var phmd "Proportion health matters discussants"
-*/
 
 recode matrix_1_2-matrix_29_30 (1=3)(2=2)(3=1)(4=0) // 0 = do not know each other
 label define alterclose 0 "Dont know each other" 1 "Not very close" 2 "Sort of close" 3 "Very close"
@@ -1713,8 +1715,7 @@ drop matrix_1_2-matrix_29_30 totnum newmatrix_1_2-newmatrix_29_30
 /* Reshaping data into long format to create alter specific variables*/
 ********************************************************************************
 
-*imd hmd need to be added to the reshape command
-reshape long name gender relpartner relparent relsibling relchild relgrandp ///
+reshape long name imd imr imb hmd hmr hmb gender relpartner relparent relsibling relchild relgrandp ///
 relgrandc relauntunc relinlaw relothrel relcowork relneigh relfriend relboss relemploy relschool ///
 rellawyer reldoctor relothmed relmental relrelig relchurch relclub relleisure howclose seetalk knowabout ///
 trustdoctors listen care advice chores loan difficult strong, i(SUBID) j(TIEID)
