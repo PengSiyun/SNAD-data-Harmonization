@@ -90,6 +90,8 @@ replace race=3 if race___3==1 //Black
 drop race___*
 label define race 1 "American Indian or Alaskan Native" 2 "Asian" 3 "African American" 4 "Pacific Islander" 5 "White" 6 "Other"
 label values race race
+replace SUBID =subinstr(SUBID, "a", "",.) //remove a
+destring SUBID,replace
 
 
 
