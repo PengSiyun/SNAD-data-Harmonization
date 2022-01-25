@@ -20,7 +20,14 @@ recode time (0=2) (1=1)
 
 rename redcap_date date_red
 rename (grade_mother2 grade_father2 education_mother2 education_father2 dem_martial) (grade_mother grade_father education_mother education_father dem_marital)
-rename no_friends* nofriends*feel
+
+*rename variables that are asked both for FOCAL and INFORMANT
+rename (health2_ energy2_ spirits2_ living_situation2_ memory2_ family2_ marriage2_ friends2_ no_friends2_ self2_ do_chores2_ do_fun2_ money2_ whole2_ marriage_other2 nofriends2_) ///
+       (health_f energy_f spirits_f living_situation_f memory_f family_f marriage_f friends_f no_friends_f self_f do_chores_f do_fun_f money_f whole_f marriage_other_f nofriends_f)
+rename (health3_ energy3_ spirits3_ living3_ memory3_ family3_ marriage3_ friends3_ no_friends3_ self3_ do_chores3_ do_fun3_ money3_ whole3_ marriage_other3 nofriends3_) ///
+       (health_i energy_i spirits_i living_situation_i memory_i family_i marriage_i friends_i no_friends_i self_i do_chores_i do_iun_i money_i whole_i marriage_other_i nofriends_i)
+rename no_friends_* nofriends_feel_*
+
 order patient2,after(assisting_adult2_)
 foreach x in twitter instagram pinterest facebook linkedin snapchat whatsapp reddit tumblr skype {
 	order followers_`x',after(sm_`x'2_)
@@ -73,6 +80,8 @@ duplicates drop SUBID,force //same as keep time==1
 rename (grade_mother grade_father education_mother education_father) ///
        (education_mother2 education_father2 education_mother1 education_father1)  
 rename (demographics_sex dem_education dem_military dem_marital dem_biochild dem_nonbio) (gender school military marital children step) 
+replace SUBID =subinstr(SUBID, "a", "",.) //remove a
+destring SUBID,replace
 
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-informant-demographics.dta",replace
 restore
@@ -84,6 +93,8 @@ grade_mother grade_father education_mother education_father //drop demographics
 *check wave indicator
 duplicates report SUBID //8 informant did 2 waves, 10339a only in T2
 replace time=1 if SUBID=="10339a"
+replace SUBID =subinstr(SUBID, "a", "",.) //remove a
+destring SUBID,replace
 
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-informant.dta",replace
 
