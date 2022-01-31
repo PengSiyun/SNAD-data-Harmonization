@@ -52,7 +52,7 @@ save "NC-informant-ego-20211112.dta", replace
 
 
 ***************************************************************
-**# 2 Read alter level data
+**# 2 Read alter level data (only collect relation types after 2021)
 ***************************************************************
 
 
@@ -121,7 +121,8 @@ drop prevalterimcat_*
 
 /*keep FOCAL alter variables*/
 
-keep SUBID id networkcanvasegouuid networkcanvasuuid alter_name alterid prevalter broughtforward stilldiscuss alterim* alterhm* alteret* alterrel_* previnterpreter altermissing altermissingother name_gen
+keep randomi SUBID id networkcanvasegouuid networkcanvasuuid informantname focalsubname interviewername NC alter_name alterid prevalter broughtforward stilldiscuss alterim* alterhm* alteret* alterrel_* previnterpreter altermissing altermissingother name_gen date_snad ///
+altersex alterrace altercollege alterage altercloseego alterfreqcon alterprox  alterhknow alterdtr alterquestion altersupfunc_* alterhassle altercls110 egoaltercloseinformant //last 3 rows are FOCAL alter questions that were dropped in 2021 of NC
 
 /*drop previous alters that entered by mistakes*/
 
@@ -137,10 +138,9 @@ drop if name_gen==0
 
 
 ***************************************************************
-**# 4 Check and fix altername and alterid across SNAD in csv files
+**#4 Check and fix altername and alterid across SNAD in csv files
 ***************************************************************
 
-**start here
 
 
 preserve
@@ -158,33 +158,33 @@ duplicates list SUBID alterid date_snad //none should exist, otherwise fix.
 duplicates drop SUBID alterid alter_name,force //drop alters in multiple waves
 duplicates list SUBID alter_name //none should exist, otherwise fix 
 rename alterid alterid_nc
-save "NC-altername-match",replace
+save "NC-informant focal-altername-match",replace
 
 rename (alterid_nc alter_name) (alterid alter_name_nc)
-duplicates list SUBID alterid //8 alters have different spelling in 2 waves (10155: 5,21; 10328:1; 10339:40; )
-duplicates drop SUBID alterid,force //Those 8 are safe to drop different spelling
-save "NC-alterid-match",replace
+duplicates list SUBID alterid //0 alters have different spelling in 2 waves 
+duplicates drop SUBID alterid,force //drop different spelling
+save "NC-informant focal-alterid-match",replace
 
 
 /*check alterid with uniqueid list*/
 
 *same name but different alterid
 
-import excel using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\UniqueID  W12345-Focal-20210215", clear first 
+import excel using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\UniqueID W12345-Informant-Focal alter", clear first 
 keep SUBID TIEID_uniq name 
 rename (name TIEID_uniq) (alter_name alterid)
 duplicates drop SUBID alter_name,force
-merge 1:1 SUBID alter_name using "NC-altername-match",keepusing(SUBID alterid_nc alter_name) 
+merge 1:1 SUBID alter_name using "NC-informant focal-altername-match",keepusing(SUBID alterid_nc alter_name) 
 sort SUBID alter_name
 keep if _merge==3
 list SUBID alter_name alterid* if alterid != alterid_nc //none should exist, otherwise fix
 
 *same alterid but different name
-import excel using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\UniqueID  W12345-Focal-20210215", clear first 
+import excel using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\UniqueID W12345-Informant-Focal alter", clear first 
 keep SUBID TIEID_uniq name 
 rename (TIEID_uniq name) (alterid alter_name)
 duplicates drop SUBID alterid,force
-merge 1:1 SUBID alterid using "NC-alterid-match",keepusing(SUBID alterid alter_name_nc) 
+merge 1:1 SUBID alterid using "NC-informant focal-alterid-match",keepusing(SUBID alterid alter_name_nc) 
 sort SUBID alterid
 keep if _merge==3
 list SUBID alterid alter_name* if alter_name != alter_name_nc //double check to make sure people with same id are indeed different spelling rather than different people
@@ -194,162 +194,85 @@ list SUBID alterid alter_name* if alter_name != alter_name_nc //double check to 
 
 
 ***********************************************************************
-**# 5. Retrive old alters' relation type and other demo (i.e., gender,race, age, college) from ENSO/pilot (only needed for early interviews in NC)
+**#5. Retrive old alters' relation type and other demo (i.e., gender,race, age, college) from ENSO (only needed for early interviews in NC)
 ***********************************************************************
+
 
 
 restore
 /*clean alter demo for merge with ENSO&pilots*/
 
-
-destring SUBID altersex altercollege alterage alterrace,replace force
+replace SUBID =subinstr(SUBID, "a", "",.) //remove a
+destring SUBID,replace
+destring altersex altercollege alterage alterrace,replace force
 recode altercollege (-8=.) (1=1) (2=0)
 recode altersex (-8=.) (2=1) (1=0),gen(tfem)
 drop altersex
 recode alterrace (3=4) (4=3) (5=4)
 label define alterrace 1 "Asian" 2 "African American" 3 "White" 4 "Other"
 label values alterrace alterrace
-save "NC-Participant-LONG-20211112.dta", replace 
+save "NC-informant focal-LONG-20211112.dta", replace 
 
 
 /*Merge W1 NC with missing alter demo with ENSO*/
 
 
 keep if NC==1
-egen relmiss=rowtotal(alterrel*) //209 alters are missing/0 on all relation type
+egen relmiss=rowtotal(alterrel*) //40 alters are missing/0 on all relation type
 
 *rename for merge with ENSO
 rename (altercollege alterage alterrace) (alter_college alter_age alter_race)
 
 *merge NC with ENSO
-merge 1:1 SUBID alterid using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\temp\ENSO-Participant-alter-LONG-clean.dta",keepusing(nirel* tfem alter_race alter_age alter_college) update //update missing values in tfem alter_race alter_age alter_college of master data with values in using data
+merge 1:1 SUBID alterid using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\temp\ENSO-Informant-Focal alter-LONG-clean.dta",keepusing(frel* tfem alter_race alter_age alter_college) update //update missing values in tfem alter_race alter_age alter_college of master data with values in using data
 drop if _merge==2 //drop ENSO alters did not match with NC old alters
 drop _merge
 
 *retrive relation type (it cannot be done with update because we need to use relmiss to identify missing)
-replace alterrel_1=nirelpart if relmiss==0
-replace alterrel_2=nirelprnt if relmiss==0
-replace alterrel_3=nirelsib if relmiss==0
-replace alterrel_4=nirelchld if relmiss==0
-replace alterrel_5=nirelgprnt if relmiss==0
-replace alterrel_6=nirelgchld if relmiss==0
-replace alterrel_7=nirelantun if relmiss==0
-replace alterrel_8=nirelinlaw if relmiss==0
-replace alterrel_9=nirelothrl if relmiss==0
-replace alterrel_10=nirelcowrk if relmiss==0
-replace alterrel_11=nirelnghbr if relmiss==0
-replace alterrel_12=nirelfrnd if relmiss==0
-replace alterrel_13=nirelemplr if relmiss==0
-replace alterrel_14=nirelemple if relmiss==0
-replace alterrel_15=nirelstdnt if relmiss==0
-replace alterrel_16=nirellwyr if relmiss==0
-replace alterrel_17=nireldoc if relmiss==0
-replace alterrel_18=nirelothmd if relmiss==0
-replace alterrel_19=nirelthrpy if relmiss==0
-replace alterrel_20=nirelrabbi if relmiss==0
-replace alterrel_21=nirelchrch if relmiss==0
-replace alterrel_22=nirelclub if relmiss==0
-replace alterrel_23=nirelactvt if relmiss==0
+replace alterrel_1=frelpart if relmiss==0
+replace alterrel_2=frelprnt if relmiss==0
+replace alterrel_3=frelsib if relmiss==0
+replace alterrel_4=frelchld if relmiss==0
+replace alterrel_5=frelgprnt if relmiss==0
+replace alterrel_6=frelgchld if relmiss==0
+replace alterrel_7=frelantun if relmiss==0
+replace alterrel_8=frelinlaw if relmiss==0
+replace alterrel_9=frelothrl if relmiss==0
+replace alterrel_10=frelcowrk if relmiss==0
+replace alterrel_11=frelnghbr if relmiss==0
+replace alterrel_12=frelfrnd if relmiss==0
+replace alterrel_13=frelemplr if relmiss==0
+replace alterrel_14=frelemple if relmiss==0
+replace alterrel_15=frelstdnt if relmiss==0
+replace alterrel_16=frellwyr if relmiss==0
+replace alterrel_17=freldoc if relmiss==0
+replace alterrel_18=frelothrmd if relmiss==0
+replace alterrel_19=frelthrpy if relmiss==0
+replace alterrel_20=frelrabbi if relmiss==0
+replace alterrel_21=frelchrch if relmiss==0
+replace alterrel_22=frelclub if relmiss==0
+replace alterrel_23=frelactvt if relmiss==0
 
-drop relmiss nirel*
-egen relmiss=rowtotal(alterrel*) //54 alters are still missing/0 on all relation type
-
-
-/*Merge W1 NC with missing alter demo with Pilots*/
-
-
-*rename for merge with pilots
-rename (alter_college) (tcollege)
-
-*merge NC with pilots
-preserve
-use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot clean\clean data\SNAD-Participant-T1234-CleanB-LONG",replace
-keep SUBID alterid time rel* tfem tcollege
-
-*Only keep 1 wave 
-tostring SUBID alterid,replace
-gen id=SUBID+alterid
-destring SUBID alterid,replace
-reshape wide rel* tfem tcollege,i(id) j(time)
-drop id
-foreach x in tfem tcollege relpartner relparent relsibling relchild relgrandp relgrandc relauntunc relinlaw relothrel relcowork relneigh relfriend relboss relemploy relschool rellawyer reldoctor relothmed relmental relrelig relchurch relclub relleisure {
-	replace `x'4=`x'3 if missing(`x'4) 
-	replace `x'4=`x'2 if missing(`x'4)
-	replace `x'4=`x'1 if missing(`x'4)
-	rename `x'4 `x'
-	drop `x'1 `x'2 `x'3
-} //use the most recent wave demo info
-save "pilot-alterdemo",replace
-restore
-
-merge 1:1 SUBID alterid using "pilot-alterdemo", update //update missing values in tfem tcollege of master data with values in using data
-drop if _merge==2 //drop pilot alters did not match with NC old alters
-drop _merge
-
-
-*retrive relation type info (it cannot be done with update because we need to use relmiss to identify missing)
-replace alterrel_1=relpartner if relmiss==0
-replace alterrel_2=relparent if relmiss==0
-replace alterrel_3=relsibling if relmiss==0
-replace alterrel_4=relchild if relmiss==0
-replace alterrel_5=relgrandp if relmiss==0
-replace alterrel_6=relgrandc if relmiss==0
-replace alterrel_7=relauntunc if relmiss==0
-replace alterrel_8=relinlaw if relmiss==0
-replace alterrel_9=relothrel if relmiss==0
-replace alterrel_10=relcowork if relmiss==0
-replace alterrel_11=relneigh if relmiss==0
-replace alterrel_12=relfriend if relmiss==0
-replace alterrel_13=relboss if relmiss==0
-replace alterrel_14=relemploy if relmiss==0
-replace alterrel_15=relschool if relmiss==0
-replace alterrel_16=rellawyer if relmiss==0
-replace alterrel_17=reldoctor if relmiss==0
-replace alterrel_18=relothmed if relmiss==0
-replace alterrel_19=relmental if relmiss==0
-replace alterrel_20=relrelig if relmiss==0
-replace alterrel_21=relchurch if relmiss==0
-replace alterrel_22=relclub if relmiss==0
-replace alterrel_23=relleisure if relmiss==0
-drop rel*
-rename (tcollege alter_age alter_race) (altercollege alterage alterrace)
-recode NC (1=.)
+drop relmiss frel*
+egen relmiss=rowtotal(alterrel*) //20 alters are still missing/0 on all relation type
 
 *append with wave 2+ NC
-append using "NC-Participant-LONG-20211112.dta" 
+recode NC (1=.)
+append using "NC-informant focal-LONG-20211112.dta" 
 drop if NC==1 //only append wave 2+
 recode NC (.=1)
 rename (tfem) (alterfem)
 rename (alterrel_1-alterrel_23) (relpartner relparent relsibling relchild relgrandp relgrandc relauntunc relinlaw relothrel relcowork relneigh relfriend relboss relemploy relschool rellawyer reldoctor relothmed relmental relrelig relchurch relclub relleisure)
 recode rel* (.=0) //. were from ENSO/pilots
 
-*rename (nirelpart nirelprnt nirelsib nirelchld nirelgprnt nirelgchld nirelantun nirelinlaw nirelothrl nirelcowrk nirelnghbr nirelfrnd nirelemplr nirelemple nirelstdnt nirellwyr nireldoc nirelothmd nirelthrpy nirelrabbi nirelchrch nirelclub nirelactvt) 
+save "NC-informant-focal alter-20211112.dta", replace
 
 
-
-
-***************************************************************
-**#6 Retrive alter demo from NC T1 (those are skiped for T2+ NC)
-***************************************************************
-
-
-egen relmiss=rowtotal(rel*) //65 alters are 0 on all relation type
-sort SUBID alterid NC // T1 alter appears first
-
-foreach x of varlist altercollege alterfem alterrace {
-	bysort SUBID alterid: replace `x'=`x'[1] if missing(`x') & NC>1 //take T1 values if missing
-}
-foreach x of varlist rel* {
-	bysort SUBID alterid: replace `x'=`x'[1] if relmiss==0 & NC>1 //take T1 values if relmiss=0
-}
-bysort SUBID alterid: replace alterage=alterage[1]+age(date_snad[1], date_snad) if missing(alterage) & NC>1 //take T1 values+time between waves if missing
-
-save "NC-participant-alter-20211112.dta", replace
 
 
 
 ***************************************************************
-**#7 Full: clean alter level interpretors
+**#6a Full: clean alter level interpretors
 ***************************************************************
 
 
@@ -490,6 +413,18 @@ lab var tkin "Alter is family member"
 bysort SUBID NC: egen pkin=mean(tkin)
 lab var pkin "Proportion of network that is kin"
 
+destring egoaltercloseinformant,replace
+gen tficlose=egoaltercloseinformant
+recode tficlose (2/3=0) (-8=.)
+lab var tficlose "Focal Alter is very close to Informant"
+bysort SUBID: egen pficlose=mean(tficlose)
+lab var pficlose "Proportion Focal alter very close to Informant in network"
+gen howcloser2=egoaltercloseinformant
+recode howcloser2 (1=3)(3=1)(-8=.)
+bysort SUBID: egen mficlose=mean(howcloser2)
+lab var mficlose "Mean Focal alter closeness to Informant in network, HI=MORE"
+drop howcloser2
+
 *diversity measure (Cohen)
 egen othfam=rowtotal(relsibling relgrandp relgrandc relauntunc relothrel),mi //group into other family
 egen fri=rowtotal(relfriend relleisure),mi //group into friend
@@ -507,13 +442,13 @@ drop relmiss urelpartner-urelclub othfam fri work church prof
 lab var diverse "Network diversity"
 
 drop tclose tfreq numsup numsup3 thassles prox30 tknow ttrust white tkin //drop alter level variables
-save "NC-participant-alter-clean-20211112.dta", replace
+save "NC-informant-focal alter-clean-20211112.dta", replace
 
 
 
 
 ***************************************************************
-**#8 Full: Clean alter-alter level data
+**#7a Full: Clean alter-alter level data
 ***************************************************************
 
 
@@ -522,16 +457,15 @@ save "NC-participant-alter-clean-20211112.dta", replace
 /*read alter tie files*/
 
 
-multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\Netcanvas Focal Interviews\alter_tie") clear force import(stringcols(_all))
-fre alteralterclose // alter do not know each other is not in the data
-destring alteralterclose,replace
+multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\Netcanvas Informant Interviews\alter_tie") clear force import(stringcols(_all))
 
-*impute missing in alter-alter tie due to accidental skip
-replace alteralterclose=1 if networkcanvasuuid=="5e61b348-bd81-4e29-9f04-3c0ea0201768" & missing(alteralterclose) //they are both family members
-replace alteralterclose=1 if networkcanvasuuid=="f8be72ca-3e3f-48bb-88e2-8f9489294d7a" & missing(alteralterclose) //they are both children
-replace alteralterclose=1 if networkcanvasuuid=="e33cc922-9118-46a1-863b-97fa4500c03f" & missing(alteralterclose) //they are both coworker and friends
-replace alteralterclose=2 if networkcanvasuuid=="f09f351b-0fbd-4ec7-b17c-70322c6c2c6c" & missing(alteralterclose) //they are a child and a friend
-save "NC-participant-altertie-long-20211112.dta", replace
+*drop informant alter tie
+destring alteralterclose,replace
+fre alteralterclose // alter do not know each other is not in the data
+drop if missing(alteralterclose) //keep focal alter ties
+drop infalteralterclose* //drop informant variables
+
+save "NC-informant-focal altertie-long-20211112.dta", replace
 
 
 /*clean alter-alter level interpretors*/
@@ -551,15 +485,15 @@ drop _filename
 
 keep networkcanvasegouuid totval totnum totnum1 
 duplicates drop networkcanvasegouuid, force
-save "NC-participant-altertie-EGOAGG-20211112.dta", replace
+save "NC-informant-focal altertie-EGOAGG-20211112.dta", replace
 
 
 
 /*Merge with alter level*/
 
 
-merge 1:m networkcanvasegouuid using "NC-participant-alter-clean-20211112" 
-fre SUBID if _merge==2 //10229,10339 are missing in altertie data due to time constrict
+merge 1:m networkcanvasegouuid using "NC-informant-focal alter-clean-20211112" 
+fre SUBID if _merge==2 //most are missing in altertie data because we dropped questions for alter-alter tie after 2021
 drop _merge
 
 
@@ -568,10 +502,14 @@ drop _merge
 
 
 *adjust for randomization 
-destring random, replace
-bysort SUBID NC: egen trandom=total(random),mi
+destring randomi, replace
+bysort SUBID NC: egen trandom=total(randomi),mi
 bysort SUBID NC: gen npossties=trandom*(trandom-1)/2 
 bysort SUBID NC: replace npossties=netsize*(netsize-1)/2 if missing(npossties) //early NC did not implement randomization
+
+foreach x of varlist totval totnum totnum1 {
+	replace `x'=0 if inrange(netsize,2,4) & missing(`x') & !missing(mclose) //all 0 on alter-alter ties are absent and treated as missing for totval,totnum, totnum1; need to replace them as 0
+}
 
 gen density=totval/npossties
 lab var density "Valued density of networks from matrix"
@@ -594,18 +532,18 @@ drop npossties_rd npossties_full
 
 
 ***************************************************************
-**#9 Full: save files 
+**#8a Full: save files 
 ***************************************************************
 
 
 
 
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned"
-save "NC-Participant-LONG-clean-20211112.dta", replace 
+save "NC-informant focal-LONG-clean-20211112.dta", replace 
 
 duplicates drop SUBID NC, force
 keep SUBID date_snad NC netsize-efctsize
-save "NC-Participant-EGOAGG-clean-20211112.dta", replace 
+save "NC-informant focal-EGOAGG-clean-20211112.dta", replace 
 
 
 
@@ -616,7 +554,7 @@ save "NC-Participant-EGOAGG-clean-20211112.dta", replace
 
 
 ***************************************************************
-**#7b Pilot: clean alter level interpretors
+**#6b Pilot: clean alter level interpretors
 ***************************************************************
 
 
@@ -624,7 +562,7 @@ save "NC-Participant-EGOAGG-clean-20211112.dta", replace
 
 *drop names that are not in health and important matter to be consistent with Pilot data 
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\temp"
-use "NC-participant-alter-20211112.dta", clear
+use "NC-informant-focal alter-20211112.dta", clear
 egen pilot=rowtotal(alterim* alterhm*)
 drop if pilot==0 | missing(pilot) 
 
@@ -763,6 +701,18 @@ lab var tkin "Alter is family member"
 bysort SUBID NC: egen pkin=mean(tkin)
 lab var pkin "Proportion of network that is kin"
 
+destring egoaltercloseinformant,replace
+gen tficlose=egoaltercloseinformant
+recode tficlose (2/3=0) (-8=.)
+lab var tficlose "Focal Alter is very close to Informant"
+bysort SUBID: egen pficlose=mean(tficlose)
+lab var pficlose "Proportion Focal alter very close to Informant in network"
+gen howcloser2=egoaltercloseinformant
+recode howcloser2 (1=3)(3=1)(-8=.)
+bysort SUBID: egen mficlose=mean(howcloser2)
+lab var mficlose "Mean Focal alter closeness to Informant in network, HI=MORE"
+drop howcloser2
+
 *diversity measure (Cohen)
 egen othfam=rowtotal(relsibling relgrandp relgrandc relauntunc relothrel),mi //group into other family
 egen fri=rowtotal(relfriend relleisure),mi //group into friend
@@ -780,17 +730,17 @@ drop relmiss urelpartner-urelclub othfam fri work church prof
 lab var diverse "Network diversity"
 
 drop tclose tfreq numsup numsup3 thassles prox30 tknow ttrust white tkin //drop alter level variables
-save "NC-participant-alter-pilot-clean-20211112.dta", replace
+save "NC-informant-focal alter-pilot-clean-20211112.dta", replace
 
 
 
 
 ***************************************************************
-**#8b Pilot: Clean alter-alter level data
+**#7b Pilot: Clean alter-alter level data
 ***************************************************************
 
 
-
+**start here
 
 
 
@@ -798,18 +748,18 @@ save "NC-participant-alter-pilot-clean-20211112.dta", replace
 
 
 *grab selected alterid from alter level data
-use "NC-participant-alter-pilot-clean-20211112",clear
+use "NC-informant-focal alter-pilot-clean-20211112",clear
 gen networkcanvassourceuuid = networkcanvasuuid //networkcanvasuuid is alterid  
 gen networkcanvastargetuuid = networkcanvasuuid
 keep networkcanvassourceuuid networkcanvastargetuuid networkcanvasegouuid
-save "NC-participant-pilotmatch",replace
+save "NC-informant focal-pilotmatch",replace
 
 *merge alterid with alter-alter level data
-use "NC-participant-altertie-long-20211112",clear
-merge m:1 networkcanvasegouuid networkcanvassourceuuid using "NC-participant-pilotmatch",keepusing(networkcanvassourceuuid)
+use "NC-informant-focal altertie-long-20211112",clear
+merge m:1 networkcanvasegouuid networkcanvassourceuuid using "NC-informant focal-pilotmatch",keepusing(networkcanvassourceuuid)
 keep if _merge==3 //keep selected alters for networkcanvassourceuuid
 drop _merge
-merge m:1 networkcanvasegouuid networkcanvastargetuuid using "NC-participant-pilotmatch",keepusing(networkcanvastargetuuid)
+merge m:1 networkcanvasegouuid networkcanvastargetuuid using "NC-informant focal-pilotmatch",keepusing(networkcanvastargetuuid)
 keep if _merge==3 //keep selected alters for networkcanvassourceuuid
 drop _merge
 
@@ -832,14 +782,14 @@ drop _filename
 
 keep networkcanvasegouuid totval totnum totnum1 
 duplicates drop networkcanvasegouuid, force
-save "NC-participant-altertie-EGOAGG-pilot-20211112.dta", replace
+save "NC-informant-focal altertie-EGOAGG-pilot-20211112.dta", replace
 
 
 
 /*Merge with alter level*/
 
 
-merge 1:m networkcanvasegouuid using "NC-participant-alter-pilot-clean-20211112" 
+merge 1:m networkcanvasegouuid using "NC-informant-focal alter-pilot-clean-20211112" 
 list SUBID networkcanvasuuid alterid if random=="1" & _merge==2 //alters from important matters not randomly chosen, only 1 alter from important matters was randomly chosen, or alters from important matters did not know each other
 drop _merge
 
@@ -848,10 +798,14 @@ drop _merge
 
 
 *adjust for randomization 
-destring random, replace
-bysort SUBID NC: egen trandom=total(random),mi
+destring randomi, replace
+bysort SUBID NC: egen trandom=total(randomi),mi
 bysort SUBID NC: gen npossties=trandom*(trandom-1)/2 
 bysort SUBID NC: replace npossties=netsize*(netsize-1)/2 if missing(npossties) //early NC did not implement randomization
+
+foreach x of varlist totval totnum totnum1 {
+	replace `x'=0 if inrange(netsize,2,4) & missing(`x') & !missing(mclose) //all 0 on alter-alter ties are absent and treated as missing for totval,totnum, totnum1; need to replace them as 0
+}
 
 gen density=totval/npossties
 lab var density "Valued density of networks from matrix"
@@ -874,7 +828,7 @@ drop npossties_rd npossties_full
 
 
 ***************************************************************
-**#9b Pilot: save files 
+**#8b Pilot: save files 
 ***************************************************************
 
 
@@ -882,11 +836,11 @@ drop npossties_rd npossties_full
 
 *save files
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned"
-save "NC-Participant-LONG-pilot-clean-20211112.dta", replace 
+save "NC-informant focal-LONG-pilot-clean-20211112.dta", replace 
 
 duplicates drop SUBID NC, force
 keep SUBID date_snad NC netsize-efctsize
-save "NC-Participant-EGOAGG-pilot-clean-20211112.dta", replace 
+save "NC-informant focal-EGOAGG-pilot-clean-20211112.dta", replace 
 
 
 
@@ -895,7 +849,7 @@ save "NC-Participant-EGOAGG-pilot-clean-20211112.dta", replace
 
 
 ***************************************************************
-**#7c NC match (workdays and weekends generators are dropped at early of 2021): clean alter level interpretors
+**#6c NC match (workdays and weekends generators are dropped at early of 2021): clean alter level interpretors
 ***************************************************************
 
 
@@ -1042,6 +996,18 @@ lab var tkin "Alter is family member"
 bysort SUBID NC: egen pkin=mean(tkin)
 lab var pkin "Proportion of network that is kin"
 
+destring egoaltercloseinformant,replace
+gen tficlose=egoaltercloseinformant
+recode tficlose (2/3=0) (-8=.)
+lab var tficlose "Focal Alter is very close to Informant"
+bysort SUBID: egen pficlose=mean(tficlose)
+lab var pficlose "Proportion Focal alter very close to Informant in network"
+gen howcloser2=egoaltercloseinformant
+recode howcloser2 (1=3)(3=1)(-8=.)
+bysort SUBID: egen mficlose=mean(howcloser2)
+lab var mficlose "Mean Focal alter closeness to Informant in network, HI=MORE"
+drop howcloser2
+
 *diversity measure (Cohen)
 egen othfam=rowtotal(relsibling relgrandp relgrandc relauntunc relothrel),mi //group into other family
 egen fri=rowtotal(relfriend relleisure),mi //group into friend
@@ -1065,7 +1031,7 @@ save "NC-participant-alter-match-clean-20211112.dta", replace
 
 
 ***************************************************************
-**#8c NC match: Clean alter-alter level data
+**#7c NC match: Clean alter-alter level data
 ***************************************************************
 
 
@@ -1133,6 +1099,10 @@ bysort SUBID NC: egen trandom=total(random),mi
 bysort SUBID NC: gen npossties=trandom*(trandom-1)/2 
 bysort SUBID NC: replace npossties=netsize*(netsize-1)/2 if missing(npossties) //early NC did not implement randomization
 
+foreach x of varlist totval totnum totnum1 {
+	replace `x'=0 if inrange(netsize,2,4) & missing(`x') & !missing(mclose) //all 0 on alter-alter ties are absent and treated as missing for totval,totnum, totnum1; need to replace them as 0
+}
+
 gen density=totval/npossties
 lab var density "Valued density of networks from matrix"
 gen bdensity=totnum/npossties
@@ -1154,7 +1124,7 @@ drop npossties_rd npossties_full
 
 
 ***************************************************************
-**#9c NC match: save files 
+**#8c NC match: save files 
 ***************************************************************
 
 

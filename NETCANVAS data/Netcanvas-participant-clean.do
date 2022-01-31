@@ -586,6 +586,10 @@ bysort SUBID NC: egen trandom=total(random),mi
 bysort SUBID NC: gen npossties=trandom*(trandom-1)/2 
 bysort SUBID NC: replace npossties=netsize*(netsize-1)/2 if missing(npossties) //early NC did not implement randomization
 
+foreach x of varlist totval totnum totnum1 {
+	replace `x'=0 if inrange(netsize,2,4) & missing(`x') & !missing(mclose) //all 0 on alter-alter ties are absent and treated as missing for totval,totnum, totnum1; need to replace them as 0
+}
+
 gen density=totval/npossties
 lab var density "Valued density of networks from matrix"
 gen bdensity=totnum/npossties
@@ -866,6 +870,10 @@ bysort SUBID NC: egen trandom=total(random),mi
 bysort SUBID NC: gen npossties=trandom*(trandom-1)/2 
 bysort SUBID NC: replace npossties=netsize*(netsize-1)/2 if missing(npossties) //early NC did not implement randomization
 
+foreach x of varlist totval totnum totnum1 {
+	replace `x'=0 if inrange(netsize,2,4) & missing(`x') & !missing(mclose) //all 0 on alter-alter ties are absent and treated as missing for totval,totnum, totnum1; need to replace them as 0
+}
+
 gen density=totval/npossties
 lab var density "Valued density of networks from matrix"
 gen bdensity=totnum/npossties
@@ -1145,6 +1153,10 @@ destring random, replace
 bysort SUBID NC: egen trandom=total(random),mi
 bysort SUBID NC: gen npossties=trandom*(trandom-1)/2 
 bysort SUBID NC: replace npossties=netsize*(netsize-1)/2 if missing(npossties) //early NC did not implement randomization
+
+foreach x of varlist totval totnum totnum1 {
+	replace `x'=0 if inrange(netsize,2,4) & missing(`x') & !missing(mclose) //all 0 on alter-alter ties are absent and treated as missing for totval,totnum, totnum1; need to replace them as 0
+}
 
 gen density=totval/npossties
 lab var density "Valued density of networks from matrix"
