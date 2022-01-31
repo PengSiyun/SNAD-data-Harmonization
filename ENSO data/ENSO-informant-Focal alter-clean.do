@@ -75,6 +75,7 @@ fre fgen falter_mi
 keep if fgen==1
 
 
+
 ***************************************************************
 **# 2 Remove duplicates in ENSO FOCAL alter data
 ***************************************************************
@@ -273,6 +274,9 @@ drop rel*
 ************************************************************
 
 
+
+preserve
+
 *drop INFORMANT variables
 drop s*
 
@@ -282,14 +286,6 @@ lab var netsize "Total number of alters mentioned"
 
 bysort SUBID: egen pcollege=mean(alter_college)
 lab var pcollege "Proportion college in network"
-
-/* strust squedoc; ftrust, fquedoc not asked (look at codebook to make sure all interpretors are cleaned) 
-foreach x of varlist nitrust* {
-	tostring `x',replace
-	replace `x' =substr(`x',1,1) //remove " in string
-	destring `x',replace
-}
-*/
 
 replace frace2=subinstr(frace2,`"""', "", 1) //remove " in string
 replace frace3="3" if frace3=="âWhiteâ:â3â"
@@ -308,7 +304,7 @@ foreach x in frace fage flive {
 	egen `x'new=rowmean(`x'1 `x'2 `x'3 `x'4 `x'5)
 	drop `x'1 `x'2 `x'3 `x'4 `x'5
 	rename `x'new `x'
-} //add strust squedoc here
+} 
 
 rename (frace fage) (alter_race alter_age)
 bysort SUBID: egen mage=mean(alter_age)
@@ -331,26 +327,27 @@ recode alterprox (2/4=0),gen(prox30)
 bysort SUBID: egen pprox=mean(prox30)
 lab var prox30 "Proportion <30 mins"
 
-/*
-rename nitrust alterdtr
-recode alterdtr (1=3) (2=2) (3=1)
-label define alterdtr 1 "Not very much" 2 "Most of the time" 3 "A lot"
-label values alterdtr alterdtr
-bysort SUBID: egen mtrust=mean(alterdtr)
-lab var mtrust "Mean trust in doctors in network, HI=MORE"
-recode alterdtr (1 2 =0) (3=1),gen(ttrust)
-lab var ttrust "Alter trusts doctors a lot"
-bysort SUBID: egen ptrust=mean(ttrust)
-lab var ptrust "Proportion who trust doctors in network"
+replace fsclose4="1" if fsclose4=="âVery closeâ:â1â"
+replace fsclose4="2" if fsclose4=="âSort of closeâ:â2â"
+replace fsclose4="3" if fsclose4=="âNot very closeâ:â3â "
+replace fsclose3="1" if fsclose3=="âVery closeâ:â1â"
+replace fsclose3="2" if fsclose3=="âSort of closeâ:â2â"
+replace fsclose2=subinstr(fsclose2,`"""', "", 1) //remove " in string
+destring fsclose*,replace
+egen fsclose=rowmean(fsclose*)
+drop fsclose? fclose? ftalk? fstrength? //fsclose: informant's closeness to FOCAL alters
 
-rename niqdoc alterquestion
-label define alterquestion 1 "Rarely" 2 "Sometimes" 3 "Often"
-label values alterquestion alterquestion
-bysort SUBID: egen mquestion=mean(alterquestion)
-lab var mquestion "Mean questions doctors in network, HI=MORE"
-*/
+gen tficlose=fsclose
+recode tficlose (2/3=0)
+lab var tficlose "Focal Alter is very close to Informant"
+bysort SUBID: egen pficlose=mean(tficlose)
+lab var pficlose "Proportion Focal alter very close to Informant in network"
+gen howcloser2=fsclose
+recode howcloser2 (1=3)(3=1)
+bysort SUBID: egen mficlose=mean(howcloser2)
+lab var mficlose "Mean Focal alter closeness to Informant in network, HI=MORE"
+drop howcloser2
 
-drop fclose? ftalk? fstrength? //fsclose: informant's closeness to FOCAL alters
 gen tclose=fclose
 recode tclose (2/3=0)
 lab var tclose "Alter is very close"
@@ -463,5 +460,206 @@ duplicates drop SUBID, force
 keep SUBID created_on netsize-ENSO
 drop tfem tkin tclose tfreq thassles numsup white alter_race alter_age numsup numsup3 prox30 //drop alter level variables
 save "ENSO-Informant-Focal alter-EGOAGG-clean.dta", replace 
+
+
+
+
+
+
+************************************************************
+**# 5b. clean the variable names across 5 ENSO waves -Pilot match (ENSO added anyone else + study partner generators)
+************************************************************
+
+
+
+restore
+
+*pilot match
+egen pilot=rowtotal(fimp* fhlth*),mi
+drop if pilot==0 | missing(pilot) //drop names that are not in health and important matter to be consistent with Pilot data 
+
+*drop INFORMANT variables
+drop s*
+
+*******clean name interpretors 
+bysort SUBID: egen netsize=count(alter_name)
+lab var netsize "Total number of alters mentioned" 
+
+bysort SUBID: egen pcollege=mean(alter_college)
+lab var pcollege "Proportion college in network"
+
+replace frace2=subinstr(frace2,`"""', "", 1) //remove " in string
+replace frace3="3" if frace3=="âWhiteâ:â3â"
+replace frace4="1" if frace4=="âAsianâ:â1â"
+replace frace4="2" if frace4=="âAfrican American/Blackâ:â2â"
+replace frace4="3" if frace4=="âWhiteâ:â3â"
+replace frace4="4" if frace4=="âOtherâ:â4â "
+
+replace flive3="1" if flive3=="âLess than 30 minutes awayâ:â1â"
+replace flive3="2" if flive3=="â30 minutes to an hour awayâ:â2â"
+replace flive3="4" if flive3=="âMore than 2 hours awayâ:â4â"
+
+destring frace* fage* flive*,replace
+
+foreach x in frace fage flive {
+	egen `x'new=rowmean(`x'1 `x'2 `x'3 `x'4 `x'5)
+	drop `x'1 `x'2 `x'3 `x'4 `x'5
+	rename `x'new `x'
+} 
+
+rename (frace fage) (alter_race alter_age)
+bysort SUBID: egen mage=mean(alter_age)
+lab var mage "Mean age in network"
+bysort SUBID: egen sdage=sd(alter_age)
+lab var sdage "Standard deveiation of alter age"
+
+label define alter_race 1 "Asian" 2 "African American" 3 "White" 4 "Other"
+label values alter_race alter_race
+recode alter_race (1 2 4=0) (3=1),gen(white)
+bysort SUBID: egen pwhite=mean(white)
+lab var pwhite "Proportion White in network"
+
+rename flive alterprox
+label define alterprox 1 "<30 mins" 2 "30-60 mins" 3 "1-2 hour" 4 ">2 hour"
+label values alterprox alterprox
+bysort SUBID: egen mprox=mean(alterprox)
+lab var mprox "Mean alter proximity"
+recode alterprox (2/4=0),gen(prox30)
+bysort SUBID: egen pprox=mean(prox30)
+lab var prox30 "Proportion <30 mins"
+
+replace fsclose4="1" if fsclose4=="âVery closeâ:â1â"
+replace fsclose4="2" if fsclose4=="âSort of closeâ:â2â"
+replace fsclose4="3" if fsclose4=="âNot very closeâ:â3â "
+replace fsclose3="1" if fsclose3=="âVery closeâ:â1â"
+replace fsclose3="2" if fsclose3=="âSort of closeâ:â2â"
+replace fsclose2=subinstr(fsclose2,`"""', "", 1) //remove " in string
+destring fsclose*,replace
+egen fsclose=rowmean(fsclose*)
+drop fsclose? fclose? ftalk? fstrength? //fsclose: informant's closeness to FOCAL alters
+
+gen tficlose=fsclose
+recode tficlose (2/3=0)
+lab var tficlose "Focal Alter is very close to Informant"
+bysort SUBID: egen pficlose=mean(tficlose)
+lab var pficlose "Proportion Focal alter very close to Informant in network"
+gen howcloser2=fsclose
+recode howcloser2 (1=3)(3=1)
+bysort SUBID: egen mficlose=mean(howcloser2)
+lab var mficlose "Mean Focal alter closeness to Informant in network, HI=MORE"
+drop howcloser2
+
+gen tclose=fclose
+recode tclose (2/3=0)
+lab var tclose "Alter is very close"
+bysort SUBID: egen pclose=mean(tclose)
+lab var pclose "Proportion very close in network"
+gen howcloser=fclose
+recode howcloser (1=3)(3=1)
+bysort SUBID: egen mclose=mean(howcloser)
+lab var mclose "Mean closeness in network, HI=MORE"
+drop howcloser 
+
+gen tfreq=ftalk
+recode tfreq (2/3=0)
+lab var tfreq "Alter sees or talks to ego often"
+bysort SUBID: egen pfreq=mean(tfreq)
+lab var pfreq "Proportion often in contact in network"
+gen seetalkr=ftalk
+recode seetalkr (1=3)(3=1)
+bysort SUBID: egen mfreq=mean(seetalkr)
+lab var mfreq "Mean freq of contact in network, HI=MORE"
+bysort SUBID: egen sdfreq=sd(seetalkr)
+lab var sdfreq "Standard deviation of freq of contact in network"
+drop seetalkr
+
+bysort SUBID: egen mstrength=mean(fstrength)
+lab var mstrength "Mean tie strength in network, HI=MORE"
+bysort SUBID: egen weakest=min(fstrength)
+lab var weakest "Minimum tie strength score"
+bysort SUBID: egen iqrstrength=iqr(fstrength)
+lab var iqrstrength "Interquartile range of tie strength"
+bysort SUBID: egen sdstrength=sd(fstrength)
+lab var sdstrength "Standard deveiation of tie strength"
+
+foreach x in fsupcare fsupcash fsupchor fsuplstn fsupsugg {
+	egen `x'new=rowmean(`x'1 `x'2 `x'3 `x'4 `x'5)
+	drop `x'1 `x'2 `x'3 `x'4 `x'5
+	rename `x'new `x'
+}
+egen numsup=rowtotal(fsupcare fsupcash fsupchor fsuplstn fsupsugg),mi
+replace numsup=. if missing(alter_name)
+lab var numsup "Number of support functions"
+bysort SUBID: egen msupport=mean(numsup)
+lab var msupport "Mean number of support functions in network, HI=MORE"
+
+egen numsup3=rowtotal(fsupcare fsuplstn fsupsugg),mi
+replace numsup3=. if missing(alter_name)
+bysort SUBID: egen msupport3=mean(numsup3)
+lab var msupport3 "Mean number of support functions in network (listen, care, advice), HI=MORE"
+
+foreach x of varlist fsupcare fsupcash fsupchor fsuplstn fsupsugg {
+	replace `x'=. if missing(alter_name)
+	bysort SUBID: egen p`x'=mean(`x') //missing means no alter
+}
+rename (pfsupcare pfsupcash pfsupchor pfsuplstn pfsupsugg) ///
+       (pcare ploan pchores plisten padvice)
+lab var plisten "Prop. listen to you when upset"
+lab var pcare "Prop. tell you they care about what happens to you"
+lab var padvice "Prop. give suggestions when you have a problem"
+lab var pchores "Prop. help you with daily chores"
+lab var ploan "Prop. loan money when you are short of money"
+
+replace fhassle3="3" if fhassle3=="âNot reallyâ:â3â"
+replace fhassle3="2" if fhassle3=="âSometimesâ:â2â"
+destring fhassle3,replace
+
+egen fhassle=rowmean(fhassle*)
+drop fhassle?
+revrs fhassle, replace //reverse code
+bysort SUBID: egen mhassles=mean(fhassle)
+lab var mhassles "Mean hassles in network, HI=MORE)"
+recode fhassle (1=0) (2/3=1),gen(thassles)
+lab var thassles "Alter hassles, causes problems sometimes or a lot"
+bysort SUBID: egen phassles=mean(thassles)
+lab var phassles "Proportion that hassle, cause problems in network"
+
+gen tfem=alter_female
+lab var tfem "Alter is female"
+drop alter_female
+bysort SUBID: egen pfem=mean(tfem)
+lab var pfem "Proportion female in network"
+
+*diversity measure (Cohen): 25 types total in data (nirelother nirelfinan are two extra in ENSO)
+egen othfam=rowtotal(frelsib frelantun frelgprnt frelgchld frelothrl),mi //group into other family
+egen fri=rowtotal(frelfrnd frelactvt),mi //group into friend
+egen work=rowtotal(frelemple frelemplr frelcowrk),mi //group into workmate
+egen church=rowtotal(frelrabbi frelchrch),mi //group into religious group
+egen prof=rowtotal(frelthrpy frelothrmd freldoc frellwyr frelfince),mi //group into professional group
+recode othfam fri work church prof (1/10=1)
+foreach x of varlist othfam fri work church prof frelpart frelprnt frelinlaw frelchld frelnghbr frelstdnt frelclub {
+egen u`x' = tag(SUBID `x') if `x'>0 & !missing(`x') // e.g., count multiple friends as 1 friend
+}
+egen relmiss=rowtotal(frelother frelchrch frelemplr frelfrnd frelothrl frelantun frelstdnt frelsib frelgprnt frelinlaw frelgchld frelothrmd frelrabbi frelthrpy frellwyr frelprnt frelnghbr frelclub frelactvt frelfince frelcowrk freldoc frelpart frelemple frelchld) //6 alters are missing/0 on all relation type
+
+recode uothfam ufri uwork uchurch uprof ufrelpart ufrelprnt ufrelinlaw ufrelchld ufrelnghbr ufrelstdnt ufrelclub (0=.) if relmiss==0 & netsize>0 //if a named alter is not specified for relation type then treat as missing
+bysort SUBID: egen diverse=total(uothfam+ufri+uwork+uchurch+uprof+ufrelpart+ufrelprnt+ufrelinlaw+ufrelchld+ufrelnghbr+ufrelstdnt+ufrelclub),mi // cohen's 12 categories(volunteer is not in this data thus leaving us 11 of 12 Cohen's categories, and I add a group call prof as a replacement)
+drop uothfam-ufrelclub othfam fri work church prof
+lab var diverse "Network diversity" 
+fre diverse
+
+egen tkin=rowtotal(frelsib frelantun frelgprnt frelgchld frelothrl frelpart frelprnt frelinlaw frelchld)
+recode tkin (1/9=1)
+replace tkin=. if missing(alter_name)
+lab var tkin "Alter is family member"
+bysort SUBID: egen pkin=mean(tkin)
+lab var pkin "Proportion of network that is kin"
+
+gen ENSO=1
+save "ENSO-Informant-Focal alter-LONG-pilot-clean.dta", replace 
+duplicates drop SUBID, force
+keep SUBID created_on netsize-ENSO
+drop tfem tkin tclose tfreq thassles numsup white alter_race alter_age numsup numsup3 prox30 //drop alter level variables
+save "ENSO-Informant-Focal alter-EGOAGG-pilot-clean.dta", replace 
 
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Code" //reset directory for rule-all do file
