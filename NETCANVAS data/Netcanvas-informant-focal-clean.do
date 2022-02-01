@@ -211,6 +211,9 @@ drop altersex
 recode alterrace (3=4) (4=3) (5=4)
 label define alterrace 1 "Asian" 2 "African American" 3 "White" 4 "Other"
 label values alterrace alterrace
+
+*rename for merge with ENSO
+rename (altercollege alterage alterrace) (alter_college alter_age alter_race)
 save "NC-informant focal-LONG-20211112.dta", replace 
 
 
@@ -219,9 +222,6 @@ save "NC-informant focal-LONG-20211112.dta", replace
 
 keep if NC==1
 egen relmiss=rowtotal(alterrel*) //40 alters are missing/0 on all relation type
-
-*rename for merge with ENSO
-rename (altercollege alterage alterrace) (alter_college alter_age alter_race)
 
 *merge NC with ENSO
 merge 1:1 SUBID alterid using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\temp\ENSO-Informant-Focal alter-LONG-clean.dta",keepusing(frel* tfem alter_race alter_age alter_college) update //update missing values in tfem alter_race alter_age alter_college of master data with values in using data
@@ -355,13 +355,13 @@ lab var alterfem "Alter is female"
 bysort SUBID NC: egen pfem=mean(alterfem)
 lab var pfem "Proportion female in network"
 
-lab var alterage "Alter age"
-bysort SUBID NC: egen mage=mean(alterage)
+lab var alter_age "Alter age"
+bysort SUBID NC: egen mage=mean(alter_age)
 lab var mage "Mean alter age"
-bysort SUBID NC: egen sdage=sd(alterage)
+bysort SUBID NC: egen sdage=sd(alter_age)
 lab var sdage "Standard deveiation of alter age"
 
-bysort SUBID NC: egen pcollege=mean(altercollege)
+bysort SUBID NC: egen pcollege=mean(alter_college)
 lab var pcollege "Proportion college in network"
 
 destring alterprox,replace
@@ -402,7 +402,7 @@ label values alterquestion alterquestion
 bysort SUBID NC: egen mquestion=mean(alterquestion)
 lab var mquestion "Mean questions doctors in network, HI=MORE"
 
-recode alterrace (1 2 4=0) (3=1),gen(white)
+recode alter_race (1 2 4=0) (3=1),gen(white)
 bysort SUBID NC: egen pwhite=mean(white)
 lab var pwhite "Proportion White in network"
 
@@ -643,13 +643,13 @@ lab var alterfem "Alter is female"
 bysort SUBID NC: egen pfem=mean(alterfem)
 lab var pfem "Proportion female in network"
 
-lab var alterage "Alter age"
-bysort SUBID NC: egen mage=mean(alterage)
+lab var alter_age "Alter age"
+bysort SUBID NC: egen mage=mean(alter_age)
 lab var mage "Mean alter age"
-bysort SUBID NC: egen sdage=sd(alterage)
+bysort SUBID NC: egen sdage=sd(alter_age)
 lab var sdage "Standard deveiation of alter age"
 
-bysort SUBID NC: egen pcollege=mean(altercollege)
+bysort SUBID NC: egen pcollege=mean(alter_college)
 lab var pcollege "Proportion college in network"
 
 destring alterprox,replace
@@ -690,7 +690,7 @@ label values alterquestion alterquestion
 bysort SUBID NC: egen mquestion=mean(alterquestion)
 lab var mquestion "Mean questions doctors in network, HI=MORE"
 
-recode alterrace (1 2 4=0) (3=1),gen(white)
+recode alter_race (1 2 4=0) (3=1),gen(white)
 bysort SUBID NC: egen pwhite=mean(white)
 lab var pwhite "Proportion White in network"
 
@@ -938,13 +938,13 @@ lab var alterfem "Alter is female"
 bysort SUBID NC: egen pfem=mean(alterfem)
 lab var pfem "Proportion female in network"
 
-lab var alterage "Alter age"
-bysort SUBID NC: egen mage=mean(alterage)
+lab var alter_age "Alter age"
+bysort SUBID NC: egen mage=mean(alter_age)
 lab var mage "Mean alter age"
-bysort SUBID NC: egen sdage=sd(alterage)
+bysort SUBID NC: egen sdage=sd(alter_age)
 lab var sdage "Standard deveiation of alter age"
 
-bysort SUBID NC: egen pcollege=mean(altercollege)
+bysort SUBID NC: egen pcollege=mean(alter_college)
 lab var pcollege "Proportion college in network"
 
 destring alterprox,replace
@@ -985,7 +985,7 @@ label values alterquestion alterquestion
 bysort SUBID NC: egen mquestion=mean(alterquestion)
 lab var mquestion "Mean questions doctors in network, HI=MORE"
 
-recode alterrace (1 2 4=0) (3=1),gen(white)
+recode alter_race (1 2 4=0) (3=1),gen(white)
 bysort SUBID NC: egen pwhite=mean(white)
 lab var pwhite "Proportion White in network"
 
@@ -1229,13 +1229,13 @@ lab var alterfem "Alter is female"
 bysort SUBID NC: egen pfem=mean(alterfem)
 lab var pfem "Proportion female in network"
 
-lab var alterage "Alter age"
-bysort SUBID NC: egen mage=mean(alterage)
+lab var alter_age "Alter age"
+bysort SUBID NC: egen mage=mean(alter_age)
 lab var mage "Mean alter age"
-bysort SUBID NC: egen sdage=sd(alterage)
+bysort SUBID NC: egen sdage=sd(alter_age)
 lab var sdage "Standard deveiation of alter age"
 
-bysort SUBID NC: egen pcollege=mean(altercollege)
+bysort SUBID NC: egen pcollege=mean(alter_college)
 lab var pcollege "Proportion college in network"
 
 destring alterprox,replace
@@ -1276,7 +1276,7 @@ label values alterquestion alterquestion
 bysort SUBID NC: egen mquestion=mean(alterquestion)
 lab var mquestion "Mean questions doctors in network, HI=MORE"
 
-recode alterrace (1 2 4=0) (3=1),gen(white)
+recode alter_race (1 2 4=0) (3=1),gen(white)
 bysort SUBID NC: egen pwhite=mean(white)
 lab var pwhite "Proportion White in network"
 
