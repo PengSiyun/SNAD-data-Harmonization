@@ -740,7 +740,6 @@ save "NC-informant-focal alter-pilot-clean-20211112.dta", replace
 ***************************************************************
 
 
-**start here
 
 
 
@@ -849,7 +848,299 @@ save "NC-informant focal-EGOAGG-pilot-clean-20211112.dta", replace
 
 
 ***************************************************************
-**#6c NC match (workdays and weekends generators are dropped at early of 2021): clean alter level interpretors
+**#6c ENSO match (ENSO only added anyone else + study partner generators): clean alter level interpretors
+***************************************************************
+
+
+
+
+*drop name generators that are not in ENSO to be consistent with latest NC data 
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\temp"
+use "NC-informant-focal alter-20211112.dta", clear
+egen match=rowtotal(alterim* alterhm* alteret6 alteret7)
+drop if match==0 | missing(match) 
+
+
+/*clean alter level interpretors*/
+
+
+bysort SUBID NC: egen netsize=count(name_gen)
+lab var netsize "Total number of alters mentioned" 
+
+destring altercloseego,replace
+recode altercloseego (1=3) (2=2) (3=1)
+label define altercloseego 1 "Not very close" 2 "Sort of close" 3 "Very close"
+label values altercloseego altercloseego
+recode altercloseego (1 2=0) (3=1),gen(tclose)
+lab var tclose "Alter is very close"
+bysort SUBID NC: egen pclose=mean(tclose)
+lab var pclose "Proportion very close in network"
+bysort SUBID NC: egen mclose=mean(altercloseego)
+lab var mclose "Mean closeness in network, HI=MORE"
+
+destring alterfreqcon,replace
+recode alterfreqcon (1=3) (2=2) (3=1)
+label define alterfreqcon 1 "Hardly ever" 2 "Occcasionally" 3 "Often"
+label values alterfreqcon alterfreqcon
+recode alterfreqcon (1 2=0) (3=1),gen(tfreq)
+lab var tfreq "Alter sees or talks to ego often"
+bysort SUBID NC: egen pfreq=mean(tfreq)
+lab var pfreq "Proportion often in contact in network"
+bysort SUBID NC: egen mfreq=mean(alterfreqcon)
+lab var mfreq "Mean freq of contact in network, HI=MORE"
+bysort SUBID NC: egen sdfreq=sd(alterfreqcon)
+lab var sdfreq "Standard deviation of freq of contact in network"
+
+foreach x of varlist altersupfunc_* {
+	replace `x'="0" if `x'=="false" | `x'=="FALSE"
+	replace `x'="1" if `x'=="true" | `x'=="TRUE"
+	destring `x',replace
+}
+rename (altersupfunc_1-altersupfunc_5) (listen care advice chores loan)
+egen numsup=rowtotal(listen-loan),mi
+lab var numsup "Number of support functions"
+bysort SUBID NC: egen msupport=mean(numsup)
+lab var msupport "Mean number of support functions in network, HI=MORE"
+
+egen numsup3=rowtotal(listen care advice),mi
+bysort SUBID NC: egen msupport3=mean(numsup3)
+lab var msupport3 "Mean number of support functions in network (listen, care, advice), HI=MORE"
+
+foreach x of varlist listen-loan {
+	bysort SUBID NC: egen p`x'=mean(`x') //missing means no alter
+}
+lab var plisten "Prop. listen to you when upset"
+lab var pcare "Prop. tell you they care about what happens to you"
+lab var padvice "Prop. give suggestions when you have a problem"
+lab var pchores "Prop. help you with daily chores"
+lab var ploan "Prop. loan money when you are short of money"
+
+destring alterhassle,replace
+revrs alterhassle, replace //reverse code
+bysort SUBID NC: egen mhassles=mean(alterhassle)
+lab var mhassles "Mean hassles in network, HI=MORE)"
+recode alterhassle (1=0) (2/3=1),gen(thassles)
+lab var thassles "Alter hassles, causes problems sometimes or a lot"
+bysort SUBID NC: egen phassles=mean(thassles)
+lab var phassles "Proportion that hassle, cause problems in network"
+
+destring altercls110,replace
+bysort SUBID NC: egen mstrength=mean(altercls110)
+lab var mstrength "Mean tie strength in network, HI=MORE"
+bysort SUBID NC: egen weakest=min(altercls110)
+lab var weakest "Minimum tie strength score"
+bysort SUBID NC: egen iqrstrength=iqr(altercls110)
+lab var iqrstrength "Interquartile range of tie strength"
+bysort SUBID NC: egen sdstrength=sd(altercls110)
+lab var sdstrength "Standard deveiation of tie strength"
+
+lab var alterfem "Alter is female"
+bysort SUBID NC: egen pfem=mean(alterfem)
+lab var pfem "Proportion female in network"
+
+lab var alterage "Alter age"
+bysort SUBID NC: egen mage=mean(alterage)
+lab var mage "Mean alter age"
+bysort SUBID NC: egen sdage=sd(alterage)
+lab var sdage "Standard deveiation of alter age"
+
+bysort SUBID NC: egen pcollege=mean(altercollege)
+lab var pcollege "Proportion college in network"
+
+destring alterprox,replace
+label define alterprox 1 "<30 mins" 2 "30-60 mins" 3 "1-2 hour" 4 ">2 hour",replace
+label values alterprox alterprox
+bysort SUBID NC: egen mprox=mean(alterprox)
+lab var mprox "Mean alter proximity"
+recode alterprox (2/4=0),gen(prox30)
+bysort SUBID NC: egen pprox=mean(prox30)
+lab var pprox "Proportion <30 mins"
+
+destring alterhknow,replace
+recode alterhknow (1=3) (2=2) (3=1)
+label define alterhknow 1 "Not very much" 2 "Some" 3 "A lot",replace
+label values alterhknow alterhknow
+bysort SUBID NC: egen mknow=mean(alterhknow)
+lab var mknow "Mean knowledge of aging problems in network, HI=MORE"
+recode alterhknow (1 2=0) (3=1),gen(tknow)
+lab var tknow "Alter knows a lot about memory loss, confusion, or other similar problems that you might be experiencing as you age"
+bysort SUBID NC: egen pknow=mean(tknow)
+lab var pknow "Proportion knows a lot about aging"
+
+destring alterdtr,replace
+recode alterdtr (1=3) (2=2) (3=1) (-8=.)
+label define alterdtr 1 "Not very much" 2 "Most of the time" 3 "A lot",replace
+label values alterdtr alterdtr
+bysort SUBID NC: egen mtrust=mean(alterdtr)
+lab var mtrust "Mean trust in doctors in network, HI=MORE"
+recode alterdtr (1 2 =0) (3=1),gen(ttrust)
+lab var ttrust "Alter trusts doctors a lot"
+bysort SUBID NC: egen ptrust=mean(ttrust)
+lab var ptrust "Proportion who trust doctors in network"
+
+destring alterquestion,replace
+recode alterquestion (-8=.)
+label define alterquestion 1 "Rarely" 2 "Sometimes" 3 "Often",replace
+label values alterquestion alterquestion
+bysort SUBID NC: egen mquestion=mean(alterquestion)
+lab var mquestion "Mean questions doctors in network, HI=MORE"
+
+recode alterrace (1 2 4=0) (3=1),gen(white)
+bysort SUBID NC: egen pwhite=mean(white)
+lab var pwhite "Proportion White in network"
+
+gen tkin=relpartner+relparent+relsibling+relchild+relgrandp+relgrandc+relauntunc+relinlaw+relothrel
+recode tkin (1/9=1)
+replace tkin=. if relmiss==0
+lab var tkin "Alter is family member"
+bysort SUBID NC: egen pkin=mean(tkin)
+lab var pkin "Proportion of network that is kin"
+
+destring egoaltercloseinformant,replace
+gen tficlose=egoaltercloseinformant
+recode tficlose (2/3=0) (-8=.)
+lab var tficlose "Focal Alter is very close to Informant"
+bysort SUBID: egen pficlose=mean(tficlose)
+lab var pficlose "Proportion Focal alter very close to Informant in network"
+gen howcloser2=egoaltercloseinformant
+recode howcloser2 (1=3)(3=1)(-8=.)
+bysort SUBID: egen mficlose=mean(howcloser2)
+lab var mficlose "Mean Focal alter closeness to Informant in network, HI=MORE"
+drop howcloser2
+
+*diversity measure (Cohen)
+egen othfam=rowtotal(relsibling relgrandp relgrandc relauntunc relothrel),mi //group into other family
+egen fri=rowtotal(relfriend relleisure),mi //group into friend
+egen work=rowtotal(relemploy relboss relcowork),mi //group into workmate
+egen church=rowtotal(relrelig relchurch),mi //group into religious group
+egen prof=rowtotal(relmental relothmed reldoctor rellawyer),mi //group into  professional group
+
+recode othfam fri work church prof (1/10=1)
+foreach x of varlist relpartner relparent relinlaw relchild othfam relneigh fri work relschool church prof relclub {
+egen u`x' = tag(SUBID NC `x') if `x'>0 & !missing(`x') // e.g., count multiple friends as 1 friend
+}
+recode urelpartner-urelclub (0=.) if relmiss==0 & netsize>0 //if a named alter is not specified for relation type then treat as missing
+bysort SUBID NC: egen diverse=total(urelpartner+urelparent+urelinlaw+urelchild+uothfam+urelneigh+ufri+uwork+urelschool+uchurch+uprof+urelclub),mi //cohen's 12 categories(volunteer is not in this data thus leaving us 11 of 12 Cohen's categories, and I add a group call prof as a replacement)
+drop relmiss urelpartner-urelclub othfam fri work church prof
+lab var diverse "Network diversity"
+
+drop tclose tfreq numsup numsup3 thassles prox30 tknow ttrust white tkin //drop alter level variables
+save "NC-informant-focal alter-ENSOmatch-clean-20211112.dta", replace
+
+
+
+
+***************************************************************
+**#7c ENSO match: Clean alter-alter level data
+***************************************************************
+
+
+
+
+
+
+/**drop names that are workdays and weekend ties to be consistent with latest NC data 
+*/
+
+
+*grab selected alterid from alter level data
+use "NC-informant-focal alter-ENSOmatch-clean-20211112",clear
+gen networkcanvassourceuuid = networkcanvasuuid //networkcanvasuuid is alterid  
+gen networkcanvastargetuuid = networkcanvasuuid
+keep networkcanvassourceuuid networkcanvastargetuuid networkcanvasegouuid
+save "NC-informant focal-ENSOmatch",replace
+
+*merge alterid with alter-alter level data
+use "NC-informant-focal altertie-long-20211112",clear
+merge m:1 networkcanvasegouuid networkcanvassourceuuid using "NC-informant focal-ENSOmatch",keepusing(networkcanvassourceuuid)
+keep if _merge==3 //keep selected alters for networkcanvassourceuuid
+drop _merge
+merge m:1 networkcanvasegouuid networkcanvastargetuuid using "NC-informant focal-ENSOmatch",keepusing(networkcanvastargetuuid)
+keep if _merge==3 //keep selected alters for networkcanvassourceuuid
+drop _merge
+
+
+
+/*clean alter-alter level interpretors*/
+
+
+recode alteralterclose (1=3) (2=2) (3=1) 
+label define alteralterclose 1 "Not very close" 2 "Sort of close" 3 "Very close"
+label values alteralterclose alteralterclose
+bysort networkcanvasegouuid: egen totval=total(alteralterclose),mi //for value density
+
+recode alteralterclose (2/3=1) (1=0),gen(tievalue)
+bysort networkcanvasegouuid: egen totnum=total(tievalue),mi //for Binary density
+
+recode alteralterclose (1/3=1),gen(newtievalue)
+bysort networkcanvasegouuid: egen totnum1=total(newtievalue),mi // for Density of networks know each other
+drop _filename
+
+keep networkcanvasegouuid totval totnum totnum1 
+duplicates drop networkcanvasegouuid, force
+save "NC-informant-focal altertie-EGOAGG-ENSOmatch-20211112.dta", replace
+
+
+
+/*Merge with alter level*/
+
+
+merge 1:m networkcanvasegouuid using "NC-informant-focal alter-ENSOmatch-clean-20211112" 
+list SUBID networkcanvasuuid alterid if random=="1" & _merge==2 //alters from important matters not randomly chosen, only 1 alter from important matters was randomly chosen, or alters from important matters did not know each other
+drop _merge
+
+
+/*Clean density etc measures*/
+
+
+*adjust for randomization 
+destring random, replace
+bysort SUBID NC: egen trandom=total(random),mi
+bysort SUBID NC: gen npossties=trandom*(trandom-1)/2 
+bysort SUBID NC: replace npossties=netsize*(netsize-1)/2 if missing(npossties) //early NC did not implement randomization
+
+foreach x of varlist totval totnum totnum1 {
+	replace `x'=0 if inrange(netsize,2,4) & missing(`x') & !missing(mclose) //all 0 on alter-alter ties are absent and treated as missing for totval,totnum, totnum1; need to replace them as 0
+}
+
+gen density=totval/npossties
+lab var density "Valued density of networks from matrix"
+gen bdensity=totnum/npossties
+lab var bdensity "Binary density of networks from matrix"
+gen b1density=totnum1/npossties
+lab var b1density "Density of networks know each other"
+recode b1density (1=0) (.=.) (else=1),gen(sole) 
+lab var sole "Sole bridge status"
+
+bysort SUBID NC: gen npossties_rd=trandom*(trandom-1)/2 
+bysort SUBID NC: gen npossties_full=netsize*(netsize-1)/2
+gen efctsize=netsize - 2*totnum1*(npossties_full/npossties_rd)/netsize //adjust totnum1 proportionaly to npossties_full/npossties_rd; trandom to netsize/trandom
+replace efctsize=netsize-2*totnum1/netsize if missing(efctsize)
+label var efctsize "Effective size"
+drop npossties_rd npossties_full
+
+
+
+
+
+***************************************************************
+**#8c ENSO match: save files 
+***************************************************************
+
+
+
+
+*save files
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned"
+save "NC-informant focal-LONG-ENSOmatch-clean-20211112.dta", replace 
+
+duplicates drop SUBID NC, force
+keep SUBID date_snad NC netsize-efctsize
+save "NC-informant focal-EGOAGG-ENSOmatch-clean-20211112.dta", replace 
+
+
+***************************************************************
+**#6d NC match (workdays and weekends generators are dropped at early of 2021): clean alter level interpretors
 ***************************************************************
 
 
@@ -857,7 +1148,7 @@ save "NC-informant focal-EGOAGG-pilot-clean-20211112.dta", replace
 
 *drop names that are workdays and weekend ties to be consistent with latest NC data 
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\temp"
-use "NC-participant-alter-20211112.dta", clear
+use "NC-informant-focal alter-20211112.dta", clear
 egen match=rowtotal(alterim* alterhm* alteret3 alteret4 alteret5 alteret6 alteret7)
 drop if match==0 | missing(match) 
 
@@ -1025,13 +1316,13 @@ drop relmiss urelpartner-urelclub othfam fri work church prof
 lab var diverse "Network diversity"
 
 drop tclose tfreq numsup numsup3 thassles prox30 tknow ttrust white tkin //drop alter level variables
-save "NC-participant-alter-match-clean-20211112.dta", replace
+save "NC-informant-focal alter-NCmatch-clean-20211112.dta", replace
 
 
 
 
 ***************************************************************
-**#7c NC match: Clean alter-alter level data
+**#7d NC match: Clean alter-alter level data
 ***************************************************************
 
 
@@ -1044,18 +1335,18 @@ save "NC-participant-alter-match-clean-20211112.dta", replace
 
 
 *grab selected alterid from alter level data
-use "NC-participant-alter-match-clean-20211112",clear
+use "NC-informant-focal alter-NCmatch-clean-20211112",clear
 gen networkcanvassourceuuid = networkcanvasuuid //networkcanvasuuid is alterid  
 gen networkcanvastargetuuid = networkcanvasuuid
 keep networkcanvassourceuuid networkcanvastargetuuid networkcanvasegouuid
-save "NC-participant-NCmatch",replace
+save "NC-informant focal-NCmatch",replace
 
 *merge alterid with alter-alter level data
-use "NC-participant-altertie-long-20211112",clear
-merge m:1 networkcanvasegouuid networkcanvassourceuuid using "NC-participant-NCmatch",keepusing(networkcanvassourceuuid)
+use "NC-informant-focal altertie-long-20211112",clear
+merge m:1 networkcanvasegouuid networkcanvassourceuuid using "NC-informant focal-NCmatch",keepusing(networkcanvassourceuuid)
 keep if _merge==3 //keep selected alters for networkcanvassourceuuid
 drop _merge
-merge m:1 networkcanvasegouuid networkcanvastargetuuid using "NC-participant-NCmatch",keepusing(networkcanvastargetuuid)
+merge m:1 networkcanvasegouuid networkcanvastargetuuid using "NC-informant focal-NCmatch",keepusing(networkcanvastargetuuid)
 keep if _merge==3 //keep selected alters for networkcanvassourceuuid
 drop _merge
 
@@ -1078,14 +1369,14 @@ drop _filename
 
 keep networkcanvasegouuid totval totnum totnum1 
 duplicates drop networkcanvasegouuid, force
-save "NC-participant-altertie-EGOAGG-match-20211112.dta", replace
+save "NC-informant-focal altertie-EGOAGG-NCmatch-20211112.dta", replace
 
 
 
 /*Merge with alter level*/
 
 
-merge 1:m networkcanvasegouuid using "NC-participant-alter-match-clean-20211112" 
+merge 1:m networkcanvasegouuid using "NC-informant-focal alter-NCmatch-clean-20211112" 
 list SUBID networkcanvasuuid alterid if random=="1" & _merge==2 //alters from important matters not randomly chosen, only 1 alter from important matters was randomly chosen, or alters from important matters did not know each other
 drop _merge
 
@@ -1124,7 +1415,7 @@ drop npossties_rd npossties_full
 
 
 ***************************************************************
-**#8c NC match: save files 
+**#8d NC match: save files 
 ***************************************************************
 
 
@@ -1132,8 +1423,9 @@ drop npossties_rd npossties_full
 
 *save files
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned"
-save "NC-Participant-LONG-match-clean-20211112.dta", replace 
+save "NC-informant focal-LONG-NCmatch-clean-20211112.dta", replace 
 
 duplicates drop SUBID NC, force
 keep SUBID date_snad NC netsize-efctsize
-save "NC-Participant-EGOAGG-match-clean-20211112.dta", replace 
+save "NC-informant focal-EGOAGG-NCmatch-clean-20211112.dta", replace 
+
