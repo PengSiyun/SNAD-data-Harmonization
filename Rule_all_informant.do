@@ -52,7 +52,6 @@ do "ENSO-informant-Focal altertie-clean" //import & clean FOCAL alter-alter tie 
 do "ENSO-informant-Informant altertie-clean" //import & clean INFORMANT alter-alter tie level data
 do "ENSO-informant-clean" //merge ENSO data together
 
-**start here
 
 **********************************************************************
 **# 4 Netcanvas (NC) data: Network 
@@ -60,14 +59,16 @@ do "ENSO-informant-clean" //merge ENSO data together
 
 
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\code"
-*do "Unzip files-participant" //Unzip files into corresponding folders (only need to be done once data were downloaded from NC)
-do "Netcanvas-participant-clean" //Clean 
+*do "Unzip files-informant" //Unzip files into corresponding folders (only need to be done once data were downloaded from NC)
+do "Netcanvas-informant-focal-clean" //Clean Focal alter 
+do "Netcanvas-informant-informant-clean" //Clean Informant alter 
 
 
 **********************************************************************
 **# 7 Merge & harmonize all sources of data 
 **********************************************************************
 
+**start here
 
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes"
 do "Merge & harmonize data-participant" 
