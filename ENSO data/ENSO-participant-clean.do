@@ -6,14 +6,16 @@
 clear
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\temp" //home
 
-
+**add LONG data for ENSO
 
 ***************************************************************
 **# 1 Merge ENSO data-full
 ***************************************************************
 
 
-*EGOAGG data
+/*EGOAGG data*/
+
+
 use "ENSO-Participant-alter-EGOAGG-clean",clear
 merge 1:1 SUBID using "ENSO-Participant-altertie-EGOAGG-clean"
 fre SUBID if _merge==1 // 19 not in alter tie data
@@ -39,6 +41,14 @@ drop _merge date_red
 
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-EGOAGG-clean",replace
 
+
+/*LONG data*/
+
+
+use "ENSO-Participant-alter-LONG-clean",clear
+drop date_snad //use updated date_snad from above
+merge m:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-EGOAGG-clean",nogen 
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-LONG-clean",replace
 
 
 
@@ -70,6 +80,14 @@ drop _merge date_red
 
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-EGOAGG-pilot-clean",replace
 
+
+/*LONG data*/
+
+
+use "ENSO-Participant-alter-LONG-pilot-clean",clear
+drop date_snad //use updated date_snad from above
+merge m:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-EGOAGG-pilot-clean",nogen 
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-LONG-pilot-clean",replace
 
 
 
@@ -104,3 +122,10 @@ drop _merge date_red
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-EGOAGG-match-clean",replace
 
 
+/*LONG data*/
+
+
+use "ENSO-Participant-alter-LONG-match-clean",clear
+drop date_snad //use updated date_snad from above
+merge m:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-EGOAGG-match-clean",nogen 
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-LONG-match-clean",replace
