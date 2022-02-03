@@ -9,7 +9,7 @@ cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENS
 **add LONG data for ENSO
 
 ***************************************************************
-**# 1 Merge ENSO data-full
+**# 1a Merge ENSO data-full
 ***************************************************************
 
 
@@ -53,9 +53,12 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\E
 
 
 ***************************************************************
-**# 2 Merge ENSO data-pilot
+**# 1b Merge ENSO data-pilot
 ***************************************************************
 
+
+
+/*EGOAGG data*/
 
 
 use "ENSO-Participant-alter-EGOAGG-pilot-clean",clear
@@ -94,9 +97,12 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\E
 
 
 ***************************************************************
-**# 3 Merge ENSO data-NC latest (workdays and weekends generators are dropped at early of 2021)
+**# 1c Merge ENSO data-NC latest (workdays and weekends generators are dropped at early of 2021)
 ***************************************************************
 
+
+
+/*EGOAGG data*/
 
 
 use "ENSO-Participant-alter-EGOAGG-match-clean",clear

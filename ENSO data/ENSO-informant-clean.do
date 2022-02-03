@@ -13,7 +13,10 @@ cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENS
 ***************************************************************
 
 
-*EGOAGG data
+
+/*EGOAGG data*/
+
+
 use "ENSO-Informant-Focal alter-EGOAGG-clean",clear
 merge 1:1 SUBID using "ENSO-informant-focal altertie-EGOAGG-clean"
 fre SUBID if _merge==1 // 11 not in alter tie data
@@ -47,12 +50,23 @@ drop _merge date_red
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Informant focal-EGOAGG-clean",replace
 
 
+/*LONG data*/
+
+
+use "ENSO-Informant-focal alter-LONG-clean",clear
+merge m:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Informant focal-EGOAGG-clean",nogen 
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Informant focal-LONG-clean",replace
+
+
 
 
 ***************************************************************
 **# 1b Merge ENSO Informant Focal data-pilot
 ***************************************************************
 
+
+
+/*EGOAGG data*/
 
 
 use "ENSO-Informant-Focal alter-EGOAGG-pilot-clean",clear
@@ -84,6 +98,14 @@ drop _merge date_red
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Informant focal-EGOAGG-pilot-clean",replace
 
 
+/*LONG data*/
+
+
+use "ENSO-Informant-focal alter-LONG-pilot-clean",clear
+merge m:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Informant focal-EGOAGG-pilot-clean",nogen 
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Informant focal-LONG-pilot-clean",replace
+
+
 
 
 
@@ -92,7 +114,10 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\E
 ***************************************************************
 
 
-*EGOAGG data
+
+/*EGOAGG data*/
+
+
 use "ENSO-Informant-Informant alter-EGOAGG-clean",clear
 merge 1:1 SUBID using "ENSO-informant-informant altertie-EGOAGG-clean"
 fre SUBID if _merge==1 // 9 not in alter tie data
@@ -124,5 +149,13 @@ replace date_snad=date_red if !missing(date_red)
 drop _merge date_red
 
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Informant informant-EGOAGG-clean",replace
+
+
+/*LONG data*/
+
+
+use "ENSO-Informant-informant alter-LONG-clean",clear
+merge m:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Informant informant-EGOAGG-clean",nogen 
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Informant informant-LONG-clean",replace
 
 
