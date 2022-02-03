@@ -1,6 +1,6 @@
 ****Project: Clean informant data 
 ****Author: Siyun Peng & Adam Roth
-****Date:    2022/01/06
+****Date:    2022/01/21
 ****Version: 17 SE
 ****Purpose: Data Analysis
 
@@ -1857,15 +1857,12 @@ lab var sdstrength "Standard deveiation of tie strength-partner"
 
 drop record_id redcap_survey_identifier
 
-foreach x of varlist date_snad-sdstrength {
-rename `x' `x'_i
-}
 gen time=1
 save "SNAD-Partner-T1-Clean-LONG.dta", replace
 
 duplicates drop SUBID, force
 
-drop name_i-strong_i TIEID tfem_i tkin_i tfriend_i tclose_i tfreq_i tknow_i difficult_i thassles_i ttrust_i numsup_i //drop alter level variables
+drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup //drop alter level variables
 
 save "SNAD-Partner-T1-Clean-EGOAGG.dta", replace
 
@@ -2826,15 +2823,12 @@ lab var sdstrength "Standard deveiation of tie strength-partner"
 
 drop record_id 
 
-foreach x of varlist date_snad-sdstrength {
-rename `x' `x'_i
-}
 gen time=2
 save "SNAD-Partner-T2-Clean-LONG.dta", replace
 
 duplicates drop SUBID, force
 
-drop name_i-strong_i TIEID tfem_i tkin_i tfriend_i tclose_i tfreq_i tknow_i difficult_i thassles_i ttrust_i numsup_i tquestion_i questiondoc_i education_i educationcoll_i tcollege_i //drop alter level variables
+drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup tquestion questiondoc education educationcoll tcollege //drop alter level variables
 
 save "SNAD-Partner-T2-Clean-EGOAGG.dta", replace
 
@@ -3786,15 +3780,12 @@ lab var sdstrength "Standard deveiation of tie strength-partner"
 
 drop record_id 
 
-foreach x of varlist date_snad-sdstrength {
-rename `x' `x'_i
-}
 gen time=3
 save "SNAD-Partner-T3-Clean-LONG.dta", replace
 
 duplicates drop SUBID, force
 
-drop name_i-strong_i TIEID tfem_i tkin_i tfriend_i tclose_i tfreq_i tknow_i difficult_i thassles_i ttrust_i numsup_i tquestion_i questiondoc_i education_i educationcoll_i tcollege_i //drop alter level variables
+drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup tquestion questiondoc education educationcoll tcollege //drop alter level variables
 
 save "SNAD-Partner-T3-Clean-EGOAGG.dta", replace
 
@@ -4746,15 +4737,12 @@ lab var sdstrength "Standard deveiation of tie strength-partner"
 
 drop record_id 
 
-foreach x of varlist date_snad-sdstrength {
-rename `x' `x'_i
-}
 gen time=4
 save "SNAD-Partner-T4-Clean-LONG.dta", replace
 
 duplicates drop SUBID, force
 
-drop name_i-strong_i TIEID tfem_i tkin_i tfriend_i tclose_i tfreq_i tknow_i difficult_i thassles_i ttrust_i numsup_i tquestion_i questiondoc_i education_i educationcoll_i tcollege_i //drop alter level variables
+drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup tquestion questiondoc education educationcoll tcollege //drop alter level variables
 
 save "SNAD-Partner-T4-Clean-EGOAGG.dta", replace
 
@@ -4771,14 +4759,14 @@ use "SNAD-Partner-T1-Clean-LONG.dta",clear
 append using "SNAD-Partner-T2-Clean-LONG.dta"
 append using "SNAD-Partner-T3-Clean-LONG.dta",force
 append using "SNAD-Partner-T4-Clean-LONG.dta",force
-drop if missing(name_i)
-rename name_i alter_name_i
+drop if missing(name)
+rename name alter_name
 
 *make names consistent
-replace alter_name_i =strtrim(alter_name_i) //remove leading and trailing blanks
-replace alter_name_i =subinstr(alter_name_i, ".", "",.) //remove .
-replace alter_name_i =strlower(alter_name_i) //change to lower case
-replace alter_name_i =stritrim(alter_name_i) //consecutive blanks collapsed to one blank
+replace alter_name =strtrim(alter_name) //remove leading and trailing blanks
+replace alter_name =subinstr(alter_name, ".", "",.) //remove .
+replace alter_name =strlower(alter_name) //change to lower case
+replace alter_name =stritrim(alter_name) //consecutive blanks collapsed to one blank
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot clean\clean data"
 save "SNAD-Partner-T1234-Clean-LONG",replace
 
@@ -4786,15 +4774,15 @@ save "SNAD-Partner-T1234-Clean-LONG",replace
 import excel using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\UniqueID W12345-Informant-Focal alter", clear first 
 drop if time=="ENSO" //drop ENSO 
 keep SUBID TIEID_uniq_i name_i
-rename (TIEID_uniq_i name_i) (alterid_i alter_name_i)
-duplicates drop SUBID alter_name_i,force //drop alters appears in multiple waves
-duplicates tag SUBID alterid_i,gen(dup) 
-sort SUBID alterid_i
-list SUBID alter_name_i alterid_i if dup>0 //0 alters with the same name but have different id
+rename (TIEID_uniq name) (alterid alter_name)
+duplicates drop SUBID alter_name,force //drop alters appears in multiple waves
+duplicates tag SUBID alterid,gen(dup) 
+sort SUBID alterid
+list SUBID alter_name alterid if dup>0 //0 alters with the same name but have different id
 drop dup
 replace SUBID =subinstr(SUBID, "a", "",.) //remove a
 destring SUBID,replace
 
 *merge
-merge 1:m SUBID alter_name_i using "SNAD-Partner-T1234-Clean-LONG",nogen //all matched
+merge 1:m SUBID alter_name using "SNAD-Partner-T1234-Clean-LONG",nogen //all matched
 save "SNAD-Partner-T1234-Clean-LONG",replace
