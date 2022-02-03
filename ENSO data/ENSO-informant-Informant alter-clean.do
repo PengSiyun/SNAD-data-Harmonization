@@ -7,9 +7,7 @@ clear
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\temp" //home
 
 /*Things to fix later: 
-1. Alter gender, age, race, hispanic, edu, relation type are skipped for old alters, but pilot data did not collect those; need to retrive from NC
-3. SUBID=10216,10259 are in pilot T1 and ENSO T1
-
+1. SUBID=10216,10259 are in pilot T1 and ENSO T1
 */
 
 ************************************************************
@@ -65,6 +63,8 @@ sum salter_mi sclose stalk sstrength
 egen fgen=anymatch(fimp* fhlth* fanyelse* fpartner* fstillmem*),v(1)
 egen sgen=anymatch(simp* shlth* scaregiv* swk* sfamily* scowrkrs* sneighbrs* sanyelse* spartner* sstillmem*),v(1) 
 keep if sgen==1
+
+
 
 ***************************************************************
 **# 2 Remove duplicates in ENSO informant alter data
@@ -362,7 +362,7 @@ gen ENSO=1
 save "ENSO-Informant-Informant alter-LONG-clean.dta", replace 
 duplicates drop SUBID, force
 keep SUBID created_on netsize-ENSO
-drop tfem tkin tclose tfreq thassles numsup white alter_race alter_age numsup numsup3 prox30 //drop alter level variables
+drop tfem tkin tclose tfreq thassles numsup white alter_race alter_age numsup numsup3 prox30 tlkcare hlthprob //drop alter level variables
 save "ENSO-Informant-Informant alter-EGOAGG-clean.dta", replace 
 
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Code" //reset directory for rule-all do file
