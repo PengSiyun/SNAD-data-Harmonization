@@ -12,6 +12,111 @@ clear
 ***************************************************************
 
 
+
+
+
+/*LONG (alter-level)*/
+
+
+use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot clean\clean data\SNAD-Participant-T1234-CleanB-LONG.dta", clear
+append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-LONG-pilot-clean.dta"
+append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned\NC-Participant-LONG-pilot-clean-20211112.dta"
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data"
+
+*gen source indicator
+drop pilot
+rename time pilot //rename old time indicator in pilots
+recode pilot (1/4=1),gen(source) 
+replace source=2 if ENSO==1
+replace source=3 if !missing(NC)
+label define source 1 "Pilot" 2 "ENSO" 3 "NC"
+label values source source
+label var source "Data source"
+
+*make variable names consistent across softwares (pilot,ENSO,NC)
+replace impmat=imd if missing(impmat) //generators
+replace impmat=alterim1 if missing(impmat)
+replace impforce=imr if missing(impforce)
+replace impforce=alterim2 if missing(impforce)
+replace impburdn=imb if missing(impburdn)
+replace impburdn=alterim3 if missing(impburdn)
+replace hlthcount=hmd if missing(hlthcount)
+replace hlthcount=alterhm1 if missing(hlthcount)
+replace hlthencrg=hmr if missing(hlthencrg)
+replace hlthencrg=alterhm2 if missing(hlthencrg)
+replace hlthburdn=hmb if missing(hlthburdn)
+replace hlthburdn=alterhm3 if missing(hlthburdn)
+rename (wkndties wkdyties family cowrkrs neighbrs anyelse partner) (et_wkndties et_wkdyties et_family et_cowrkrs et_neighbrs et_anyelse et_partner)
+replace et_wkndties=alteret1 if missing(et_wkndties)
+replace et_wkdyties=alteret2 if missing(et_wkdyties)
+replace et_family=alteret3 if missing(et_family)
+replace et_cowrkrs=alteret4 if missing(et_cowrkrs)
+replace et_neighbrs=alteret5 if missing(et_neighbrs)
+replace et_anyelse=alteret6 if missing(et_anyelse)
+replace et_partner=alteret7 if missing(et_partner)
+drop imd imr imb hmd hmr hmb alterim1 alterim2 alterim3 alterhm1 alterhm2 alterhm3 alteret1 alteret2 alteret3 alteret4 alteret5 alteret6 alteret7
+
+replace alterfem=tfem if missing(alterfem) //interpretors
+replace alterrace=alter_race if missing(alterrace)
+replace alterage=alter_age if missing(alterage)
+replace altercollege=alter_college if missing(altercollege)
+replace altercollege=tcollege if missing(altercollege)
+recode niclose howclose nitalk seetalk (1=3) (3=1)
+replace altercloseego=niclose if missing(altercloseego)
+replace altercloseego=howclose if missing(altercloseego)
+replace alterfreqcon=nitalk if missing(alterfreqcon)
+replace alterfreqcon=seetalk if missing(alterfreqcon)
+replace listen=nisuplstn if missing(listen)
+replace care=nisupcare if missing(care)
+replace advice=nisupsugg if missing(advice)
+replace chores=nisupchor if missing(chores)
+replace loan=nisupcash if missing(loan)
+rename (listen care advice chores loan) (sup_listen sup_care sup_advice sup_chores sup_loan)
+replace alterhassle=nihassle if missing(alterhassle)
+replace alterhassle=difficult if missing(alterhassle)
+rename altercls110 alterstrength
+replace alterstrength=strong if missing(alterstrength)
+replace alterstrength=nistrength if missing(alterstrength)
+recode knowabout (1=3) (3=1)
+replace alterhknow=knowabout if missing(alterhknow)
+recode trustdoctors (1=3)(3=1)(8=.)
+replace alterdtr=trustdoctors if missing(alterdtr)
+rename alterdtr altertrust
+replace alterquestion=tquestion if missing(alterquestion)
+
+replace relothrel=nirelothrl if missing(relothrel)
+replace relchurch=nirelchrch if missing(relchurch)
+replace relboss=nirelemplr if missing(relboss)
+replace relcowork=nirelcowrk if missing(relcowork)
+replace relemploy=nirelemple if missing(relemploy)
+replace relfriend=nirelfrnd if missing(relfriend)
+replace relauntunc=nirelantun if missing(relauntunc)
+replace relschool=nirelstdnt if missing(relschool)
+replace relsibling=nirelsib if missing(relsibling)
+replace relgrandp=nirelgprnt if missing(relgrandp)
+replace relinlaw=nirelinlaw if missing(relinlaw)
+replace relgrandc=nirelgchld if missing(relgrandc)
+replace relothmed=nirelothmd if missing(relothmed)
+replace relrelig=nirelrabbi if missing(relrelig)
+replace relmental=nirelthrpy if missing(relmental)
+replace rellawyer=nirellwyr if missing(rellawyer)
+replace relpartner=nirelpart if missing(relpartner)
+replace relneigh=nirelnghbr if missing(relneigh)
+replace relclub=nirelclub if missing(relclub)
+replace reldoctor=nireldoc if missing(reldoctor)
+replace relchild=nirelchld if missing(relchild)
+replace relparent=nirelprnt if missing(relparent)
+replace relleisure=nirelactvt if missing(relleisure)
+
+drop tfem alter_race alter_age alter_college tcollege tclose niclose howclose tfreq nitalk seetalk nisupcare nisupcash nisupchor nisuplstn nisupsugg thassles nihassle difficult strong nistrength tknow knowabout trustdoctors ttrust questiondoc tquestion nirel* //keep one name for a measure
+
+
+save "SNAD-Participant-LONG-pilotmatch-clean.dta", replace 
+
+
+/*EGOAGG (ego-level)*/
+
+
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot clean\temp"
 use "SNAD-Participant-T1-CleanB-EGOAGG-120419.dta", clear
 append using "SNAD-Participant-T2-CleanB-EGOAGG-062519.dta"
@@ -39,11 +144,92 @@ save "SNAD-Participant-EGOAGG-pilotmatch-clean.dta", replace
 
 
 
-
-
 ***************************************************************
 **# 1b Append ENSO+ NC matched data (workdays and weekends generators are dropped at early of 2021)
 ***************************************************************
+
+
+
+/*LONG (alter-level)*/
+
+
+use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-LONG-match-clean.dta",clear
+append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned\NC-Participant-LONG-match-clean-20211112.dta"
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data"
+
+*gen source indicator
+gen source=1 if ENSO==1
+replace source=2 if !missing(NC)
+label define source 1 "ENSO" 2 "NC"
+label values source source
+label var source "Data source"
+
+*make variable names consistent across softwares (ENSO, NC)
+replace impmat=alterim1 if missing(impmat)
+replace impforce=alterim2 if missing(impforce)
+replace impburdn=alterim3 if missing(impburdn)
+replace hlthcount=alterhm1 if missing(hlthcount)
+replace hlthencrg=alterhm2 if missing(hlthencrg)
+replace hlthburdn=alterhm3 if missing(hlthburdn)
+rename (wkndties wkdyties family cowrkrs neighbrs anyelse partner) (et_wkndties et_wkdyties et_family et_cowrkrs et_neighbrs et_anyelse et_partner)
+replace et_wkndties=alteret1 if missing(et_wkndties)
+replace et_wkdyties=alteret2 if missing(et_wkdyties)
+replace et_family=alteret3 if missing(et_family)
+replace et_cowrkrs=alteret4 if missing(et_cowrkrs)
+replace et_neighbrs=alteret5 if missing(et_neighbrs)
+replace et_anyelse=alteret6 if missing(et_anyelse)
+replace et_partner=alteret7 if missing(et_partner)
+drop alterim1 alterim2 alterim3 alterhm1 alterhm2 alterhm3 alteret1 alteret2 alteret3 alteret4 alteret5 alteret6 alteret7
+
+replace alterfem=tfem if missing(alterfem) //interpretors
+replace alterrace=alter_race if missing(alterrace)
+replace alterage=alter_age if missing(alterage)
+replace altercollege=alter_college if missing(altercollege)
+recode niclose nitalk (1=3) (3=1)
+replace altercloseego=niclose if missing(altercloseego)
+replace alterfreqcon=nitalk if missing(alterfreqcon)
+replace listen=nisuplstn if missing(listen)
+replace care=nisupcare if missing(care)
+replace advice=nisupsugg if missing(advice)
+replace chores=nisupchor if missing(chores)
+replace loan=nisupcash if missing(loan)
+rename (listen care advice chores loan) (sup_listen sup_care sup_advice sup_chores sup_loan)
+replace alterhassle=nihassle if missing(alterhassle)
+rename altercls110 alterstrength
+replace alterstrength=nistrength if missing(alterstrength)
+rename alterdtr altertrust
+
+replace relothrel=nirelothrl if missing(relothrel)
+replace relchurch=nirelchrch if missing(relchurch)
+replace relboss=nirelemplr if missing(relboss)
+replace relcowork=nirelcowrk if missing(relcowork)
+replace relemploy=nirelemple if missing(relemploy)
+replace relfriend=nirelfrnd if missing(relfriend)
+replace relauntunc=nirelantun if missing(relauntunc)
+replace relschool=nirelstdnt if missing(relschool)
+replace relsibling=nirelsib if missing(relsibling)
+replace relgrandp=nirelgprnt if missing(relgrandp)
+replace relinlaw=nirelinlaw if missing(relinlaw)
+replace relgrandc=nirelgchld if missing(relgrandc)
+replace relothmed=nirelothmd if missing(relothmed)
+replace relrelig=nirelrabbi if missing(relrelig)
+replace relmental=nirelthrpy if missing(relmental)
+replace rellawyer=nirellwyr if missing(rellawyer)
+replace relpartner=nirelpart if missing(relpartner)
+replace relneigh=nirelnghbr if missing(relneigh)
+replace relclub=nirelclub if missing(relclub)
+replace reldoctor=nireldoc if missing(reldoctor)
+replace relchild=nirelchld if missing(relchild)
+replace relparent=nirelprnt if missing(relparent)
+replace relleisure=nirelactvt if missing(relleisure)
+
+drop tfem alter_race alter_age alter_college tclose niclose tfreq nitalk nisupcare nisupcash nisupchor nisuplstn nisupsugg thassles nihassle nistrength tknow ttrust nirel* //keep one name for a measure
+
+
+save "SNAD-Participant-LONG-match-clean.dta", replace 
+
+
+/*EGOAGG (ego-level)*/
 
 
 use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-EGOAGG-match-clean.dta", clear
@@ -69,6 +255,89 @@ save "SNAD-Participant-EGOAGG-match-clean.dta", replace
 ***************************************************************
 **# 1c Append full participant ENSO+NC
 ***************************************************************
+
+
+
+
+/*LONG (alter-level)*/
+
+
+use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-LONG-clean.dta",clear
+append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned\NC-Participant-LONG-clean-20211112.dta"
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data"
+
+*gen source indicator
+gen source=1 if ENSO==1
+replace source=2 if !missing(NC)
+label define source 1 "ENSO" 2 "NC"
+label values source source
+label var source "Data source"
+
+*make variable names consistent across softwares (ENSO, NC)
+replace impmat=alterim1 if missing(impmat)
+replace impforce=alterim2 if missing(impforce)
+replace impburdn=alterim3 if missing(impburdn)
+replace hlthcount=alterhm1 if missing(hlthcount)
+replace hlthencrg=alterhm2 if missing(hlthencrg)
+replace hlthburdn=alterhm3 if missing(hlthburdn)
+rename (wkndties wkdyties family cowrkrs neighbrs anyelse partner) (et_wkndties et_wkdyties et_family et_cowrkrs et_neighbrs et_anyelse et_partner)
+replace et_wkndties=alteret1 if missing(et_wkndties)
+replace et_wkdyties=alteret2 if missing(et_wkdyties)
+replace et_family=alteret3 if missing(et_family)
+replace et_cowrkrs=alteret4 if missing(et_cowrkrs)
+replace et_neighbrs=alteret5 if missing(et_neighbrs)
+replace et_anyelse=alteret6 if missing(et_anyelse)
+replace et_partner=alteret7 if missing(et_partner)
+drop alterim1 alterim2 alterim3 alterhm1 alterhm2 alterhm3 alteret1 alteret2 alteret3 alteret4 alteret5 alteret6 alteret7
+
+replace alterfem=tfem if missing(alterfem) //interpretors
+replace alterrace=alter_race if missing(alterrace)
+replace alterage=alter_age if missing(alterage)
+replace altercollege=alter_college if missing(altercollege)
+recode niclose nitalk (1=3) (3=1)
+replace altercloseego=niclose if missing(altercloseego)
+replace alterfreqcon=nitalk if missing(alterfreqcon)
+replace listen=nisuplstn if missing(listen)
+replace care=nisupcare if missing(care)
+replace advice=nisupsugg if missing(advice)
+replace chores=nisupchor if missing(chores)
+replace loan=nisupcash if missing(loan)
+rename (listen care advice chores loan) (sup_listen sup_care sup_advice sup_chores sup_loan)
+replace alterhassle=nihassle if missing(alterhassle)
+rename altercls110 alterstrength
+replace alterstrength=nistrength if missing(alterstrength)
+rename alterdtr altertrust
+
+replace relothrel=nirelothrl if missing(relothrel)
+replace relchurch=nirelchrch if missing(relchurch)
+replace relboss=nirelemplr if missing(relboss)
+replace relcowork=nirelcowrk if missing(relcowork)
+replace relemploy=nirelemple if missing(relemploy)
+replace relfriend=nirelfrnd if missing(relfriend)
+replace relauntunc=nirelantun if missing(relauntunc)
+replace relschool=nirelstdnt if missing(relschool)
+replace relsibling=nirelsib if missing(relsibling)
+replace relgrandp=nirelgprnt if missing(relgrandp)
+replace relinlaw=nirelinlaw if missing(relinlaw)
+replace relgrandc=nirelgchld if missing(relgrandc)
+replace relothmed=nirelothmd if missing(relothmed)
+replace relrelig=nirelrabbi if missing(relrelig)
+replace relmental=nirelthrpy if missing(relmental)
+replace rellawyer=nirellwyr if missing(rellawyer)
+replace relpartner=nirelpart if missing(relpartner)
+replace relneigh=nirelnghbr if missing(relneigh)
+replace relclub=nirelclub if missing(relclub)
+replace reldoctor=nireldoc if missing(reldoctor)
+replace relchild=nirelchld if missing(relchild)
+replace relparent=nirelprnt if missing(relparent)
+replace relleisure=nirelactvt if missing(relleisure)
+
+drop tfem alter_race alter_age alter_college tclose niclose tfreq nitalk nisupcare nisupcash nisupchor nisuplstn nisupsugg thassles nihassle nistrength tknow ttrust nirel* //keep one name for a measure
+
+save "SNAD-Participant-LONG-clean.dta", replace 
+
+
+/*EGOAGG (ego-level)*/
 
 
 
@@ -529,7 +798,11 @@ merge m:1 SUBID using "Demographics.dta"
 drop if _merge==2 //Demo data not matched with network data
 drop _merge 
 personage dobdate date_snad, gen(agesnad) //create age based on SNAD date; install personage if not alreday 
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-R01full-preexlusion-20211222",replace
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-R01raw-preexlusion-20211222",replace
+
+*add LONG data (alter-level)
+merge 1:m SUBID date_snad using "SNAD-Participant-LONG-clean",nogen //add alter-level on top of EGOAGG
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-LONG-R01raw-preexlusion-20211222",replace
 
 restore
 preserve
@@ -548,6 +821,10 @@ drop _merge
 
 personage dobdate date_snad, gen(agesnad) //create age based on SNAD date; install personage if not alreday 
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-pilotmatch-preexlusion-20211222",replace
+
+*add LONG data (alter-level)
+merge 1:m SUBID date_snad using "SNAD-Participant-LONG-pilotmatch-clean",nogen //add alter-level on top of EGOAGG
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-LONG-pilotmatch-preexlusion-20211222",replace
 
 
 restore
@@ -568,6 +845,10 @@ drop _merge
 personage dobdate date_snad, gen(agesnad) //create age based on SNAD date; install personage if not alreday 
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-R01match-preexlusion-20211222",replace
 
+*add LONG data (alter-level)
+merge 1:m SUBID date_snad using "SNAD-Participant-LONG-match-clean",nogen //add alter-level on top of EGOAGG
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-LONG-R01match-preexlusion-20211222",replace
+
 
 
 
@@ -584,29 +865,49 @@ cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean dat
 /*R01 only*/
 
 
-use "SNAD-Analysis-R01full-preexlusion-20211222",clear
+*EGOAGG
+use "SNAD-Analysis-R01raw-preexlusion-20211222",clear
 drop if agesnad<45 | MOCATOTS<10
 drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
-save "SNAD-Analysis-R01full-20211222", replace
+save "SNAD-Analysis-R01raw-20211222", replace
+
+*LONG
+use "SNAD-Analysis-LONG-R01raw-preexlusion-20211222",clear
+drop if agesnad<45 | MOCATOTS<10
+drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
+save "SNAD-Analysis-LONG-R01raw-20211222", replace
 
 
 /*Pilot matched*/
 
 
+*EGOAGG
 use "SNAD-Analysis-pilotmatch-preexlusion-20211222",clear
 
 drop if agesnad<45 | MOCATOTS<10
 drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
 save "SNAD-Analysis-pilotmatch-20211222", replace
 
+*LONG
+use "SNAD-Analysis-LONG-pilotmatch-preexlusion-20211222",clear
+drop if agesnad<45 | MOCATOTS<10
+drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
+save "SNAD-Analysis-LONG-pilotmatch-20211222", replace
+
 
 /*R01 matched*/
 
 
+*EGOAGG
 use "SNAD-Analysis-R01match-preexlusion-20211222",clear
 
 drop if agesnad<45 | MOCATOTS<10
 drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
 save "SNAD-Analysis-R01match-20211222", replace
 
+*LONG
+use "SNAD-Analysis-LONG-R01match-preexlusion-20211222",clear
+drop if agesnad<45 | MOCATOTS<10
+drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
+save "SNAD-Analysis-LONG-R01match-20211222", replace
 
