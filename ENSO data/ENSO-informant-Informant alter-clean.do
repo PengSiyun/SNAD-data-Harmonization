@@ -362,7 +362,7 @@ gen ENSO=1
 save "ENSO-Informant-Informant alter-LONG-clean.dta", replace 
 duplicates drop SUBID, force
 keep SUBID created_on netsize-ENSO
-drop tfem tkin tclose tfreq thassles numsup white alter_race alter_age numsup numsup3 prox30 tlkcare hlthprob //drop alter level variables
+drop tfem tkin tclose tfreq thassles numsup white alter_race alter_age numsup numsup3 prox30 tlkcare hlthprob alterprox alterdtr alterquestion ssupcare ssupcash ssupchor ssuplstn ssupsugg shassle stlkcare shlthprob ttrust //drop alter level variables
 save "ENSO-Informant-Informant alter-EGOAGG-clean.dta", replace 
 
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Code" //reset directory for rule-all do file

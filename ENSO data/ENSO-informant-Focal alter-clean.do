@@ -207,7 +207,6 @@ save "ENSO-Informant-Focal alter-LONG.dta",replace
 
 use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot clean\clean data\SNAD-Partner-T1234-Clean-LONG",replace
 keep SUBID alterid time rel* tfem tcollege
-rename alterid_i alterid
 
 *Only keep 1 wave 
 tostring SUBID alterid,replace
@@ -215,7 +214,7 @@ gen id=SUBID+alterid
 destring SUBID alterid,replace
 reshape wide rel* tfem tcollege,i(id) j(time)
 drop id
-foreach x in tfem_i tcollege_i relpartner_i relparent_i relsibling_i relchild_i relgrandp_i relgrandc_i relauntunc_i relinlaw_i relothrel_i relcowork_i relneigh_i relfriend_i relboss_i relemploy_i relschool_i rellawyer_i reldoctor_i relothmed_i relmental_i relrelig_i relchurch_i relclub_i relleisure_i {
+foreach x in tfem tcollege relpartner relparent relsibling relchild relgrandp relgrandc relauntunc relinlaw relothrel relcowork relneigh relfriend relboss relemploy relschool rellawyer reldoctor relothmed relmental relrelig relchurch relclub relleisure {
 	replace `x'4=`x'3 if missing(`x'4) 
 	replace `x'4=`x'2 if missing(`x'4)
 	replace `x'4=`x'1 if missing(`x'4)
@@ -458,7 +457,7 @@ gen ENSO=1
 save "ENSO-Informant-Focal alter-LONG-clean.dta", replace 
 duplicates drop SUBID, force
 keep SUBID created_on netsize-ENSO
-drop tfem tkin tclose tfreq thassles numsup white alter_race alter_age numsup numsup3 prox30 //drop alter level variables
+drop tfem tkin tclose tfreq thassles numsup white alter_race alter_age numsup numsup3 prox30 alterprox fsclose tficlose fsupcare fsupcash fsupchor fsuplstn fsupsugg fhassle //drop alter level variables
 save "ENSO-Informant-Focal alter-EGOAGG-clean.dta", replace 
 
 
@@ -659,7 +658,7 @@ gen ENSO=1
 save "ENSO-Informant-Focal alter-LONG-pilot-clean.dta", replace 
 duplicates drop SUBID, force
 keep SUBID created_on netsize-ENSO
-drop tfem tkin tclose tfreq thassles numsup white alter_race alter_age numsup numsup3 prox30 //drop alter level variables
+drop tfem tkin tclose tfreq thassles numsup white alter_race alter_age numsup numsup3 prox30 alterprox fsclose tficlose fsupcare fsupcash fsupchor fsuplstn fsupsugg fhassle //drop alter level variables
 save "ENSO-Informant-Focal alter-EGOAGG-pilot-clean.dta", replace 
 
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Code" //reset directory for rule-all do file
