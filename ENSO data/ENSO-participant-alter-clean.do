@@ -592,7 +592,7 @@ save "ENSO-Participant-alter-LONG-clean.dta", replace
 
 duplicates drop SUBID, force
 keep SUBID date_snad netsize-ENSO
-drop tfem tkin tclose tfreq thassles numsup white alter_race alter_age numsup numsup3 prox30 tknow ttrust //drop alter level variables
+drop tfem tkin tclose tfreq thassles numsup white alter_race alter_age numsup numsup3 prox30 tknow ttrust alterprox alterquestion alterdtr alterhknow niclose nitalk nisupcare nisupcash nisupchor nisuplstn nisupsugg nihassle nistrength //drop alter level variables
 save "ENSO-Participant-alter-EGOAGG-clean.dta", replace 
 
 
@@ -818,7 +818,7 @@ save "ENSO-Participant-alter-LONG-pilot-clean.dta", replace
 
 duplicates drop SUBID, force
 keep SUBID date_snad netsize-ENSO
-drop tfem tkin tclose tfreq thassles numsup white alter_race alter_age numsup numsup3 prox30 tknow ttrust //drop alter level variables
+drop tfem tkin tclose tfreq thassles numsup white alter_race alter_age numsup numsup3 prox30 tknow ttrust alterprox alterquestion alterdtr alterhknow niclose nitalk nisupcare nisupcash nisupchor nisuplstn nisupsugg nihassle nistrength //drop alter level variables
 save "ENSO-Participant-alter-EGOAGG-pilot-clean.dta", replace 
 
 
@@ -1043,7 +1043,7 @@ save "ENSO-Participant-alter-LONG-match-clean.dta", replace
 
 duplicates drop SUBID, force
 keep SUBID date_snad netsize-ENSO
-drop tfem tkin tclose tfreq thassles numsup white alter_race alter_age numsup numsup3 prox30 tknow ttrust //drop alter level variables
+drop tfem tkin tclose tfreq thassles numsup white alter_race alter_age numsup numsup3 prox30 tknow ttrust alterprox alterquestion alterdtr alterhknow niclose nitalk nisupcare nisupcash nisupchor nisuplstn nisupsugg nihassle nistrength //drop alter level variables
 save "ENSO-Participant-alter-EGOAGG-match-clean.dta", replace 
 
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Code" //reset directory for rule-all do file
