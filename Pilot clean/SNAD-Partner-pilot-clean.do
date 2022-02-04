@@ -1862,7 +1862,7 @@ save "SNAD-Partner-T1-Clean-LONG.dta", replace
 
 duplicates drop SUBID, force
 
-drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup //drop alter level variables
+drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup im? hm? //drop alter level variables
 
 save "SNAD-Partner-T1-Clean-EGOAGG.dta", replace
 
@@ -2828,7 +2828,7 @@ save "SNAD-Partner-T2-Clean-LONG.dta", replace
 
 duplicates drop SUBID, force
 
-drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup tquestion questiondoc education educationcoll tcollege //drop alter level variables
+drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup tquestion questiondoc education educationcoll tcollege im? hm?  //drop alter level variables
 
 save "SNAD-Partner-T2-Clean-EGOAGG.dta", replace
 
@@ -3785,7 +3785,7 @@ save "SNAD-Partner-T3-Clean-LONG.dta", replace
 
 duplicates drop SUBID, force
 
-drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup tquestion questiondoc education educationcoll tcollege //drop alter level variables
+drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup tquestion questiondoc education educationcoll tcollege im? hm?  //drop alter level variables
 
 save "SNAD-Partner-T3-Clean-EGOAGG.dta", replace
 
@@ -4742,7 +4742,7 @@ save "SNAD-Partner-T4-Clean-LONG.dta", replace
 
 duplicates drop SUBID, force
 
-drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup tquestion questiondoc education educationcoll tcollege //drop alter level variables
+drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup tquestion questiondoc education educationcoll tcollege im? hm?  //drop alter level variables
 
 save "SNAD-Partner-T4-Clean-EGOAGG.dta", replace
 
