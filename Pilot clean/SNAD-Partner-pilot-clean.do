@@ -1862,7 +1862,7 @@ save "SNAD-Partner-T1-Clean-LONG.dta", replace
 
 duplicates drop SUBID, force
 
-drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup im? hm? //drop alter level variables
+drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup im? hm? seetalkr //drop alter level variables
 
 save "SNAD-Partner-T1-Clean-EGOAGG.dta", replace
 
@@ -2828,7 +2828,7 @@ save "SNAD-Partner-T2-Clean-LONG.dta", replace
 
 duplicates drop SUBID, force
 
-drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup tquestion questiondoc education educationcoll tcollege im? hm?  //drop alter level variables
+drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup tquestion questiondoc education educationcoll tcollege im? hm?  seetalkr //drop alter level variables
 
 save "SNAD-Partner-T2-Clean-EGOAGG.dta", replace
 
@@ -3785,7 +3785,7 @@ save "SNAD-Partner-T3-Clean-LONG.dta", replace
 
 duplicates drop SUBID, force
 
-drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup tquestion questiondoc education educationcoll tcollege im? hm?  //drop alter level variables
+drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup tquestion questiondoc education educationcoll tcollege im? hm?  seetalkr //drop alter level variables
 
 save "SNAD-Partner-T3-Clean-EGOAGG.dta", replace
 
@@ -4742,7 +4742,7 @@ save "SNAD-Partner-T4-Clean-LONG.dta", replace
 
 duplicates drop SUBID, force
 
-drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup tquestion questiondoc education educationcoll tcollege im? hm?  //drop alter level variables
+drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup tquestion questiondoc education educationcoll tcollege im? hm?  seetalkr //drop alter level variables
 
 save "SNAD-Partner-T4-Clean-EGOAGG.dta", replace
 
@@ -4767,6 +4767,10 @@ replace alter_name =strtrim(alter_name) //remove leading and trailing blanks
 replace alter_name =subinstr(alter_name, ".", "",.) //remove .
 replace alter_name =strlower(alter_name) //change to lower case
 replace alter_name =stritrim(alter_name) //consecutive blanks collapsed to one blank
+
+*drop quality_of_life (keep the network proportion to avoid naming conflict)
+drop health-comments 
+
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot clean\clean data"
 save "SNAD-Partner-T1234-Clean-LONG",replace
 
