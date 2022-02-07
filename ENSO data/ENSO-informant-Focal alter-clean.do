@@ -269,7 +269,7 @@ replace freldoc=reldoctor if relmiss==0
 replace frelchld=relchild if relmiss==0
 replace frelprnt=relparent if relmiss==0
 replace frelactvt=relleisure if relmiss==0
-drop rel*
+drop rel* _srel*
 
 
 

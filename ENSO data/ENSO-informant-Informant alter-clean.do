@@ -190,7 +190,7 @@ save "ENSO-Informant-Informant alter-LONG.dta",replace
 
 
 *drop FOCAL variables
-drop f*
+drop f* _frel*
 
 *******clean name interpretors 
 bysort SUBID: egen netsize=count(alter_name)
