@@ -68,6 +68,13 @@ egen salter_mi=rowmean(sclose stalk)
 sum salter_mi sclose stalk sstrength
 
 *generators
+foreach x in fhlthburdn fhlthcount fhlthencrg fimpburdn fimpforce fimpmat ///
+    fanyelse fpartner {
+	egen `x'new=rowmean(`x'1 `x'2 `x'3 `x'4 `x'5)
+	drop `x'1 `x'2 `x'3 `x'4 `x'5
+	rename `x'new `x'
+}
+
 egen fgen=anymatch(fimp* fhlth* fanyelse* fpartner* fstillmem*),v(1)
 egen sgen=anymatch(simp* shlth* scaregiv* swk* sfamily* scowrkrs* sneighbrs* sanyelse* spartner* sstillmem*),v(1) 
 fre fgen falter_mi
