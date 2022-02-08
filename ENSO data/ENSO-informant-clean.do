@@ -55,6 +55,8 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\E
 
 use "ENSO-Informant-focal alter-LONG-clean",clear
 merge m:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Informant focal-EGOAGG-clean",nogen //add alter-level data on top of cleaned EGOAGG data
+rename (fanyelse fpartner) (et_anyelse et_partner)
+
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Informant focal-LONG-clean",replace
 
 
@@ -105,6 +107,8 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\E
 
 use "ENSO-Informant-focal alter-LONG-pilot-clean",clear
 merge m:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Informant focal-EGOAGG-pilot-clean",nogen //add alter-level data on top of cleaned EGOAGG data
+rename (fanyelse fpartner) (et_anyelse et_partner)
+
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Informant focal-LONG-pilot-clean",replace
 
 
@@ -158,6 +162,7 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\E
 
 use "ENSO-Informant-informant alter-LONG-clean",clear
 merge m:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Informant informant-EGOAGG-clean",nogen  //add alter-level data on top of cleaned EGOAGG data
+
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Informant informant-LONG-clean",replace
 
 
