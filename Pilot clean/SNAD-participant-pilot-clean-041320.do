@@ -3972,7 +3972,7 @@ use "SNAD-Participant-T1-CleanB-LONG-120419.dta",clear
 append using "SNAD-Participant-T2-CleanB-LONG-062519.dta"
 append using "SNAD-Participant-T3-CleanB-LONG-062519.dta"
 append using "SNAD-Participant-T4-CleanB-LONG-092520.dta",force
-drop if missing(name)
+drop if missing(name) & netsize!=0
 rename name alter_name
 
 *make names consistent
@@ -3995,5 +3995,5 @@ list SUBID alter_name if dup>0 //0 alters with the same name but have different 
 drop dup
 
 *merge
-merge 1:m SUBID alter_name using "SNAD-Participant-T1234-CleanB-LONG",nogen //all matched
+merge 1:m SUBID alter_name using "SNAD-Participant-T1234-CleanB-LONG",nogen //all matched except 200 netsize=0
 save "SNAD-Participant-T1234-CleanB-LONG",replace
