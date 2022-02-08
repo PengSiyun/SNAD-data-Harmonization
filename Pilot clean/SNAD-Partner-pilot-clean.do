@@ -1807,8 +1807,7 @@ bysort SUBID: egen mfreq=mean(seetalkr)
 lab var mfreq "Mean freq of contact in network, HI=MORE-partner"
 bysort SUBID: egen sdfreq=sd(seetalkr)
 lab var sdfreq "Standard deviation of freq of contact in network-partner"
-
-drop seetalk
+drop seetalkr
 
 gen tknow=knowabout
 recode tknow (2/3=0)
@@ -1858,11 +1857,17 @@ lab var sdstrength "Standard deveiation of tie strength-partner"
 drop record_id redcap_survey_identifier
 
 gen time=1
+
+*retrive interview date from FOCAL
+*merge m:1 SUBID using "SNAD-Participant-T1-CleanB-EGOAGG-120419.dta",keepusing(date_snad) update replace
+
 save "SNAD-Partner-T1-Clean-LONG.dta", replace
 
 duplicates drop SUBID, force
 
-drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup im? hm? seetalkr //drop alter level variables
+drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup im? hm? seetalk //drop alter level variables
+
+merge 1:1 SUBID using "SNAD-Participant-T1-CleanB-EGOAGG-120419.dta",keepusing(date_snad) update replace
 
 save "SNAD-Partner-T1-Clean-EGOAGG.dta", replace
 
@@ -2773,8 +2778,7 @@ bysort SUBID: egen mfreq=mean(seetalkr)
 lab var mfreq "Mean freq of contact in network, HI=MORE-partner"
 bysort SUBID: egen sdfreq=sd(seetalkr)
 lab var sdfreq "Standard deviation of freq of contact in network-partner"
-
-drop seetalk
+drop seetalkr
 
 gen tknow=knowabout
 recode tknow (2/3=0)
@@ -2828,7 +2832,7 @@ save "SNAD-Partner-T2-Clean-LONG.dta", replace
 
 duplicates drop SUBID, force
 
-drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup tquestion questiondoc education educationcoll tcollege im? hm?  seetalkr //drop alter level variables
+drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup tquestion questiondoc education educationcoll tcollege im? hm?  seetalk //drop alter level variables
 
 save "SNAD-Partner-T2-Clean-EGOAGG.dta", replace
 
@@ -3730,8 +3734,7 @@ bysort SUBID: egen mfreq=mean(seetalkr)
 lab var mfreq "Mean freq of contact in network, HI=MORE-partner"
 bysort SUBID: egen sdfreq=sd(seetalkr)
 lab var sdfreq "Standard deviation of freq of contact in network-partner"
-
-drop seetalk
+drop seetalkr
 
 gen tknow=knowabout
 recode tknow (2/3=0)
@@ -3785,7 +3788,7 @@ save "SNAD-Partner-T3-Clean-LONG.dta", replace
 
 duplicates drop SUBID, force
 
-drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup tquestion questiondoc education educationcoll tcollege im? hm?  seetalkr //drop alter level variables
+drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup tquestion questiondoc education educationcoll tcollege im? hm?  seetalk //drop alter level variables
 
 save "SNAD-Partner-T3-Clean-EGOAGG.dta", replace
 
@@ -4687,8 +4690,7 @@ bysort SUBID: egen mfreq=mean(seetalkr)
 lab var mfreq "Mean freq of contact in network, HI=MORE-partner"
 bysort SUBID: egen sdfreq=sd(seetalkr)
 lab var sdfreq "Standard deviation of freq of contact in network-partner"
-
-drop seetalk
+drop seetalkr
 
 gen tknow=knowabout
 recode tknow (2/3=0)
@@ -4742,7 +4744,7 @@ save "SNAD-Partner-T4-Clean-LONG.dta", replace
 
 duplicates drop SUBID, force
 
-drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup tquestion questiondoc education educationcoll tcollege im? hm?  seetalkr //drop alter level variables
+drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup tquestion questiondoc education educationcoll tcollege im? hm?  seetalk //drop alter level variables
 
 save "SNAD-Partner-T4-Clean-EGOAGG.dta", replace
 
@@ -4767,9 +4769,6 @@ replace alter_name =strtrim(alter_name) //remove leading and trailing blanks
 replace alter_name =subinstr(alter_name, ".", "",.) //remove .
 replace alter_name =strlower(alter_name) //change to lower case
 replace alter_name =stritrim(alter_name) //consecutive blanks collapsed to one blank
-
-*drop quality_of_life (keep the network proportion to avoid naming conflict)
-drop health-comments 
 
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot clean\clean data"
 save "SNAD-Partner-T1234-Clean-LONG",replace
