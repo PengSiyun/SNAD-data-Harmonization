@@ -4753,7 +4753,7 @@ use "SNAD-Partner-T1-Clean-LONG.dta",clear
 append using "SNAD-Partner-T2-Clean-LONG.dta"
 append using "SNAD-Partner-T3-Clean-LONG.dta",force
 append using "SNAD-Partner-T4-Clean-LONG.dta",force
-drop if missing(name) & netsize!=0
+drop if missing(name)
 rename name alter_name
 
 *make names consistent
@@ -4782,5 +4782,5 @@ replace SUBID =subinstr(SUBID, "a", "",.) //remove a
 destring SUBID,replace
 
 *merge
-merge 1:m SUBID alter_name using "SNAD-Partner-T1234-Clean-LONG",nogen //all matched except 100 netsize=0
+merge 1:m SUBID alter_name using "SNAD-Partner-T1234-Clean-LONG",nogen //all matched 
 save "SNAD-Partner-T1234-Clean-LONG",replace
