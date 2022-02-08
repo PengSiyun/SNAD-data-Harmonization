@@ -3980,6 +3980,7 @@ replace alter_name =strtrim(alter_name) //remove leading and trailing blanks
 replace alter_name =subinstr(alter_name, ".", "",.) //remove .
 replace alter_name =strlower(alter_name) //change to lower case
 replace alter_name =stritrim(alter_name) //consecutive blanks collapsed to one blank
+
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot clean\clean data"
 save "SNAD-Participant-T1234-CleanB-LONG",replace
 
