@@ -48,6 +48,8 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\E
 use "ENSO-Participant-alter-LONG-clean",clear
 drop date_snad //use updated date_snad from above
 merge m:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-EGOAGG-clean",nogen  //add alter-level data on top of cleaned EGOAGG data
+rename (wkndties wkdyties family cowrkrs neighbrs anyelse partner) (et_wkndties et_wkdyties et_family et_cowrkrs et_neighbrs et_anyelse et_partner)
+
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-LONG-clean",replace
 
 
@@ -92,6 +94,8 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\E
 use "ENSO-Participant-alter-LONG-pilot-clean",clear
 drop date_snad //use updated date_snad from above
 merge m:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-EGOAGG-pilot-clean",nogen //add alter-level data on top of cleaned EGOAGG data
+rename (wkndties wkdyties family cowrkrs neighbrs anyelse partner) (et_wkndties et_wkdyties et_family et_cowrkrs et_neighbrs et_anyelse et_partner)
+
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-LONG-pilot-clean",replace
 
 
@@ -138,4 +142,6 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\E
 use "ENSO-Participant-alter-LONG-match-clean",clear
 drop date_snad //use updated date_snad from above
 merge m:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-EGOAGG-match-clean",nogen //add alter-level data on top of cleaned EGOAGG data
+rename (wkndties wkdyties family cowrkrs neighbrs anyelse partner) (et_wkndties et_wkdyties et_family et_cowrkrs et_neighbrs et_anyelse et_partner)
+
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-LONG-match-clean",replace
