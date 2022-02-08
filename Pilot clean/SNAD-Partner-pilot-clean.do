@@ -1855,20 +1855,12 @@ bysort SUBID: egen sdstrength=sd(strong)
 lab var sdstrength "Standard deveiation of tie strength-partner"
 
 drop record_id redcap_survey_identifier
-
 gen time=1
-
-*retrive interview date from FOCAL
-*merge m:1 SUBID using "SNAD-Participant-T1-CleanB-EGOAGG-120419.dta",keepusing(date_snad) update replace
-
 save "SNAD-Partner-T1-Clean-LONG.dta", replace
 
 duplicates drop SUBID, force
 
 drop name-strong TIEID tfem tkin tfriend tclose tfreq tknow difficult thassles ttrust numsup im? hm? seetalk //drop alter level variables
-
-merge 1:1 SUBID using "SNAD-Participant-T1-CleanB-EGOAGG-120419.dta",keepusing(date_snad) update replace
-
 save "SNAD-Partner-T1-Clean-EGOAGG.dta", replace
 
 
@@ -4761,7 +4753,7 @@ use "SNAD-Partner-T1-Clean-LONG.dta",clear
 append using "SNAD-Partner-T2-Clean-LONG.dta"
 append using "SNAD-Partner-T3-Clean-LONG.dta",force
 append using "SNAD-Partner-T4-Clean-LONG.dta",force
-drop if missing(name)
+drop if missing(name) & netsize!=0
 rename name alter_name
 
 *make names consistent
@@ -4769,6 +4761,9 @@ replace alter_name =strtrim(alter_name) //remove leading and trailing blanks
 replace alter_name =subinstr(alter_name, ".", "",.) //remove .
 replace alter_name =strlower(alter_name) //change to lower case
 replace alter_name =stritrim(alter_name) //consecutive blanks collapsed to one blank
+
+*drop quality_of_life (keep the network proportion to avoid naming conflict)
+drop health-comments 
 
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot clean\clean data"
 save "SNAD-Partner-T1234-Clean-LONG",replace
@@ -4787,5 +4782,5 @@ replace SUBID =subinstr(SUBID, "a", "",.) //remove a
 destring SUBID,replace
 
 *merge
-merge 1:m SUBID alter_name using "SNAD-Partner-T1234-Clean-LONG",nogen //all matched
+merge 1:m SUBID alter_name using "SNAD-Partner-T1234-Clean-LONG",nogen //all matched except 100 netsize=0
 save "SNAD-Partner-T1234-Clean-LONG",replace
