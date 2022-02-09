@@ -4,8 +4,11 @@
 ****Version: 17
 ****Purpose: Harmonize data from IADRC and SNAD -participant
 clear
-
-
+/*
+To do: 
+1. mail-in packet from IADRC vs. Redcap
+2. quality of life in pilot vs. Redcap R01
+*/
 
 ***************************************************************
 **# 1a Append Pilot participant T1, T2, T3, T4+ ENSO+ NC
@@ -157,9 +160,9 @@ append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data"
 
 *gen source indicator
-gen source=1 if ENSO==1
-replace source=2 if !missing(NC)
-label define source 1 "ENSO" 2 "NC"
+gen source=2 if ENSO==1
+replace source=3 if !missing(NC)
+label define source 1 "Pilot" 2 "ENSO" 3 "NC"
 label values source source
 label var source "Data source"
 
@@ -234,9 +237,9 @@ use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\EN
 append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned\NC-Participant-EGOAGG-match-clean-20211112.dta"
 
 *gen source indicator
-gen source=1 if ENSO==1
-replace source=2 if !missing(NC)
-label define source 1 "ENSO" 2 "NC"
+gen source=2 if ENSO==1
+replace source=3 if !missing(NC)
+label define source 1 "Pilot" 2 "ENSO" 3 "NC"
 label values source source
 label var source "Data source"
 
@@ -265,9 +268,9 @@ append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data"
 
 *gen source indicator
-gen source=1 if ENSO==1
-replace source=2 if !missing(NC)
-label define source 1 "ENSO" 2 "NC"
+gen source=2 if ENSO==1
+replace source=3 if !missing(NC)
+label define source 1 "Pilot" 2 "ENSO" 3 "NC"
 label values source source
 label var source "Data source"
 
@@ -342,9 +345,9 @@ use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\EN
 append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned\NC-Participant-EGOAGG-clean-20211112.dta"
 
 *gen source indicator
-gen source=1 if ENSO==1
-replace source=2 if !missing(NC)
-label define source 1 "ENSO" 2 "NC"
+gen source=2 if ENSO==1
+replace source=3 if !missing(NC)
+label define source 1 "Pilot" 2 "ENSO" 3 "NC"
 label values source source
 label var source "Data source"
 
@@ -786,7 +789,7 @@ drop _merge
 
 preserve
 
-merge 1:1 SUBID date_snad using "SNAD-Participant-EGOAGG-clean" 
+merge 1:1 SUBID date_snad using "SNAD-Participant-EGOAGG-clean",update // fill in pilot quality of life
 drop if _merge==1 //drop cases have no R01 SNAD data
 drop _merge 
 
@@ -807,7 +810,7 @@ preserve
 /*add SNAD data (pilot match)*/
 
 
-merge 1:1 SUBID date_snad using "SNAD-Participant-EGOAGG-pilotmatch-clean.dta" 
+merge 1:1 SUBID date_snad using "SNAD-Participant-EGOAGG-pilotmatch-clean.dta",update // fill in pilot quality of life 
 drop if _merge==1 //drop cases have no SNAD data
 drop _merge
 
@@ -830,7 +833,7 @@ restore
 /*add SNAD data (NC latest match)*/
 
 
-merge 1:1 SUBID date_snad using "SNAD-Participant-EGOAGG-match-clean.dta" 
+merge 1:1 SUBID date_snad using "SNAD-Participant-EGOAGG-match-clean.dta",update // fill in pilot quality of life 
 drop if _merge==1 //drop cases have no SNAD data
 drop _merge
 
