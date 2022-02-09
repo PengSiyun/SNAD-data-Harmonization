@@ -18,6 +18,7 @@ multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\S
 replace respondent_name =subinstr(respondent_name, "a", "",.) //remove a
 destring respondent_name,force gen(SUBID) 
 drop if missing(SUBID) | SUBID==445566 //drop all test runs
+replace SUBID=10288 if SUBID==10228 //typo
 
 *make names consistent
 foreach i of varlist alter_a_name alter_b_name {

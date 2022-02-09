@@ -22,6 +22,7 @@ replace SUBID =subinstr(SUBID, "a", "",.) //remove a
 destring SUBID,force replace
 drop if missing(SUBID) //drop all test runs
 rename alter_id TIEID
+replace SUBID=10288 if SUBID==10228 //typo
 
 *make names consistent
 drop if alter_name=="99" | missing(alter_name) // 2 with 99
