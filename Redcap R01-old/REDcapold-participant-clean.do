@@ -76,15 +76,15 @@ rename *_ *
 preserve
 
 keep SUBID time first_name last_name date_of_birth ///
-demographics_sex dem_education dem_military dem_marital dem_biochild dem_nonbio ///
-race gender school military marital children step ///
+demographics_sex dem_education dem_military dem_biochild dem_nonbio ///
+race gender school military children step ///
 longest_job-long_live15 kind_business kind2_business grade_mother grade_father education_mother education_father family_finances //1st line: demo in Demographics; 2nd line: demo in Missing ENSO; 3rd line: demo in wave1 of stress and qol; 4th line: variables that are in demo of new R01
 
 *If missing values occurred in T1 demo, then they could be replaced by T2
 sort SUBID time
 foreach x of varlist first_name last_name date_of_birth ///
-demographics_sex dem_education dem_military dem_marital dem_biochild dem_nonbio ///
-race gender school military marital children step ///
+demographics_sex dem_education dem_military dem_biochild dem_nonbio ///
+race gender school military children step ///
 longest_job-long_live15 kind_business kind2_business grade_mother grade_father education_mother education_father family_finances {
 	bysort SUBID: replace `x'=`x'[2] if missing(`x') 
 }
@@ -98,14 +98,13 @@ replace demographics_sex=gender if missing(demographics_sex)
 replace dem_education=school if missing(dem_education)
 recode military (1=1) (2=0)
 replace dem_military=military if missing(dem_military)
-replace dem_marital=marital if missing(dem_marital)
 replace dem_biochild=children if missing(dem_biochild)
 replace dem_nonbio=subinstr(dem_nonbio, " step children", "",.)
 destring dem_nonbio,replace
 replace dem_nonbio=step if missing(dem_nonbio)
 
-drop gender school military marital children step time
-rename (demographics_sex dem_education dem_military dem_marital dem_biochild dem_nonbio) (gender school military marital children step) //consistent with new R01
+drop gender school military children step time
+rename (demographics_sex dem_education dem_military dem_biochild dem_nonbio) (gender school military children step) //consistent with new R01
 
 tostring long_live*,replace 
 
@@ -114,8 +113,13 @@ restore
 
 drop first_name last_name date_of_birth ///
 demographics_sex dem_education dem_military dem_biochild dem_nonbio ///
-race gender school military marital children step ///
+race gender school military children step ///
 longest_job-long_live15 kind_business kind2_business grade_mother grade_father education_mother education_father family_finances //drop demographics 
+replace marital=dem_marital if missing(marital) //those are collected both in each wave and missing demo section
+replace employment=dem_employment if missing(employment)
+tostring dem_jobhours,replace
+replace workhours=dem_jobhours if missing(workhours)
+drop dem_marital dem_employment dem_jobhours
 
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-participant.dta",replace
 
