@@ -142,7 +142,7 @@ restore
 
 
 *prepare for append
-tostring day_week2 followers_*,replace
+tostring workhours day_week2 followers_*,replace
 drop if redcap_event_name=="demographics_arm_1" //drop demo line
 drop first_name-demographics_complete //drop demo variables
 
