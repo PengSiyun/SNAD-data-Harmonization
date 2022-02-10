@@ -399,9 +399,6 @@ merge 1:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\
 *married was collected as demo before new R01; IADC update the demo with most recent marital status
 rename married married_iadc_demo
 rename married_enso married_enso_demo
-recode marital_red (1 4 5 6=0) (2 3=1)
-rename marital_red married_oldred_demo
-label values married_oldred_demo married
 
 *harmonize demo from 3 sources (IADC most accurate, then Redcap, then ENSO)
 recode gender_red sex_enso (1=0) (2=1)
@@ -798,6 +795,11 @@ merge m:1 SUBID using "Demographics.dta"
 drop if _merge==2 //Demo data not matched with network data
 drop _merge 
 personage dobdate date_snad, gen(agesnad) //create age based on SNAD date; install personage if not alreday 
+recode marital (1 4 5 6=0) (2 3=1)
+replace marital=married_enso if missing(marital) & ENSO==1 //ENSO marital is not in Redcap
+rename marital married
+label values married married_enso
+drop married_enso
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-R01raw-preexlusion-20211222",replace
 
 *add LONG data (alter-level)
@@ -820,6 +822,11 @@ drop if _merge==2 //Demo data not matched with network data
 drop _merge 
 
 personage dobdate date_snad, gen(agesnad) //create age based on SNAD date; install personage if not alreday 
+recode marital (1 4 5 6=0) (2 3=1)
+replace marital=married_enso if missing(marital) & ENSO==1 //ENSO marital is not in Redcap
+rename marital married
+label values married married_enso
+drop married_enso
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-pilotmatch-preexlusion-20211222",replace
 
 *add LONG data (alter-level)
@@ -843,6 +850,11 @@ drop if _merge==2 //Demo data not matched with network data
 drop _merge 
 
 personage dobdate date_snad, gen(agesnad) //create age based on SNAD date; install personage if not alreday 
+recode marital (1 4 5 6=0) (2 3=1)
+replace marital=married_enso if missing(marital) & ENSO==1 //ENSO marital is not in Redcap
+rename marital married
+label values married married_enso
+drop married_enso
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-R01match-preexlusion-20211222",replace
 
 *add LONG data (alter-level)
