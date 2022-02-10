@@ -63,13 +63,13 @@ replace moca_total=subinstr(moca_total,"/2019","",1) //turn 16/2019 into 16
 preserve
 
 keep SUBID time name_informant ///
-demographics_sex dem_education dem_military dem_biochild dem_nonbio dem_employment dem_jobhours ///
+demographics_sex dem_education dem_military dem_biochild dem_nonbio ///
 grade_mother grade_father education_mother education_father //1st line: demo in Demographics; 2-3 lines: demo in Missing ENSO; 4 line: demo in wave1 of stress and qol
 
 *If missing values occurred in T1 demo, then they could be replaced by T2
 sort SUBID time
 foreach x of varlist name_informant ///
-demographics_sex dem_education dem_military dem_biochild dem_nonbio dem_employment dem_jobhours ///
+demographics_sex dem_education dem_military dem_biochild dem_nonbio ///
 grade_mother grade_father education_mother education_father {
 	bysort SUBID: replace `x'=`x'[2] if missing(`x') 
 }
@@ -87,9 +87,12 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\R
 restore
 
 drop name_informant ///
-demographics_sex dem_education dem_military dem_biochild dem_nonbio dem_employment dem_jobhours ///
+demographics_sex dem_education dem_military dem_biochild dem_nonbio ///
 grade_mother grade_father education_mother education_father //drop demographics 
 rename dem_marital marital
+rename dem_employment employment
+rename dem_jobhours workhours 
+
 *check wave indicator
 duplicates report SUBID //8 informant did 2 waves, 10339a only in T2
 replace time=1 if SUBID=="10339a"
