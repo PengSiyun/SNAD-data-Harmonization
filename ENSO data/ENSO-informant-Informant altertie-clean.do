@@ -77,7 +77,7 @@ save "ENSO-informant-informant altertie-long.dta",replace
 
 
 ***************************************************************
-**# 2 Clean alter-alter ties full data (A-B and B-A are both in the file! But this does not affect calculation of density)
+**# 2a Clean alter-alter ties full data (A-B and B-A are both in the file! But this does not affect calculation of density)
 ***************************************************************
 
 
@@ -106,5 +106,65 @@ replace totnum1=totnum1/2 //it is double counting, so need to divide by 2
 keep SUBID *density sole totnum1
 duplicates drop SUBID, force
 save "ENSO-informant-informant altertie-EGOAGG-clean.dta", replace
+
+
+
+
+***************************************************************
+**# 2b Clean alter-alter ties R01match data (A-B and B-A are both in the file! But this does not affect calculation of density)
+***************************************************************
+
+
+
+*prepare alter data with pilot generator
+use "ENSO-Informant-informant alter-LONG-R01match-clean.dta",clear
+rename alter_name alter_a_name
+keep SUBID alter_a_name
+save "ENSO-Informant-informant alter-LONG-R01match-altertie",replace
+
+*prepare alter tie data to merge
+use "ENSO-informant-informant altertie-long.dta",clear
+*make names consistent
+foreach x of varlist alter_a_name alter_b_name {
+    replace `x' =strtrim(`x') //remove leading and trailing blanks
+    replace `x' =subinstr(`x', ".", "",.) //remove .
+    replace `x' =strlower(`x') //change to lower case
+    replace `x' =stritrim(`x') //consecutive blanks collapsed to one blank
+}
+
+merge m:1 SUBID alter_a_name using "ENSO-Informant-informant alter-LONG-R01match-altertie"
+fre SUBID if _merge==2 //112 cases not in alter tie data
+keep if _merge==3 //keep alters in alter_a_name that are not weekdays&weekend ties
+drop alter_a_name _merge
+rename alter_b_name alter_a_name
+
+merge m:1 SUBID alter_a_name using "ENSO-Informant-informant alter-LONG-R01match-altertie"
+fre SUBID if _merge==2 //112 cases
+keep if _merge==3 //keep alters in alter_b_name that are not weekdays&weekend ties 
+
+bysort SUBID: egen npossties=count(tievalue)
+
+bysort SUBID: egen totval=total(tievalue),mi //for value density
+gen density=totval/npossties
+lab var density "Valued density of networks from matrix"
+
+recode tievalue (2/3=1) (0/1=0),gen(tievalue1)
+bysort SUBID: egen totnum=total(tievalue1),mi //for Binary density
+gen bdensity=totnum/npossties
+lab var bdensity "Binary density of networks from matrix"
+
+recode tievalue (1/3=1) (0=0),gen(tievalue2)
+bysort SUBID: egen totnum1=total(tievalue2),mi // for Density of networks know each other
+gen b1density=totnum1/npossties
+lab var b1density "Density of networks know each other"
+
+recode b1density (1=0) (.=.) (else=1),gen(sole) 
+lab var sole "Sole bridge status"
+
+save "ENSO-informant-informant altertie-long-R01match-clean.dta", replace
+replace totnum1=totnum1/2 //it is double counting, so need to divide by 2
+keep SUBID *density sole totnum1
+duplicates drop SUBID, force
+save "ENSO-informant-informant altertie-EGOAGG-R01match-clean.dta", replace
 
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Code" //reset directory for rule-all do file
