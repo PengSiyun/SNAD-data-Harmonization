@@ -904,13 +904,13 @@ cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean dat
 
 *EGOAGG
 use "SNAD-Analysis-R01raw-preexlusion-20211222",clear
-drop if agesnad<45 | MOCATOTS<10
+drop if agesnad<45 | moca_raw<10
 drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
 save "SNAD-Analysis-R01raw-20211222", replace
 
 *LONG
 use "SNAD-Analysis-LONG-R01raw-preexlusion-20211222",clear
-drop if agesnad<45 | MOCATOTS<10
+drop if agesnad<45 | moca_raw<10
 drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
 save "SNAD-Analysis-LONG-R01raw-20211222", replace
 
@@ -921,13 +921,13 @@ save "SNAD-Analysis-LONG-R01raw-20211222", replace
 *EGOAGG
 use "SNAD-Analysis-pilotmatch-preexlusion-20211222",clear
 
-drop if agesnad<45 | MOCATOTS<10
+drop if agesnad<45 | moca_raw<10
 drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
 save "SNAD-Analysis-pilotmatch-20211222", replace
 
 *LONG
 use "SNAD-Analysis-LONG-pilotmatch-preexlusion-20211222",clear
-drop if agesnad<45 | MOCATOTS<10
+drop if agesnad<45 | moca_raw<10
 drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
 save "SNAD-Analysis-LONG-pilotmatch-20211222", replace
 
@@ -938,13 +938,13 @@ save "SNAD-Analysis-LONG-pilotmatch-20211222", replace
 *EGOAGG
 use "SNAD-Analysis-R01match-preexlusion-20211222",clear
 
-drop if agesnad<45 | MOCATOTS<10
+drop if agesnad<45 | moca_raw<10
 drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
 save "SNAD-Analysis-R01match-20211222", replace
 
 *LONG
 use "SNAD-Analysis-LONG-R01match-preexlusion-20211222",clear
-drop if agesnad<45 | MOCATOTS<10
+drop if agesnad<45 | moca_raw<10
 drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
 save "SNAD-Analysis-LONG-R01match-20211222", replace
 
