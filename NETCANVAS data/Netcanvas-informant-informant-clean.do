@@ -433,7 +433,7 @@ bysort SUBID NC: egen diverse=total(urelpartner+urelparent+urelinlaw+urelchild+u
 drop relmiss urelpartner-urelclub othfam fri work church prof
 lab var diverse "Network diversity"
 
-drop tclose tfreq numsup numsup3 thassles prox30 ttrust white tkin tlkcare hlthprob //drop alter level variables
+drop tclose tfreq numsup numsup3 thassles prox30 ttrust tkin tlkcare hlthprob //drop alter level variables
 
 save "NC-informant-informant alter-clean-20211112.dta", replace
 
