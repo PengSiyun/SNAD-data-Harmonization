@@ -1429,3 +1429,4 @@ duplicates drop SUBID NC, force
 keep SUBID date_snad NC netsize-efctsize
 save "NC-informant focal-EGOAGG-NCmatch-clean-20211112.dta", replace 
 
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\code"  //reset directory for rule-all do file
