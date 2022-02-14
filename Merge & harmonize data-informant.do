@@ -410,9 +410,6 @@ label define source 1 "Pilot" 2 "ENSO" 3 "NC"
 label values source source
 label var source "Data source"
 
-
-**start here (need to add informant to 3,4,5)
-
 *make variable names consistent across softwares (ENSO,NC)
 replace simpmat=iim1 if missing(simpmat) //generators
 replace simpforce=iim2 if missing(simpforce)

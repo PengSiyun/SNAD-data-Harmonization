@@ -7,9 +7,6 @@
 
 clear
 
-/*Things to fix later: 
-1. ENSO INFORMANT Alter gender, age, race, hispanic, edu, relation type are skipped for old alters, but pilot data did not collect those; need to retrive from NC
-*/
 
 **********************************************************************
 **# 1 Redcap R01 data: demographics for R01 + all non Network data from SNAD
@@ -65,20 +62,19 @@ do "Netcanvas-informant-informant-clean" //Clean Informant alter
 
 
 **********************************************************************
-**# 7 Merge & harmonize all sources of data 
+**# 5 Merge & harmonize all sources of data 
 **********************************************************************
 
 **start here
 
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes"
-do "Merge & harmonize data-participant" 
+do "Merge & harmonize data-informant" 
 
 
 
 /*Summary of workflow
 1. run REDCAP clean //redcap before ENSO
-3. run IADRC clean 
-4. run pilot clean
-5. run ENSO clean
-6. run NC clean
-7. run Merge & harmonize 
+2. run pilot clean
+3. run ENSO clean
+4. run NC clean
+5. run Merge & harmonize 
