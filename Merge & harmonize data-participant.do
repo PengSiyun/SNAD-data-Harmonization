@@ -773,6 +773,8 @@ replace Trailatime=trail_a_time if missing(Trailatime)
 replace Trailbtime=trail_b_time if missing(Trailbtime)
 replace calcavltsum=rey_sum if missing(calcavltsum)
 replace ReyDeCorAB=delayed_rey_sum if missing(ReyDeCorAB)
+drop moca_raw trail_a_time trail_b_time rey_sum delayed_rey_sum
+rename (MOCATOTS Trailatime Trailbtime calcavltsum ReyDeCorAB) (moca_raw trail_a_time trail_b_time rey_sum delayed_rey_sum)
 
 *add Neuroimaging data
 merge 1:1 SUBID date_snad using "MRI-Clean-snadMatch.dta",nogen
@@ -800,6 +802,13 @@ replace marital=married_enso if missing(marital) & ENSO==1 //ENSO marital is not
 rename marital married
 label values married married_enso
 drop married_enso
+
+replace employment=empstat_enso if missing(employment) & ENSO==1
+drop empstat_enso
+
+tostring emphrs_enso,replace
+replace workhours=emphrs_enso if missing(workhours) & ENSO==1
+drop emphrs_enso
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-R01raw-preexlusion-20211222",replace
 
 *add LONG data (alter-level)
@@ -827,6 +836,13 @@ replace marital=married_enso if missing(marital) & ENSO==1 //ENSO marital is not
 rename marital married
 label values married married_enso
 drop married_enso
+
+replace employment=empstat_enso if missing(employment) & ENSO==1
+drop empstat_enso
+
+tostring emphrs_enso,replace
+replace workhours=emphrs_enso if missing(workhours) & ENSO==1
+drop emphrs_enso
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-pilotmatch-preexlusion-20211222",replace
 
 *add LONG data (alter-level)
@@ -850,11 +866,20 @@ drop if _merge==2 //Demo data not matched with network data
 drop _merge 
 
 personage dobdate date_snad, gen(agesnad) //create age based on SNAD date; install personage if not alreday 
+
+*some non demographics are collected in ENSO EGO, need to harmonize with Redcap
 recode marital (1 4 5 6=0) (2 3=1)
 replace marital=married_enso if missing(marital) & ENSO==1 //ENSO marital is not in Redcap
 rename marital married
 label values married married_enso
-drop married_enso
+drop married_enso 
+
+replace employment=empstat_enso if missing(employment) & ENSO==1
+drop empstat_enso
+
+tostring emphrs_enso,replace
+replace workhours=emphrs_enso if missing(workhours) & ENSO==1
+drop emphrs_enso
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-R01match-preexlusion-20211222",replace
 
 *add LONG data (alter-level)
