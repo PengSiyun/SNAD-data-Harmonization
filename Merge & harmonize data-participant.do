@@ -940,7 +940,7 @@ use "SNAD-Analysis-focal-R01match-preexlusion-20211222",clear
 
 drop if agesnad<45 | moca_raw<10
 drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
-save "SNAD-Analysis-R01match-20211222", replace
+save "SNAD-Analysis-focal-R01match-20211222", replace
 
 *LONG
 use "SNAD-Analysis-focal-LONG-R01match-preexlusion-20211222",clear
