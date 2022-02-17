@@ -84,6 +84,14 @@ cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes"
 do "Merge & harmonize data-participant" 
 
 
+**********************************************************************
+**# 8 Compute latent variables (e.g., Bridging capital, Cognitive resserve) 
+**********************************************************************
+
+
+cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes"
+do "Create latent variables" 
+
 
 /*Summary of workflow
 1. run Pilot missing demo in Redcap //pilot missing and old RO1 must precede R01
