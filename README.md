@@ -13,6 +13,8 @@ Short summary of workflow of the Rule_all_participant do file:
 5. run ENSO clean: Social Network + some Demographics
 6. run NC clean: Social Network 
 7. run Merge & harmonize: Merge and harmonize all data above ready for data analysis 
+8. run compute latent variables: create index for complex concepts
+
 
 Short summary of workflow of the Rule_all_informant do file:
 1. run REDCAP clean 
