@@ -758,7 +758,7 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean d
 
 *add LONG data (alter-level)
 merge 1:m SUBID NC ENSO pilot using "SNAD-informant focal-LONG-pilotmatch-clean",nogen //add alter-level on top of EGOAGG
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-informant focal-LONG-pilotmatch-20211222",replace
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\Alter-level\SNAD-Analysis-informant focal-LONG-pilotmatch-20211222",replace
 
 
 
@@ -792,7 +792,7 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean d
 
 *add LONG data (alter-level)
 merge 1:m SUBID NC ENSO using "SNAD-informant focal-LONG-clean",nogen //add alter-level on top of EGOAGG
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-informant focal-LONG-ENSOmatch-20211222",replace
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\Alter-level\SNAD-Analysis-informant focal-LONG-ENSOmatch-20211222",replace
 
 
 
@@ -828,7 +828,7 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean d
 
 *add LONG data (alter-level)
 merge 1:m SUBID NC ENSO using "SNAD-informant focal-LONG-clean",nogen //add alter-level on top of EGOAGG
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-informant focal-LONG-R01raw-20211222",replace
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\Alter-level\SNAD-Analysis-informant focal-LONG-R01raw-20211222",replace
 
 
 
@@ -857,7 +857,7 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean d
 
 *add LONG data (alter-level)
 merge 1:m SUBID date_snad using "SNAD-informant focal-LONG-NCmatch-clean",nogen //add alter-level on top of EGOAGG
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-informant focal-LONG-NCmatch-20211222",replace
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\Alter-level\SNAD-Analysis-informant focal-LONG-NCmatch-20211222",replace
 
 
 
@@ -901,7 +901,7 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean d
 
 *add LONG data (alter-level)
 merge 1:m SUBID NC ENSO using "SNAD-informant informant-LONG-clean",nogen //add alter-level on top of EGOAGG
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-informant informant-LONG-R01match-20211222",replace
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\Alter-level\SNAD-Analysis-informant informant-LONG-R01match-20211222",replace
 
 
 
@@ -937,4 +937,4 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean d
 
 *add LONG data (alter-level)
 merge 1:m SUBID NC ENSO using "SNAD-informant informant-LONG-clean",nogen //add alter-level on top of EGOAGG
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-informant informant-LONG-R01raw-20211222",replace
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\Alter-level\SNAD-Analysis-informant informant-LONG-R01raw-20211222",replace
