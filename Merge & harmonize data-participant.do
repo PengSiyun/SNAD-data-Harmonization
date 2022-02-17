@@ -809,11 +809,11 @@ drop empstat_enso
 tostring emphrs_enso,replace
 replace workhours=emphrs_enso if missing(workhours) & ENSO==1
 drop emphrs_enso
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-R01raw-preexlusion-20211222",replace
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-focal-R01raw-preexlusion-20211222",replace
 
 *add LONG data (alter-level)
 merge 1:m SUBID date_snad using "SNAD-Participant-LONG-clean",nogen //add alter-level on top of EGOAGG
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-LONG-R01raw-preexlusion-20211222",replace
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-focal-LONG-R01raw-preexlusion-20211222",replace
 
 restore
 preserve
@@ -843,11 +843,11 @@ drop empstat_enso
 tostring emphrs_enso,replace
 replace workhours=emphrs_enso if missing(workhours) & ENSO==1
 drop emphrs_enso
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-pilotmatch-preexlusion-20211222",replace
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-focal-pilotmatch-preexlusion-20211222",replace
 
 *add LONG data (alter-level)
 merge 1:m SUBID date_snad using "SNAD-Participant-LONG-pilotmatch-clean",nogen //add alter-level on top of EGOAGG
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-LONG-pilotmatch-preexlusion-20211222",replace
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-focal-LONG-pilotmatch-preexlusion-20211222",replace
 
 
 restore
@@ -880,11 +880,11 @@ drop empstat_enso
 tostring emphrs_enso,replace
 replace workhours=emphrs_enso if missing(workhours) & ENSO==1
 drop emphrs_enso
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-R01match-preexlusion-20211222",replace
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-focal-R01match-preexlusion-20211222",replace
 
 *add LONG data (alter-level)
 merge 1:m SUBID date_snad using "SNAD-Participant-LONG-match-clean",nogen //add alter-level on top of EGOAGG
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-LONG-R01match-preexlusion-20211222",replace
+save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-focal-LONG-R01match-preexlusion-20211222",replace
 
 
 
@@ -903,48 +903,48 @@ cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean dat
 
 
 *EGOAGG
-use "SNAD-Analysis-R01raw-preexlusion-20211222",clear
+use "SNAD-Analysis-focal-R01raw-preexlusion-20211222",clear
 drop if agesnad<45 | moca_raw<10
 drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
-save "SNAD-Analysis-R01raw-20211222", replace
+save "SNAD-Analysis-focal-R01raw-20211222", replace
 
 *LONG
-use "SNAD-Analysis-LONG-R01raw-preexlusion-20211222",clear
+use "SNAD-Analysis-focal-LONG-R01raw-preexlusion-20211222",clear
 drop if agesnad<45 | moca_raw<10
 drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
-save "SNAD-Analysis-LONG-R01raw-20211222", replace
+save "SNAD-Analysis-focal-LONG-R01raw-20211222", replace
 
 
 /*Pilot matched*/
 
 
 *EGOAGG
-use "SNAD-Analysis-pilotmatch-preexlusion-20211222",clear
+use "SNAD-Analysis-focal-pilotmatch-preexlusion-20211222",clear
 
 drop if agesnad<45 | moca_raw<10
 drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
-save "SNAD-Analysis-pilotmatch-20211222", replace
+save "SNAD-Analysis-focal-pilotmatch-20211222", replace
 
 *LONG
-use "SNAD-Analysis-LONG-pilotmatch-preexlusion-20211222",clear
+use "SNAD-Analysis-focal-LONG-pilotmatch-preexlusion-20211222",clear
 drop if agesnad<45 | moca_raw<10
 drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
-save "SNAD-Analysis-LONG-pilotmatch-20211222", replace
+save "SNAD-Analysis-focal-LONG-pilotmatch-20211222", replace
 
 
 /*R01 matched*/
 
 
 *EGOAGG
-use "SNAD-Analysis-R01match-preexlusion-20211222",clear
+use "SNAD-Analysis-focal-R01match-preexlusion-20211222",clear
 
 drop if agesnad<45 | moca_raw<10
 drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
 save "SNAD-Analysis-R01match-20211222", replace
 
 *LONG
-use "SNAD-Analysis-LONG-R01match-preexlusion-20211222",clear
+use "SNAD-Analysis-focal-LONG-R01match-preexlusion-20211222",clear
 drop if agesnad<45 | moca_raw<10
 drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
-save "SNAD-Analysis-LONG-R01match-20211222", replace
+save "SNAD-Analysis-focal-LONG-R01match-20211222", replace
 
