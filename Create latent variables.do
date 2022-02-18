@@ -1,4 +1,4 @@
-****Priject: Measuring cognitive reserve
+****Project: Create index for complex concepts
 ****Author:  Siyun Peng
 ****Date:    2022/02/17
 ****Version: 17
@@ -58,5 +58,6 @@ label var reserve "Cognitive reserve"
 		
 
 	/*save files*/
+	
 	save "`file'", replace
 }
