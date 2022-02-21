@@ -136,7 +136,7 @@ destring lastdiagx, replace
 
 lab def lastd 1 "Amnestic MCI-memory impairment" 2 "Amnesiastic MCI-memory impairment plus 1+ domains" 3 "Dementia" 4 "Impaired, not MCI" 5 "Non-amnestic MCI-multiple domains" 6 "Normal" 7 "Non-amnestic MCI-single domain"
 lab val lastdiagx lastd
-drop lastdiagx lastsubtype contribute normcond syndrome //this is most recent diagnosis which is usually years after SNAD interview
+drop lastsubtype contribute normcond syndrome //this is most recent diagnosis which is usually years after SNAD interview
 
 recode APOEGenotype (22=1)(23=2)(24=3)(33=4)(34=5)(44=6)
 
