@@ -123,20 +123,17 @@ lab var married "Marital status (IADC)"
 lab def married 0 "Not married" 1 "Married" 
 lab val married married
 
-replace lastdiagx="1" if lastdiagx=="Amnestic MCI-memory impairment" | lastdiagx=="MCI"
-replace lastdiagx="2" if lastdiagx=="Amnestic MCI-memory impairment Plus one or more domains"
-replace lastdiagx="3" if lastdiagx=="Dementia"
-replace lastdiagx="4" if lastdiagx=="Impaired, not MCI"
-replace lastdiagx="5" if lastdiagx=="Non-amnestic MCI-multiple domains"
-replace lastdiagx="6" if lastdiagx=="Normal"
+replace lastdiagx="1" if lastdiagx=="Normal"
+replace lastdiagx="2" if lastdiagx=="Impaired, not MCI"
+replace lastdiagx="3" if lastdiagx=="MCI"
+replace lastdiagx="4" if lastdiagx=="Amnestic MCI-memory impairment" 
+replace lastdiagx="5" if lastdiagx=="Amnestic MCI-memory impairment Plus one or more domains"
+replace lastdiagx="6" if lastdiagx=="Non-amnestic MCI-multiple domains"
 replace lastdiagx="7" if lastdiagx=="Non-amnestic MCI-single domain"
+replace lastdiagx="8" if lastdiagx=="Dementia"
 replace lastdiagx="" if lastdiagx=="Missing"
-
 destring lastdiagx, replace
-
-lab def lastd 1 "Amnestic MCI-memory impairment" 2 "Amnesiastic MCI-memory impairment plus 1+ domains" 3 "Dementia" 4 "Impaired, not MCI" 5 "Non-amnestic MCI-multiple domains" 6 "Normal" 7 "Non-amnestic MCI-single domain"
-lab val lastdiagx lastd
-recode lastdiagx (4 6 7=1) (1 2 5=2) (3=3),gen(diagnosis_iadclast)
+recode lastdiagx (1 2=1) (3/7=2) (8=3),gen(diagnosis_iadclast)
 lab def diagnosis_iadclast 1 "Normal" 2 "MCI" 3 "Dementia"
 lab val diagnosis_iadclast diagnosis_iadclast
 lab var diagnosis_iadclast "Latest consensus diagnosis from IADC"
@@ -228,9 +225,19 @@ gen adtype=1 if ad== "Alzheimers disease"
 replace	adtype=0 if !missing(ad) & adtype!=1	   
 label define ad 0 "Non AD" 1 "AD"
 label values adtype ad
+
 *create diagnosis variable + data clean
-encode diag,gen(diagnosis) //convert string to numeric
-recode diagnosis (4 7 8=1) (1 2 5 6 =2) (3=3)
+replace diag="1" if diag=="Normal"
+replace diag="2" if diag=="Impaired, not MCI"
+replace diag="3" if diag=="MCI"
+replace diag="4" if diag=="Amnestic MCI-memory impairment" 
+replace diag="5" if diag=="Amnestic MCI-memory impairment Plus one or more domains"
+replace diag="6" if diag=="Non-amnestic MCI-multiple domains"
+replace diag="7" if diag=="Non-amnestic MCI-single domain"
+replace diag="8" if diag=="Dementia"
+replace diag="" if diag=="Missing"
+destring diag, replace
+recode diag (1 2=1) (3/7=2) (8=3),gen(diagnosis)
 lab def diagnosisnew 1 "Normal" 2 "MCI" 3 "Dementia"
 lab val diagnosis diagnosisnew
 lab var diagnosis "Normal, MCI, or dementia"
