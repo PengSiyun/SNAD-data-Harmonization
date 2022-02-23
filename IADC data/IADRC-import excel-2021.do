@@ -138,7 +138,7 @@ lab def diagnosis_iadclast 1 "Normal" 2 "MCI" 3 "Dementia"
 lab val diagnosis_iadclast diagnosis_iadclast
 lab var diagnosis_iadclast "Latest consensus diagnosis from IADC"
 
-drop lastdiagx lastsubtype contribute normcond syndrome //this is most recent diagnosis which is usually years after SNAD interview
+drop diagnosis_iadclast lastdiagx lastsubtype contribute normcond syndrome //this is most recent diagnosis which is usually years after SNAD interview
 
 recode APOEGenotype (22=1)(23=2)(24=3)(33=4)(34=5)(44=6)
 
