@@ -101,3 +101,4 @@ do "Create latent variables"
 5. run ENSO clean
 6. run NC clean
 7. run Merge & harmonize 
+8. run Create latent variables
