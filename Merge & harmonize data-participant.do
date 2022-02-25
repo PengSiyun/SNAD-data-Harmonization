@@ -776,6 +776,14 @@ replace ReyDeCorAB=delayed_rey_sum if missing(ReyDeCorAB)
 drop moca_raw trail_a_time trail_b_time rey_sum delayed_rey_sum
 rename (MOCATOTS Trailatime Trailbtime calcavltsum ReyDeCorAB) (moca_raw trail_a_time trail_b_time rey_sum delayed_rey_sum)
 
+*calculate diagnosis here
+rename diagnosis diagnosis_iadc
+label var diagnosis_iadc "Consensus diagnosis from IADC"
+
+recode moca_raw (26/30=1) (18/25=2) (0/17=3),gen(diagnosis_moca)
+label var diagnosis_moca "diagnosis based on MoCA scores"
+label values diagnosis_moca diagnosisnew
+
 *add Neuroimaging data
 merge 1:1 SUBID date_snad using "MRI-Clean-snadMatch.dta",nogen
 merge 1:1 SUBID date_snad using "TAU-Clean-snadMatch.dta",nogen 
