@@ -6,8 +6,8 @@
 clear
 /*
 To do: 
-1. mail-in packet from IADRC vs. Redcap
-2. quality of life in pilot vs. Redcap R01
+1. quality of life in pilot vs. Redcap R01
+2. fix married?
 */
 
 ***************************************************************
@@ -766,7 +766,7 @@ use "red-Clean-snadMatch.dta", clear
 *add IADC data
 merge 1:1 SUBID date_snad using "IADC-Long-Clean-snadMatch.dta", nogen update // Redcap as master: when in conflict, prefer Redcap over IADRC for mail-in packet
 
-*harmonize cognitive test from Redcap vs. IADC: e.g., moca for new recuit&discontinued is only collected in Redcap. (need to harmonize mail-in pack)
+*harmonize cognitive test from Redcap vs. IADC: e.g., moca for new recuit&discontinued is only collected in Redcap.
 destring moca_raw,replace
 replace MOCATOTS=moca_raw if missing(MOCATOTS)
 replace Trailatime=trail_a_time if missing(Trailatime)
@@ -783,6 +783,11 @@ label var diagnosis_iadc "Consensus diagnosis from IADC"
 recode moca_raw (26/30=1) (18/25=2) (0/17=3),gen(diagnosis_moca)
 label var diagnosis_moca "diagnosis based on MoCA scores"
 label values diagnosis_moca diagnosisnew
+
+*harmonize mail-in pack
+replace alcoholser=alcoholdrinks if missing(alcoholser) //prefer Redcap over IADRC
+drop alcoholdrinks 
+rename alcoholser alcoholdrinks
 
 *add Neuroimaging data
 merge 1:1 SUBID date_snad using "MRI-Clean-snadMatch.dta",nogen
