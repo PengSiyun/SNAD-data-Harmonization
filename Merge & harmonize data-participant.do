@@ -6,8 +6,7 @@
 clear
 /*
 To do: 
-1. quality of life in pilot vs. Redcap R01
-2. fix married?
+1. fix married?
 */
 
 ***************************************************************
@@ -37,6 +36,7 @@ label values source source
 label var source "Data source"
 
 *make variable names consistent across softwares (pilot,ENSO,NC)
+rename no_friends nofriends_feel
 replace impmat=imd if missing(impmat) //generators
 replace impmat=alterim1 if missing(impmat)
 replace impforce=imr if missing(impforce)
@@ -140,6 +140,8 @@ label var source "Data source"
 sort SUBID date_snad
 bysort SUBID: gen time=_n
 
+*make variable names consistent between pilot and Redcap for quality of life
+rename no_friends nofriends_feel
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data"
 save "SNAD-Participant-EGOAGG-pilotmatch-clean.dta", replace 
 
@@ -762,6 +764,7 @@ save "red-Clean-snadMatch.dta",replace
 
 *load Redcap data
 use "red-Clean-snadMatch.dta", clear 
+rename puzzlegame puzzlegame_d //consistent with IADC
 
 *add IADC data
 merge 1:1 SUBID date_snad using "IADC-Long-Clean-snadMatch.dta", nogen update // Redcap as master: when in conflict, prefer Redcap over IADRC for mail-in packet
