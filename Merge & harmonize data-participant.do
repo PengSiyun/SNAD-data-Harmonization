@@ -4,10 +4,6 @@
 ****Version: 17
 ****Purpose: Harmonize data from IADRC and SNAD- participant
 clear
-/*
-To do: 
-fix married?
-*/
 
 ***************************************************************
 **# 1a Append Pilot participant T1, T2, T3, T4+ ENSO+ NC
