@@ -1,6 +1,6 @@
 ****Priject: SNAD
 ****Author:  Siyun Peng
-****Date:    2022/02/22
+****Date:    2022/03/15
 ****Version: 17
 ****Purpose: label and create variables for IADC
 
@@ -52,7 +52,7 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\I
 
 
 
-import excel "IADC_clinical_10NOV2021.xlsx", sheet("Cross_sectional_Data") firstrow clear
+import excel "IADC_clinical_13MAR2022.xlsx", sheet("Cross_sectional_Data") firstrow clear
 
 
 lab var birthyr "Year of birth"
@@ -172,11 +172,11 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\I
 
 
 
-import excel "IADC_clinical_10NOV2021.xlsx", sheet("Longitudinal Data") firstrow clear
+import excel "IADC_clinical_13MAR2022.xlsx", sheet("Longitudinal Data") firstrow clear
 save "IADC-Long-raw",replace
 
 *label variables
-import excel "IADC_clinical_10NOV2021.xlsx", ///
+import excel "IADC_clinical_13MAR2022.xlsx", ///
 sheet("Longitudinal_Variables") firstrow case(lower) clear //read file with value labels 
 keep name label 
 replace label=subinstr(label, char(34), "", .) //remove quotation from string variable (label cannot handle quotation marks)
