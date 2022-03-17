@@ -2,7 +2,7 @@
 ****Author:  Siyun Peng
 ****Date:    2022/2/3
 ****Version: 17
-****Purpose: Harmonize data from SNAD -Informant
+****Purpose: Harmonize data from SNAD-Informant
 clear
 
 /*Things to fix later: 
