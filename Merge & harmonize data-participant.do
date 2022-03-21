@@ -482,11 +482,13 @@ forvalues i=1/`num' {
 }
 
 
-duplicates list SUBID match if !missing(match) //3 mismatch
+duplicates list SUBID match if !missing(match) //4 mismatch
 list SUBID visitdate date_snad* diff* match if SUBID==3805 & minval<=180
 replace match=. if diff1==112 & SUBID==3805
 list SUBID visitdate date_snad* diff* match if SUBID==6343 & minval<=180
 replace match=. if diff1==166 & SUBID==6343
+list SUBID visitdate date_snad* diff* match if SUBID==10037 & minval<=180
+replace match=. if diff3==163 & SUBID==10037
 list SUBID visitdate date_snad* diff* match if SUBID==10179 & minval<=180
 replace match=. if diff1==170 & SUBID==10179
 
