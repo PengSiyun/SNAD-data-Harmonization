@@ -25,7 +25,7 @@ save "NC-informant-interviewer-20211112.dta", replace
 /*read ego files*/
 
 
-multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\Netcanvas Informant Interviews\ego") clear force import(stringcols(_all)) //import all variables as string
+multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\Netcanvas Informant Interviews\ego") clear force import(stringcols(_all) varnames(1)) //import all variables as string
 
 *convert date
 list ccid session* if missing(sessionfinish)
@@ -36,8 +36,8 @@ format date_snad %dM_d,_CY //display in date
 list date_snad sessionfinish //double check
 
 *check ccid
-list ccid networkcanvascaseid if ccid!=networkcanvascaseid //4 cases, correct in the excel if networkcanvascaseid is wrong
-replace ccid=networkcanvascaseid if ccid!=networkcanvascaseid //networkcanvascaseid are all correct for 4 cases
+list ccid networkcanvascaseid if ccid!=networkcanvascaseid //5 cases, correct in the excel if networkcanvascaseid is wrong
+replace ccid=networkcanvascaseid if ccid!=networkcanvascaseid //networkcanvascaseid are all correct for 5 cases
 
 *create wave for NC
 sort ccid date_snad //sort ccid by time
