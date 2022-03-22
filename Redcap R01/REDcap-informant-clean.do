@@ -27,7 +27,7 @@ fre gift_datei gift_card_receipt_complete
 *keep completed interviews
 gen date_red = dofc(gift_datei) //remove hours and minutes
 format date_red %td
-bysort record_id: replace date_red=date_red[2] if missing(date_red) //fill in date for Demo line using 1st wave line
+bysort record_id: replace date_red=date_red[2] if missing(date_red)&redcap_event_name=="demographics_arm_1" //fill in date for Demo line using 1st wave line
 bysort record_id: replace ccid=ccid[1] if missing(ccid) //fill in ccid for wave lines line using demo line
 drop if missing(date_red)
 
