@@ -21,6 +21,9 @@ drop if missing(SUBID) | SUBID==445566 //drop all test runs
 replace SUBID=10400 if SUBID==1400
 drop if SUBID==10339 //ENSO interviewer thought 10039 is a misspelling of 10339 in ENSO, thus leave incomplete data for 10339 and restart interview for 10039
 replace SUBID=10339 if SUBID==10039 //actually 10039 is the wrong number, it should be 10339
+drop if SUBID==10025 //worng ID left in Ego
+drop if SUBID==1042 | SUBID==1352 //not found in any other places
+drop if SUBID==6241  //imcomplete interview 
 
 *drop duplicates
 duplicates drop SUBID,force
