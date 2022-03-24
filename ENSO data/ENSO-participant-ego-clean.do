@@ -6,10 +6,35 @@
 clear
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\temp" //home
 
+
+
+
+
+************************************************************
+// 1. clean ego to match with alter level (goal: get a list of people completed ego interview)
+************************************************************
+
+
+multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\ENSO Focal\Ego") clear force import(stringcols(_all)) //import multiple csv in a folder (ssc install multimport)
+destring respondent_name,force gen(SUBID) 
+drop if missing(SUBID) | SUBID==445566 //drop all test runs
+replace SUBID=10400 if SUBID==1400
+drop if SUBID==10339 //ENSO interviewer thought 10039 is a misspelling of 10339 in ENSO, thus leave incomplete data for 10339 and restart interview for 10039
+replace SUBID=10339 if SUBID==10039 //actually 10039 is the wrong number, it should be 10339
+
+*drop duplicates
+duplicates drop SUBID,force
+keep SUBID created_on
+save "ENSO-Participant-ego-interview",replace
+
+
+
+************************************************************
+// 2. retrive ego info for baseline ENSO interview (not collected for other wave)
+************************************************************
 *Race is not collected, data is not reliable
-************************************************************
-// 1. retrive ego info for baseline ENSO interview (not collected for other wave)
-************************************************************
+
+
 import delimited "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\ENSO Focal\Ego\focal_bl_ego_export_17-1_2021-01-14T10 05 01.920140-05 00.csv", clear
 destring respondent_name,force gen(SUBID) 
 drop if missing(SUBID) | SUBID==445566 //drop all test runs
