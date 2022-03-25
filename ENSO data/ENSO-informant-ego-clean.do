@@ -8,10 +8,32 @@ cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENS
 
 
 
+
+
+************************************************************
+// 1. clean ego to match with alter level (goal: get a list of people completed ego interview)
+************************************************************
+
+
+multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\ENSO Informant\Ego") clear force import(stringcols(_all)) //import multiple csv in a folder (ssc install multimport)
+replace respondent_name =subinstr(respondent_name, "a", "",.) //remove a
+destring respondent_name,force gen(SUBID) 
+drop if missing(SUBID) | SUBID==445566 //drop all test runs
+replace SUBID=10288 if SUBID==10228 //typo
+drop if SUBID==10039 | SUBID==10216 //imcomplete interview 
+
+*drop duplicates
+duplicates drop SUBID,force
+keep SUBID 
+save "ENSO-informant-ego-interview",replace
+
+
+
+
+************************************************************
+**# 2. retrive ego demo info for baseline ENSO interview (not collected for other wave)
+************************************************************
 *Race is not collected, data is not reliable
-************************************************************
-**# 1. retrive ego info for baseline ENSO interview (not collected for other wave)
-************************************************************
 
 
 
