@@ -406,7 +406,12 @@ drop gender_red sex_enso
 
 recode race_red (5=1) (.=.) (else=0),gen(white_red)
 replace white=white_red if missing(white)
-drop race_red race white_red
+recode race (1=5) (2=3) (5=2) (50=6)
+replace race_red=race if missing(race_red)
+drop race white_red
+rename race_red race
+label define race_red 1 "American Indian or Alaskan Native" 2 "Asian" 3 "African American" 4 "Pacific Islander" 5 "White" 6 "Other"
+label values race race_red
 
 rename death deceased_iadc
 
@@ -555,7 +560,7 @@ forvalues i=1/`num' {
 }
 
 
-duplicates list SUBID matchmri if !missing(matchmri) //9 mismatch
+duplicates list SUBID matchmri if !missing(matchmri) //8 mismatch
 
 list SUBID matchmri diffmri* date_mri date_snad* if SUBID==5032 & minval<=365
 replace matchmri=. if diffmri1==337 & SUBID==5032 
@@ -574,8 +579,7 @@ list SUBID matchmri diffmri* date_mri date_snad* if SUBID==10088 & minval<=365
 replace matchmri=. if diffmri1==329 & SUBID==10088  
 list SUBID matchmri diffmri* date_mri date_snad* if SUBID==10101 & minval<=365
 replace matchmri=. if diffmri1==350 & SUBID==10101  
-list SUBID matchmri diffmri* date_mri date_snad* if SUBID==10154 & minval<=365
-replace matchmri=3 if diffmri4==274 & SUBID==10154  
+
 
 di date("20140514","YMD") //19857=one year before SNAD
 fre matchmri date_mri if date_mri>19857 //231 out of 312
@@ -704,7 +708,7 @@ save "AMY-Clean-snadMatch.dta" ,replace
 
 use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\Cleaned\REDcap-R01-participant.dta",clear
 merge m:1 SUBID using "SNAD-MatchData.dta"
-drop if _merge==1 //drop 4 people in Redcap not complete network: 6477,10045,10397,10484
+drop if _merge==1 //drop 8 people in Redcap not complete network: 6477,10045,10292,10365,10397,10418,10425,910018
 drop if _merge==2 //drop people did not do REDCap
 order SUBID date_red date_snad*
 
@@ -731,10 +735,10 @@ forvalues i=1/`num' {
 duplicates list SUBID matchred if !missing(matchred) //0 duplicates
 
 *check interviews lag>60 days
-fre SUBID if missing(matchred) //3 not matched
+fre SUBID if missing(matchred) //12 not matched
 list SUBID date_red date_snad* if missing(matchred)
 list matchred date_red date_snad* diffred* if SUBID==6418 //NC interview not found
-list matchred date_red diffred* if SUBID==10250
+list matchred date_red diffred* date_snad* if SUBID==10250
 replace matchred=4 if SUBID==10250 & diffred4==147 
 list matchred date_red diffred* if SUBID==10394 //ENSO interview not finished
 
