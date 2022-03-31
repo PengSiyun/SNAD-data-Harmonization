@@ -150,6 +150,9 @@ append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data
 drop time //wave indicator in old R01
 sort SUBID date_red
 bysort SUBID: gen time=_n //create new wave indicator
+recode anxiety? (1=0) (2=1) (3=2) (4=3)
+label define anxiety 0 "No" 1 "A little" 2 "Sometimes" 3 "Extremely"
+label values anxiety? anxiety
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\Cleaned\REDcap-R01-participant.dta",replace
 
 
