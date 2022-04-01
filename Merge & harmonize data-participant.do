@@ -708,7 +708,7 @@ save "AMY-Clean-snadMatch.dta" ,replace
 
 use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\Cleaned\REDcap-R01-participant.dta",clear
 merge m:1 SUBID using "SNAD-MatchData.dta"
-drop if _merge==1 //drop 8 people in Redcap not complete network: 6477,10045,10292,10365,10397,10418,10425,910018
+drop if _merge==1 //drop 1 people in Redcap not complete network: 10045
 drop if _merge==2 //drop people did not do REDCap
 order SUBID date_red date_snad*
 
@@ -735,12 +735,11 @@ forvalues i=1/`num' {
 duplicates list SUBID matchred if !missing(matchred) //0 duplicates
 
 *check interviews lag>60 days
-fre SUBID if missing(matchred) //12 not matched
+fre SUBID if missing(matchred) //2 not matched
 list SUBID date_red date_snad* if missing(matchred)
 list matchred date_red date_snad* diffred* if SUBID==6418 //NC interview not found
 list matchred date_red diffred* date_snad* if SUBID==10250
 replace matchred=4 if SUBID==10250 & diffred4==147 
-list matchred date_red diffred* if SUBID==10394 //ENSO interview not finished
 
 drop time
 
