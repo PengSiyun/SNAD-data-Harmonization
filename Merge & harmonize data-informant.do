@@ -671,8 +671,8 @@ save "SNAD-MatchData-informant.dta", replace //match all SNAD ego regardless of 
 
 use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\Cleaned\REDcap-R01-informant.dta",clear
 merge m:1 SUBID using "SNAD-MatchData-informant.dta"
-drop if _merge==1 //drop 10 people in Redcap not complete network (10294,10295,10346,10347,10365,10369,10373,10403,10480)10374 only had graphml file
-drop if _merge==2 //drop 4 people did not do REDCap
+drop if _merge==1 //drop 2 people in Redcap not complete network (10347a,10480a)
+drop if _merge==2 //drop 5 people did not do REDCap
 order SUBID date_red date_snad*
 
 *extract total number of waves in SNAD
@@ -698,9 +698,9 @@ forvalues i=1/`num' {
 duplicates list SUBID matchred if !missing(matchred) //0 duplicates
 
 *check interviews lag>60 days
-fre SUBID if missing(matchred) //7 not matched (mostly NC interview wait to be cleaned)
+fre SUBID if missing(matchred) //2 not matched (3564a,10250a)
 list SUBID date_red date_snad* if missing(matchred) //check to make sure the date diff is not close to 60 
-list matchred date_red date_snad* diffred* if SUBID==10389 //10356,10389 ENSO interview only have ego data (maybe 0 alters?)
+list matchred date_red date_snad* diffred* if SUBID==3564 
 
 drop time _merge
 
