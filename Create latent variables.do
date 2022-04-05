@@ -57,13 +57,17 @@ egen reserve=std(residual)
 label var reserve "Cognitive reserve"
 		
 
-	/*merge with occupation complexity*/
+	/*merge with occupation complexity & prestige*/
 
 
-merge m:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\occ_complexSNAD_03072022"
+	*complexity
+merge m:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\occ_complexSNAD_03292022"
 drop if _merge==2 //drop cases not in the cleanned data
 drop _merge
-
+	*prestige
+merge m:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\OccPrestigeSNAD_03292022"
+drop if _merge==2 //drop cases not in the cleanned data
+drop _merge
 
 	/*save files*/
 	
