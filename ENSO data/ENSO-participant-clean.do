@@ -17,7 +17,7 @@ cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENS
 
 use "ENSO-Participant-ego-interview",clear
 merge 1:1 SUBID using "ENSO-Participant-alter-EGOAGG-clean",nogen 
-replace netsize=0 if missing(netsize) //6477,10394,10397 true 0 alter
+replace netsize=. if missing(netsize) //6477,10394,10397 not true 0 alter
 merge 1:1 SUBID using "ENSO-Participant-altertie-EGOAGG-clean"
 fre SUBID if _merge==1 // 19+3 not in alter tie data
 fre SUBID if _merge==2 // 0 not in alter data
@@ -49,7 +49,7 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\E
 
 use "ENSO-Participant-ego-interview",clear
 merge 1:m SUBID using "ENSO-Participant-alter-LONG-clean",nogen 
-replace netsize=0 if missing(netsize) //6477,10394,10397 true 0 alter
+replace netsize=. if missing(netsize) //6477,10394,10397 not true 0 alter
 drop date_snad //use updated date_snad from above
 merge m:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-EGOAGG-clean",nogen  //add alter-level data on top of cleaned EGOAGG data
 rename (wkndties wkdyties family cowrkrs neighbrs anyelse partner) (et_wkndties et_wkdyties et_family et_cowrkrs et_neighbrs et_anyelse et_partner)
@@ -69,7 +69,8 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\E
 
 use "ENSO-Participant-ego-interview",clear
 merge 1:1 SUBID using "ENSO-Participant-alter-EGOAGG-pilot-clean",nogen 
-replace netsize=0 if missing(netsize) //6477,10394,10397 true 0 alter + 7 no alters in IM/HM generators
+replace netsize=0 if missing(netsize) // 6477,10394,10397 + 7 no alters in IM/HM generators
+replace netsize=. if SUBID==6477 | SUBID==10394 | SUBID==10397 //6477,10394,10397 not true 0 alter
 merge 1:1 SUBID using "ENSO-Participant-altertie-EGOAGG-pilot-clean"
 fre SUBID if _merge==1 // 16 not in alter tie data
 drop _merge
@@ -100,6 +101,7 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\E
 use "ENSO-Participant-ego-interview",clear
 merge 1:m SUBID using "ENSO-Participant-alter-LONG-pilot-clean",nogen 
 replace netsize=0 if missing(netsize) //6477,10394,10397 true 0 alter + 7 no alters in IM/HM generators
+replace netsize=. if SUBID==6477 | SUBID==10394 | SUBID==10397 //6477,10394,10397 not true 0 alter
 drop date_snad //use updated date_snad from above
 merge m:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-EGOAGG-pilot-clean",nogen //add alter-level data on top of cleaned EGOAGG data
 rename (wkndties wkdyties family cowrkrs neighbrs anyelse partner) (et_wkndties et_wkdyties et_family et_cowrkrs et_neighbrs et_anyelse et_partner)
@@ -122,6 +124,7 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\E
 use "ENSO-Participant-ego-interview",clear
 merge 1:1 SUBID using "ENSO-Participant-alter-EGOAGG-match-clean",nogen 
 replace netsize=0 if missing(netsize) //6477,10394,10397 true 0 alter + 6 no alters in matched generators
+replace netsize=. if SUBID==6477 | SUBID==10394 | SUBID==10397 //6477,10394,10397 not true 0 alter
 merge 1:1 SUBID using "ENSO-Participant-altertie-EGOAGG-match-clean"
 fre SUBID if _merge==1 // 13 not in alter tie data
 drop _merge
@@ -152,6 +155,7 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\E
 use "ENSO-Participant-ego-interview",clear
 merge 1:m SUBID using "ENSO-Participant-alter-LONG-match-clean",nogen 
 replace netsize=0 if missing(netsize) //6477,10394,10397 true 0 alter + 6 no alters in matched generators
+replace netsize=. if SUBID==6477 | SUBID==10394 | SUBID==10397 //6477,10394,10397 not true 0 alter
 drop date_snad //use updated date_snad from above
 merge m:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-EGOAGG-match-clean",nogen //add alter-level data on top of cleaned EGOAGG data
 rename (wkndties wkdyties family cowrkrs neighbrs anyelse partner) (et_wkndties et_wkdyties et_family et_cowrkrs et_neighbrs et_anyelse et_partner)

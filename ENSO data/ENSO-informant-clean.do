@@ -19,7 +19,7 @@ cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENS
 
 use "ENSO-informant-ego-interview",clear
 merge 1:1 SUBID using "ENSO-Informant-Focal alter-EGOAGG-clean",nogen 
-replace netsize=0 if missing(netsize) //6545,10262,10295,10346,10356,10369,10373,10389,10403 missing alter info completely, are they true 0 alter? (need to confirm with Hope)
+replace netsize=. if missing(netsize) //6545,10262,10295,10346,10356,10369,10373,10389,10403 missing alter info completely, they are probably not true 0 alter. Because informant should be count as an alter at least (need to confirm with Hope)
 merge 1:1 SUBID using "ENSO-informant-focal altertie-EGOAGG-clean"
 fre SUBID if _merge==1 // 11+9 not in alter tie data
 fre SUBID if _merge==2 // 0 not in alter data
@@ -57,7 +57,7 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\E
 
 use "ENSO-informant-ego-interview",clear
 merge 1:m SUBID using "ENSO-Informant-focal alter-LONG-clean",nogen 
-replace netsize=0 if missing(netsize) //6545,10262,10295,10346,10356,10369,10373,10389,10403 missing alter info completely, are they true 0 alter? (need to confirm with Hope)
+replace netsize=. if missing(netsize) //6545,10262,10295,10346,10356,10369,10373,10389,10403 missing alter info completely,they are probably not true 0 alter. Because informant should be count as an alter at least (need to confirm with Hope)
 merge m:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Informant focal-EGOAGG-clean",nogen //add alter-level data on top of cleaned EGOAGG data
 rename (fanyelse fpartner) (et_anyelse et_partner)
 
@@ -77,7 +77,7 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\E
 
 use "ENSO-informant-ego-interview",clear
 merge 1:1 SUBID using "ENSO-Informant-Focal alter-EGOAGG-pilot-clean",nogen 
-replace netsize=0 if missing(netsize) //6545,10262,10295,10346,10356,10369,10373,10389,10403 missing alter info completely, are they true 0 alter? (need to confirm with Hope)
+replace netsize=. if missing(netsize) //6545,10262,10295,10346,10356,10369,10373,10389,10403 missing alter info completely, they are probably not true 0 alter. Because informant should be count as an alter at least (need to confirm with Hope)
 merge 1:1 SUBID using "ENSO-informant-focal altertie-EGOAGG-pilot-clean"
 fre SUBID if _merge==1 // 12+9 not in alter tie data
 drop _merge
@@ -113,7 +113,7 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\E
 
 use "ENSO-informant-ego-interview",clear
 merge 1:m SUBID using "ENSO-Informant-focal alter-LONG-pilot-clean",nogen 
-replace netsize=0 if missing(netsize) //6545,10262,10295,10346,10356,10369,10373,10389,10403 missing alter info completely, are they true 0 alter? (need to confirm with Hope)
+replace netsize=. if missing(netsize) //6545,10262,10295,10346,10356,10369,10373,10389,10403 missing alter info completely, they are probably not true 0 alter. Because informant should be count as an alter at least (need to confirm with Hope)
 merge m:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Informant focal-EGOAGG-pilot-clean",nogen //add alter-level data on top of cleaned EGOAGG data
 rename (fanyelse fpartner) (et_anyelse et_partner)
 
@@ -134,7 +134,7 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\E
 
 use "ENSO-informant-ego-interview",clear
 merge 1:1 SUBID using "ENSO-Informant-Informant alter-EGOAGG-clean",nogen 
-replace netsize=0 if missing(netsize) //6545,10262,10295,10346,10356,10369,10373,10389,10403 missing alter info completely, are they true 0 alter? (need to confirm with Hope) + 13 have no informant alters
+replace netsize=. if missing(netsize) //6545,10262,10295,10346,10356,10369,10373,10389,10403 missing alter info completely, they are probably not true 0 alter. Because informant should be count as an alter at least (need to confirm with Hope) + 13 have no informant alters
 merge 1:1 SUBID using "ENSO-informant-informant altertie-EGOAGG-clean"
 fre SUBID if _merge==1 // 8+22 not in alter tie data
 fre SUBID if _merge==2 // 0 not in alter data
@@ -172,7 +172,7 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\E
 
 use "ENSO-informant-ego-interview",clear
 merge 1:m SUBID using "ENSO-Informant-informant alter-LONG-clean",nogen 
-replace netsize=0 if missing(netsize) //6545,10262,10295,10346,10356,10369,10373,10389,10403 missing alter info completely, are they true 0 alter? (need to confirm with Hope) + 13 have no informant alters
+replace netsize=. if missing(netsize) //6545,10262,10295,10346,10356,10369,10373,10389,10403 missing alter info completely, they are probably not true 0 alter. Because informant should be count as an alter at least (need to confirm with Hope) + 13 have no informant alters
 merge m:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Informant informant-EGOAGG-clean",nogen  //add alter-level data on top of cleaned EGOAGG data
 
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Informant informant-LONG-clean",replace
@@ -191,7 +191,8 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\E
 
 use "ENSO-informant-ego-interview",clear
 merge 1:1 SUBID using "ENSO-Informant-Informant alter-EGOAGG-R01match-clean",nogen 
-replace netsize=0 if missing(netsize) //6545,10262,10295,10346,10356,10369,10373,10389,10403 missing alter info completely, are they true 0 alter? (need to confirm with Hope) + 14 have no informant alters
+replace netsize=. if missing(netsize) //6545,10262,10295,10346,10356,10369,10373,10389,10403 missing alter info completely, they are probably not true 0 alter. Because informant should be count as an alter at least (need to confirm with Hope) + 14 have no informant alters
+replace netsize=0 if SUBID==6418 //it had alters in workdays and weekends generators
 merge 1:1 SUBID using "ENSO-informant-informant altertie-EGOAGG-R01match-clean"
 fre SUBID if _merge==1 // 7+23 not in alter tie data
 fre SUBID if _merge==2 // 0 not in alter data
@@ -229,7 +230,8 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\E
 
 use "ENSO-informant-ego-interview",clear
 merge 1:m SUBID using "ENSO-Informant-informant alter-LONG-R01match-clean",nogen 
-replace netsize=0 if missing(netsize) //6545,10262,10295,10346,10356,10369,10373,10389,10403 missing alter info completely, are they true 0 alter? (need to confirm with Hope) + 14 have no informant alters
+replace netsize=. if missing(netsize) //6545,10262,10295,10346,10356,10369,10373,10389,10403 missing alter info completely, they are probably not true 0 alter. Because informant should be count as an alter at least (need to confirm with Hope) + 14 have no informant alters
+replace netsize=0 if SUBID==6418 //it had alters in workdays and weekends generators
 merge m:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Informant informant-EGOAGG-R01match-clean",nogen  //add alter-level data on top of cleaned EGOAGG data
 
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Informant informant-LONG-R01match-clean",replace
