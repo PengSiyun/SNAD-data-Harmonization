@@ -23,11 +23,17 @@ foreach file of local files {
 	/*compute bridging ties*/
 	
 	
-	sem (Bridging -> netsize diverse weakest density efctsize sole) ///
+	sem (Bridging -> netsize diverse weakest density efctsize sole) if netsize>1 & !missing(netsize) ///
     , var(Bridging@1) method(mlmv) cov(e.netsize*e.density) cov(e.density*e.sole) ///
 	cov(e.netsize*e.diverse) cov(e.diverse*e.density) cov(e.netsize*e.efctsize) 
 predict bridging,latent(Bridging) 
 label var bridging "Bridging capital"
+
+*adjust bridging when netsize<2 or missing
+replace bridging=. if missing(netsize) 
+sum bridging
+local min=r(min)
+replace bridging=`min' if netsize<2 //set bridging to minimum value when netsize<2
 
 
 	/*compute cognitive reserve*/
