@@ -1,6 +1,6 @@
 ****Priject: SNAD
 ****Author:  Siyun Peng
-****Date:    2022/01/22
+****Date:    2022/04/22
 ****Version: 17
 ****Purpose: do file that runs all do files for SNAD informant
 
@@ -65,10 +65,12 @@ do "Netcanvas-informant-informant-clean" //Clean Informant alter
 **# 5 Merge & harmonize all sources of data 
 **********************************************************************
 
-**start here
+
 
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes"
 do "Merge & harmonize data-informant" 
+
+
 
 
 
