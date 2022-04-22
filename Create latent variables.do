@@ -1,6 +1,6 @@
 ****Project: Create index for complex concepts
 ****Author:  Siyun Peng
-****Date:    2022/03/17
+****Date:    2022/04/17
 ****Version: 17
 ****Purpose: Create bridging and Cognitive reserve measures for SNAD
 
