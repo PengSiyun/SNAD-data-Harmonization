@@ -921,14 +921,16 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean d
 *EGOAGG
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data"
 use "SNAD-preexlusion-focal-R01raw-20211222",clear
-drop if agesnad<45 | moca_raw<10
+drop if agesnad<45 
+drop if moca_raw<10 & time==1 //exclude moca<10 for 1st wave
 drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
 save "SNAD-Analysis-focal-R01raw-20211222", replace
 
 *LONG
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\Alter-level\"
 use "SNAD-preexlusion-focal-LONG-R01raw-20211222",clear
-drop if agesnad<45 | moca_raw<10
+drop if agesnad<45 
+drop if moca_raw<10 & time==1 //exclude moca<10 for 1st wave
 drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
 save "SNAD-Analysis-focal-LONG-R01raw-20211222", replace
 
@@ -940,14 +942,16 @@ save "SNAD-Analysis-focal-LONG-R01raw-20211222", replace
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data"
 use "SNAD-preexlusion-focal-pilotmatch-20211222",clear
 
-drop if agesnad<45 | moca_raw<10
+drop if agesnad<45 
+drop if moca_raw<10 & time==1 //exclude moca<10 for 1st wave
 drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
 save "SNAD-Analysis-focal-pilotmatch-20211222", replace
 
 *LONG
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\Alter-level\"
 use "SNAD-preexlusion-focal-LONG-pilotmatch-20211222",clear
-drop if agesnad<45 | moca_raw<10
+drop if agesnad<45 
+drop if moca_raw<10 & time==1 //exclude moca<10 for 1st wave
 drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
 save "SNAD-Analysis-focal-LONG-pilotmatch-20211222", replace
 
@@ -959,14 +963,16 @@ save "SNAD-Analysis-focal-LONG-pilotmatch-20211222", replace
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data"
 use "SNAD-preexlusion-focal-R01match-20211222",clear
 
-drop if agesnad<45 | moca_raw<10
+drop if agesnad<45 
+drop if moca_raw<10 & time==1 //exclude moca<10 for 1st wave
 drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
 save "SNAD-Analysis-focal-R01match-20211222", replace
 
 *LONG
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\Alter-level\"
 use "SNAD-preexlusion-focal-LONG-R01match-20211222",clear
-drop if agesnad<45 | moca_raw<10
+drop if agesnad<45 
+drop if moca_raw<10 & time==1 //exclude moca<10 for 1st wave
 drop if primarysubtype=="Bipolar disorder" | primarysubtype=="Prion Disease"
 save "SNAD-Analysis-focal-LONG-R01match-20211222", replace
 
