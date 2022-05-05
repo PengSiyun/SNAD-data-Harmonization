@@ -2,7 +2,7 @@
 ****Author:  Siyun Peng
 ****Date:    2022/04/22
 ****Version: 17
-****Purpose: Harmonize data from IADRC and SNAD-Focal participant
+****Purpose: Harmonize data from IADRC and SNAD- Focal participant
 clear
 
 ***************************************************************
