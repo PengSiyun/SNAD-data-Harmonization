@@ -1,6 +1,6 @@
 ****Author:  Siyun Peng
 ****Date:    2021/12/09
-****Version: 17 
+****Version: 17
 ****Purpose: Clean NC full & pilot matched
 
 clear
