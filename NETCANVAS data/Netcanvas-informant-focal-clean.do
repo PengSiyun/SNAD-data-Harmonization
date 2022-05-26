@@ -1,5 +1,5 @@
 ****Author:  Siyun Peng
-****Date:    2022/01/27
+****Date:    2022/04/27
 ****Version: 17
 ****Purpose: Clean NC Informant report of FOCAL
 
@@ -161,7 +161,7 @@ rename alterid alterid_nc
 save "NC-informant focal-altername-match",replace
 
 rename (alterid_nc alter_name) (alterid alter_name_nc)
-duplicates list SUBID alterid //0 alters have different spelling in 2 waves 
+duplicates list SUBID alterid //1 alter have different spelling in 2 waves (6585a 13)
 duplicates drop SUBID alterid,force //drop different spelling
 save "NC-informant focal-alterid-match",replace
 
