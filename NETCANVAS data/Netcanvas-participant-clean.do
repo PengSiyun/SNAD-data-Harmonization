@@ -374,6 +374,14 @@ save "NC-participant-alter-20211112.dta", replace
 bysort SUBID NC: egen netsize=count(name_gen)
 lab var netsize "Total number of alters mentioned" 
 
+egen imd=anymatch(alterim*), values(1)
+bysort SUBID: egen pimd=mean(imd)
+egen hmd=anymatch(alterhm*), values(1)
+bysort SUBID: egen phmd=mean(hmd)
+lab var pimd "Proportion important matters discussants"
+lab var phmd "Proportion health matters discussants"
+drop imd hmd
+
 destring altercloseego,replace
 recode altercloseego (1=3) (2=2) (3=1)
 label define altercloseego 1 "Not very close" 2 "Sort of close" 3 "Very close"
@@ -650,6 +658,14 @@ drop if pilot==0 | missing(pilot)
 
 bysort SUBID NC: egen netsize=count(name_gen)
 lab var netsize "Total number of alters mentioned" 
+
+egen imd=anymatch(alterim*), values(1)
+bysort SUBID: egen pimd=mean(imd)
+egen hmd=anymatch(alterhm*), values(1)
+bysort SUBID: egen phmd=mean(hmd)
+lab var pimd "Proportion important matters discussants"
+lab var phmd "Proportion health matters discussants"
+drop imd hmd
 
 destring altercloseego,replace
 recode altercloseego (1=3) (2=2) (3=1)
@@ -933,6 +949,14 @@ drop if match==0 | missing(match)
 
 bysort SUBID NC: egen netsize=count(name_gen)
 lab var netsize "Total number of alters mentioned" 
+
+egen imd=anymatch(alterim*), values(1)
+bysort SUBID: egen pimd=mean(imd)
+egen hmd=anymatch(alterhm*), values(1)
+bysort SUBID: egen phmd=mean(hmd)
+lab var pimd "Proportion important matters discussants"
+lab var phmd "Proportion health matters discussants"
+drop imd hmd
 
 destring altercloseego,replace
 recode altercloseego (1=3) (2=2) (3=1)
