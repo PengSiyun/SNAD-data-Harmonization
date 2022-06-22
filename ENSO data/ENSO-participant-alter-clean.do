@@ -397,6 +397,14 @@ lab var netsize "Total number of alters mentioned"
 bysort SUBID: egen pcollege=mean(alter_college)
 lab var pcollege "Proportion college in network"
 
+egen imd=anymatch(imp*), values(1)
+bysort SUBID: egen pimd=mean(imd)
+egen hmd=anymatch(hlth*), values(1)
+bysort SUBID: egen phmd=mean(hmd)
+lab var pimd "Proportion important matters discussants"
+lab var phmd "Proportion health matters discussants"
+drop imd hmd
+
 foreach x of varlist nitrust* {
 	tostring `x',replace
 	replace `x' =substr(`x',1,1) //remove " in string
@@ -623,6 +631,14 @@ lab var netsize "Total number of alters mentioned"
 bysort SUBID: egen pcollege=mean(alter_college)
 lab var pcollege "Proportion college in network"
 
+egen imd=anymatch(imp*), values(1)
+bysort SUBID: egen pimd=mean(imd)
+egen hmd=anymatch(hlth*), values(1)
+bysort SUBID: egen phmd=mean(hmd)
+lab var pimd "Proportion important matters discussants"
+lab var phmd "Proportion health matters discussants"
+drop imd hmd
+
 foreach x of varlist nitrust* {
 	tostring `x',replace
 	replace `x' =substr(`x',1,1) //remove " in string
@@ -847,6 +863,14 @@ lab var netsize "Total number of alters mentioned"
 
 bysort SUBID: egen pcollege=mean(alter_college)
 lab var pcollege "Proportion college in network"
+
+egen imd=anymatch(imp*), values(1)
+bysort SUBID: egen pimd=mean(imd)
+egen hmd=anymatch(hlth*), values(1)
+bysort SUBID: egen phmd=mean(hmd)
+lab var pimd "Proportion important matters discussants"
+lab var phmd "Proportion health matters discussants"
+drop imd hmd
 
 foreach x of varlist nitrust* {
 	tostring `x',replace
