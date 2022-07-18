@@ -104,8 +104,8 @@ rename alterid alterid_nc
 save "NC-altername-match",replace
 
 rename (alterid_nc alter_name) (alterid alter_name_nc)
-duplicates list SUBID alterid //11 alters have different spelling in 2 waves (6302:9,24; 10124:4,5; 10155:5,21; 10327:1; 10328:1; 10339:40; 10420:8,10)
-duplicates drop SUBID alterid,force //Those 11 are safe to drop different spelling
+duplicates list SUBID alterid //24 alters have different spelling in 2 waves (6302:9,24; 6368:4; 6568:5,22; 10124:4,5; 10155:5,21; 10250:40; 10327:1; 10328:1; 10339:40; 10399:3; 10420:8,10; 10434:3; 10447:12,17; 910002:3,12,15; 910006:14,29)
+duplicates drop SUBID alterid,force //Those 24 are safe to drop different spelling
 save "NC-alterid-match",replace
 
 
