@@ -33,6 +33,10 @@ label define source 1 "Pilot" 2 "ENSO" 3 "NC"
 label values source source
 label var source "Data source"
 
+tostring SUBID,gen(SUBID_copy)
+replace SUBID_str=SUBID_copy + "a" if missing(SUBID_str) //add a to non NC people
+drop SUBID_copy
+
 *make variable names consistent across softwares (pilot,ENSO,NC)
 replace fimpmat=imd if missing(fimpmat) //generators
 replace fimpmat=alterim1 if missing(fimpmat)
@@ -131,6 +135,10 @@ label define source 1 "Pilot" 2 "ENSO" 3 "NC"
 label values source source
 label var source "Data source"
 
+tostring SUBID,gen(SUBID_copy)
+replace SUBID_str=SUBID_copy + "a" if missing(SUBID_str) //add a to non NC people
+drop SUBID_copy
+
 *gen time indicator (pilot wave may not be accurate: e.g., T3 is actually a T2. Without date, no real way to fix this)
 gen time=pilot //pilot waves keep its corresponding waves
 bysort SUBID: egen time_pilot=max(pilot) //count pilot waves completed by SUBID
@@ -163,6 +171,10 @@ replace source=3 if !missing(NC)
 label define source 1 "Pilot" 2 "ENSO" 3 "NC"
 label values source source
 label var source "Data source"
+
+tostring SUBID,gen(SUBID_copy)
+replace SUBID_str=SUBID_copy + "a" if missing(SUBID_str) //add a to non NC people
+drop SUBID_copy
 
 *make variable names consistent across softwares (ENSO,NC)
 replace fimpmat=alterim1 if missing(fimpmat) //generators
@@ -237,6 +249,10 @@ label define source 1 "Pilot" 2 "ENSO" 3 "NC"
 label values source source
 label var source "Data source"
 
+tostring SUBID,gen(SUBID_copy)
+replace SUBID_str=SUBID_copy + "a" if missing(SUBID_str) //add a to non NC people
+drop SUBID_copy
+
 *gen time indicator
 sort SUBID date_snad
 bysort SUBID: gen time=_n
@@ -265,6 +281,10 @@ replace source=3 if !missing(NC)
 label define source 1 "Pilot" 2 "ENSO" 3 "NC"
 label values source source
 label var source "Data source"
+
+tostring SUBID,gen(SUBID_copy)
+replace SUBID_str=SUBID_copy + "a" if missing(SUBID_str) //add a to non NC people
+drop SUBID_copy
 
 *make variable names consistent across softwares (ENSO,NC)
 replace fimpmat=alterim1 if missing(fimpmat) //generators
@@ -339,6 +359,10 @@ label define source 1 "Pilot" 2 "ENSO" 3 "NC"
 label values source source
 label var source "Data source"
 
+tostring SUBID,gen(SUBID_copy)
+replace SUBID_str=SUBID_copy + "a" if missing(SUBID_str) //add a to non NC people
+drop SUBID_copy
+
 *gen time indicator
 sort SUBID date_snad
 bysort SUBID: gen time=_n
@@ -366,6 +390,10 @@ label define source 1 "Pilot" 2 "ENSO" 3 "NC"
 label values source source
 label var source "Data source"
 
+tostring SUBID,gen(SUBID_copy)
+replace SUBID_str=SUBID_copy + "a" if missing(SUBID_str) //add a to non NC people
+drop SUBID_copy
+
 save "SNAD-informant focal-LONG-NCmatch-clean.dta", replace 
 
 
@@ -380,6 +408,10 @@ gen source=3 if !missing(NC)
 label define source 1 "Pilot" 2 "ENSO" 3 "NC"
 label values source source
 label var source "Data source"
+
+tostring SUBID,gen(SUBID_copy)
+replace SUBID_str=SUBID_copy + "a" if missing(SUBID_str) //add a to non NC people
+drop SUBID_copy
 
 *gen time indicator
 sort SUBID date_snad
@@ -409,6 +441,10 @@ replace source=3 if !missing(NC)
 label define source 1 "Pilot" 2 "ENSO" 3 "NC"
 label values source source
 label var source "Data source"
+
+tostring SUBID,gen(SUBID_copy)
+replace SUBID_str=SUBID_copy + "a" if missing(SUBID_str) //add a to non NC people
+drop SUBID_copy
 
 *make variable names consistent across softwares (ENSO,NC)
 replace simpmat=iim1 if missing(simpmat) //generators
@@ -486,6 +522,10 @@ label define source 1 "Pilot" 2 "ENSO" 3 "NC"
 label values source source
 label var source "Data source"
 
+tostring SUBID,gen(SUBID_copy)
+replace SUBID_str=SUBID_copy + "a" if missing(SUBID_str) //add a to non NC people
+drop SUBID_copy
+
 *gen time indicator
 sort SUBID date_snad
 bysort SUBID: gen time=_n
@@ -513,6 +553,10 @@ replace source=3 if !missing(NC)
 label define source 1 "Pilot" 2 "ENSO" 3 "NC"
 label values source source
 label var source "Data source"
+
+tostring SUBID,gen(SUBID_copy)
+replace SUBID_str=SUBID_copy + "a" if missing(SUBID_str) //add a to non NC people
+drop SUBID_copy
 
 *make variable names consistent across softwares (ENSO,NC)
 replace simpmat=iim1 if missing(simpmat) //generators
@@ -590,6 +634,10 @@ label define source 1 "Pilot" 2 "ENSO" 3 "NC"
 label values source source
 label var source "Data source"
 
+tostring SUBID,gen(SUBID_copy)
+replace SUBID_str=SUBID_copy + "a" if missing(SUBID_str) //add a to non NC people
+drop SUBID_copy
+
 *gen time indicator
 sort SUBID date_snad
 bysort SUBID: gen time=_n
@@ -611,7 +659,9 @@ save "SNAD-informant informant-EGOAGG-clean.dta", replace
 
 
 use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\temp\ENSO-informant-ego-clean",clear 
-merge 1:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\Cleaned\REDcap-R01-informant-demographics.dta" 
+tostring SUBID, gen(SUBID_str)
+replace SUBID_str=SUBID_str + "a"
+merge 1:1 SUBID_str using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\Cleaned\REDcap-R01-informant-demographics.dta" 
 
 *married was collected as demo before new R01; IADC did not collect married
 rename married_enso married_enso_demo
@@ -732,12 +782,12 @@ gen pilot=. //Redcap has R01 only
 /*add SNAD data (pilot match)*/
 
 
-merge 1:1 SUBID date_snad pilot using "SNAD-informant focal-EGOAGG-pilotmatch-clean.dta"
+merge 1:1 SUBID_str date_snad pilot using "SNAD-informant focal-EGOAGG-pilotmatch-clean.dta"
 drop if _merge==1 //drop cases have no SNAD data
 drop _merge
 
 *add Demographics info
-merge m:1 SUBID using "Demographics-informant.dta"
+merge m:1 SUBID_str using "Demographics-informant.dta"
 drop if _merge==2 //Demo data not matched with network data
 drop _merge 
 
@@ -767,12 +817,12 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean d
 
 use "red-Clean-snadMatch-informant.dta", clear 
 
-merge 1:1 SUBID date_snad using "SNAD-informant focal-EGOAGG-ENSOmatch-clean"
+merge 1:1 SUBID_str date_snad using "SNAD-informant focal-EGOAGG-ENSOmatch-clean"
 drop if _merge==1 //drop cases have no R01 SNAD data
 drop _merge 
 
 *add Demographics info
-merge m:1 SUBID using "Demographics-informant.dta" 
+merge m:1 SUBID_str using "Demographics-informant.dta" 
 drop if _merge==2 //Demo data not matched with network data
 drop _merge 
 personage dobdate date_snad, gen(agesnad) //create age based on SNAD date; install personage if not alreday (Only new Redcap R01 started collect dob)
@@ -803,12 +853,12 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean d
 
 use "red-Clean-snadMatch-informant.dta", clear 
 
-merge 1:1 SUBID date_snad using "SNAD-informant focal-EGOAGG-clean"
+merge 1:1 SUBID_str date_snad using "SNAD-informant focal-EGOAGG-clean"
 drop if _merge==1 //drop cases have no R01 SNAD data
 drop _merge 
 
 *add Demographics info
-merge m:1 SUBID using "Demographics-informant.dta" 
+merge m:1 SUBID_str using "Demographics-informant.dta" 
 drop if _merge==2 //Demo data not matched with network data
 drop _merge 
 personage dobdate date_snad, gen(agesnad) //create age based on SNAD date; install personage if not alreday (Only new Redcap R01 started collect dob)
@@ -837,12 +887,12 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean d
 
 
 use "red-Clean-snadMatch-informant.dta", clear 
-merge 1:1 SUBID date_snad using "SNAD-informant focal-EGOAGG-NCmatch-clean.dta"
+merge 1:1 SUBID_str date_snad using "SNAD-informant focal-EGOAGG-NCmatch-clean.dta"
 drop if _merge==1 //drop cases have no SNAD data
 drop _merge
 
 *add Demographics info
-merge m:1 SUBID using "Demographics-informant.dta"
+merge m:1 SUBID_str using "Demographics-informant.dta"
 drop if _merge==2 //Demo data not matched with network data
 drop _merge 
 
@@ -856,7 +906,7 @@ drop empstat_enso emphrs_enso
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-Analysis-informant focal-NCmatch-20211222",replace
 
 *add LONG data (alter-level)
-merge 1:m SUBID date_snad using "SNAD-informant focal-LONG-NCmatch-clean",nogen //add alter-level on top of EGOAGG
+merge 1:m SUBID_str date_snad using "SNAD-informant focal-LONG-NCmatch-clean",nogen //add alter-level on top of EGOAGG
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\Alter-level\SNAD-Analysis-informant focal-LONG-NCmatch-20211222",replace
 
 
@@ -876,12 +926,12 @@ use "red-Clean-snadMatch-informant.dta", clear
 /*add SNAD data (R01 matched)*/
 
 
-merge 1:1 SUBID date_snad using "SNAD-informant informant-EGOAGG-R01match-clean"
+merge 1:1 SUBID_str date_snad using "SNAD-informant informant-EGOAGG-R01match-clean"
 drop if _merge==1 //drop cases have no R01 SNAD data
 drop _merge 
 
 *add Demographics info
-merge m:1 SUBID using "Demographics-informant.dta" 
+merge m:1 SUBID_str using "Demographics-informant.dta" 
 drop if _merge==2 //Demo data not matched with network data
 drop _merge 
 personage dobdate date_snad, gen(agesnad) //create age based on SNAD date; install personage if not alreday (Only new Redcap R01 started collect dob)
@@ -912,12 +962,12 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean d
 
 use "red-Clean-snadMatch-informant.dta", clear 
 
-merge 1:1 SUBID date_snad using "SNAD-informant informant-EGOAGG-clean"
+merge 1:1 SUBID_str date_snad using "SNAD-informant informant-EGOAGG-clean"
 drop if _merge==1 //drop cases have no R01 SNAD data
 drop _merge 
 
 *add Demographics info
-merge m:1 SUBID using "Demographics-informant.dta" 
+merge m:1 SUBID_str using "Demographics-informant.dta" 
 drop if _merge==2 //Demo data not matched with network data
 drop _merge 
 personage dobdate date_snad, gen(agesnad) //create age based on SNAD date; install personage if not alreday (Only new Redcap R01 started collect dob)
