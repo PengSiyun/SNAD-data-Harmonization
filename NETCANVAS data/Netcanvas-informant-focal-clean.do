@@ -40,13 +40,14 @@ list ccid networkcanvascaseid if ccid!=networkcanvascaseid //5 cases, correct in
 replace ccid=networkcanvascaseid if ccid!=networkcanvascaseid //networkcanvascaseid are all correct for 5 cases
 
 *create wave for NC
-gen SUBID_num =subinstr(ccid, "a", "",.) 
-replace SUBID_num =subinstr(SUBID_num, "b", "",.) 
-replace SUBID_num =subinstr(SUBID_num, "c", "",.) 
-destring SUBID_num,replace
-sort SUBID_num date_snad //sort ccid by time
-bysort SUBID_num: gen NC=_n
-list SUBID_num date_snad NC  //check order by time
+gen SUBID_str=ccid
+gen SUBID =subinstr(ccid, "a", "",.) 
+replace SUBID =subinstr(SUBID, "b", "",.) 
+replace SUBID=subinstr(SUBID, "c", "",.) 
+destring SUBID,replace
+sort SUBID date_snad //sort ccid by time
+bysort SUBID: gen NC=_n
+list SUBID date_snad NC  //check order by time
 drop sessionstart sessionfinish sessionexported interviewwave alterid ego_variable _filename // drop unnessary variables
 
 save "NC-informant-ego-20211112.dta", replace
@@ -69,7 +70,7 @@ drop null _filename // drop unnessary variables
 *merge with ego level 
 merge m:1 networkcanvasegouuid using "NC-informant-ego-20211112.dta", nogen //all matched
 
-rename (ccid name) (SUBID alter_name)
+rename (name) (alter_name)
 order SUBID alterid id
 sort SUBID alterid 
 destring alterid,replace
@@ -99,8 +100,8 @@ prevalteri broughtforwardi stilldiscussi iim* iihm* iet* stilldiscusscati* {
 recode broughtforward stilldiscuss stilldiscussi (. 2 =0)
 
 egen name_gen=rowtotal(alterim* alterhm* alteret* prevalterimcat*) //Focal 
-list SUBID_num alter_name if name_gen==0 & stilldiscuss==1 //0 missing generators while stilldiscuss=1
-list SUBID_num if name_gen>0 & stilldiscuss==0 & broughtforward==0 //10004a, 10299a, 10327a are named in generators but broughtforward/stilldiscuss!=1. The drag back problem. It is fixed in the APP and will not happen in the future.
+list SUBID alter_name if name_gen==0 & stilldiscuss==1 //0 missing generators while stilldiscuss=1
+list SUBID if name_gen>0 & stilldiscuss==0 & broughtforward==0 //10004a, 10299a, 10327a are named in generators but broughtforward/stilldiscuss!=1. The drag back problem. It is fixed in the APP and will not happen in the future.
 
 
 /*recode generators*/
@@ -152,21 +153,21 @@ preserve
 
 /*check alterid & alter_name within each wave of NC*/
 
-duplicates list SUBID_num alter_name date_snad //none should exist, otherwise fix.  
-duplicates list SUBID_num alterid date_snad //none should exist, otherwise fix. 
+duplicates list SUBID alter_name date_snad //none should exist, otherwise fix.  
+duplicates list SUBID alterid date_snad //none should exist, otherwise fix. 
 
 
 /*check alterid & alter_name across waves of NC*/
 
 
-duplicates drop SUBID_num alterid alter_name,force //drop alters in multiple waves
-duplicates list SUBID_num alter_name //none should exist, otherwise fix 
+duplicates drop SUBID alterid alter_name,force //drop alters in multiple waves
+duplicates list SUBID alter_name //none should exist, otherwise fix 
 rename alterid alterid_nc
 save "NC-informant focal-altername-match",replace
 
 rename (alterid_nc alter_name) (alterid alter_name_nc)
-duplicates list SUBID_num alterid //9 alters have different spelling in 2 waves (6368:5; 6585: 13; 10395:3,5,13,14; 910003:1,2,21)
-duplicates drop SUBID_num alterid,force //drop different spelling
+duplicates list SUBID alterid //9 alters have different spelling in 2 waves (6368:5; 6585: 13; 10395:3,5,13,14; 910003:1,2,21)
+duplicates drop SUBID alterid,force //drop different spelling
 save "NC-informant focal-alterid-match",replace
 
 
@@ -175,27 +176,27 @@ save "NC-informant focal-alterid-match",replace
 *same name but different alterid
 
 import excel using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\UniqueID W12345-Informant-Focal alter", clear first 
-gen SUBID_num =subinstr(SUBID, "a", "",.) //remove a
-destring SUBID_num,replace
-keep SUBID_num TIEID_uniq name 
+replace SUBID =subinstr(SUBID, "a", "",.) //remove a
+destring SUBID,replace
+keep SUBID TIEID_uniq name 
 rename (name TIEID_uniq) (alter_name alterid)
-duplicates drop SUBID_num alter_name,force
-merge 1:1 SUBID_num alter_name using "NC-informant focal-altername-match",keepusing(SUBID_num alterid_nc alter_name) 
-sort SUBID_num alter_name
+duplicates drop SUBID alter_name,force
+merge 1:1 SUBID alter_name using "NC-informant focal-altername-match",keepusing(SUBID alterid_nc alter_name) 
+sort SUBID alter_name
 keep if _merge==3
-list SUBID_num alter_name alterid* if alterid != alterid_nc //none should exist, otherwise fix
+list SUBID alter_name alterid* if alterid != alterid_nc //none should exist, otherwise fix
 
 *same alterid but different name
 import excel using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\UniqueID W12345-Informant-Focal alter", clear first 
-gen SUBID_num =subinstr(SUBID, "a", "",.) //remove a
-destring SUBID_num,replace
-keep SUBID_num TIEID_uniq name 
+replace SUBID =subinstr(SUBID, "a", "",.) //remove a
+destring SUBID,replace
+keep SUBID TIEID_uniq name 
 rename (TIEID_uniq name) (alterid alter_name)
-duplicates drop SUBID_num alterid,force
-merge 1:1 SUBID_num alterid using "NC-informant focal-alterid-match",keepusing(SUBID alterid alter_name_nc) 
-sort SUBID_num alterid
+duplicates drop SUBID alterid,force
+merge 1:1 SUBID alterid using "NC-informant focal-alterid-match",keepusing(SUBID alterid alter_name_nc) 
+sort SUBID alterid
 keep if _merge==3
-list SUBID_num alterid alter_name* if alter_name != alter_name_nc //double check to make sure people with same id are indeed different spelling rather than different people
+list SUBID alterid alter_name* if alter_name != alter_name_nc //double check to make sure people with same id are indeed different spelling rather than different people
 
 
 
@@ -231,9 +232,7 @@ keep if NC==1
 egen relmiss=rowtotal(alterrel*) //40 alters are missing/0 on all relation type
 
 *merge NC with ENSO
-rename (SUBID SUBID_num) (SUBID_str SUBID)
 merge 1:1 SUBID alterid using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\temp\ENSO-Informant-Focal alter-LONG-clean.dta",keepusing(frel* tfem alter_race alter_age alter_college) update //update missing values in tfem alter_race alter_age alter_college of master data with values in using data
-rename (SUBID_str SUBID) (SUBID SUBID_num)
 
 drop if _merge==2 //drop ENSO alters did not match with NC old alters
 drop _merge
