@@ -50,8 +50,13 @@ rename city_w1 city_moca
 rename *_w1 * //drop _w1
 
 *Cognitive tests
-rename total_score moca_total //
+rename total_score moca_total 
+tostring moca_total,replace
 replace moca_total=subinstr(moca_total,"/30","",1) //turn 16/30 into 16
+
+*other
+replace education_mother2 = "6" if education_mother2=="12 years old; 6th "
+destring education_mother2,replace
 
 *rename variables that are asked both for FOCAL and INFORMANT
 rename (nofriends2_w1___1 nofriends3_w1___1) (nofriends_f nofriends_i)
@@ -91,6 +96,9 @@ drop race___*
 label define race 1 "American Indian or Alaskan Native" 2 "Asian" 3 "African American" 4 "Pacific Islander" 5 "White" 6 "Other"
 label values race race
 replace SUBID =subinstr(SUBID, "a", "",.) //remove a
+replace SUBID =subinstr(SUBID, "b", "",.) 
+replace SUBID =subinstr(SUBID, "c", "",.) 
+
 destring SUBID,replace
 
 
