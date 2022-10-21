@@ -7,6 +7,7 @@
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01" //home
 do "REDcap-R01-Informant-import" //import excel from Redcap into stata
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\temp" //home
+save "REDcap-R01-informant-raw",replace
 
 *to do: 
 *6404a is missing moca_total
@@ -95,6 +96,7 @@ replace race=3 if race___3==1 //Black
 drop race___*
 label define race 1 "American Indian or Alaskan Native" 2 "Asian" 3 "African American" 4 "Pacific Islander" 5 "White" 6 "Other"
 label values race race
+gen SUBID_str=SUBID
 replace SUBID =subinstr(SUBID, "a", "",.) //remove a
 replace SUBID =subinstr(SUBID, "b", "",.) 
 replace SUBID =subinstr(SUBID, "c", "",.) 
@@ -116,7 +118,7 @@ destring SUBID,replace
 preserve
 
 keep if redcap_event_name=="demographics_arm_1" //keep demo line
-keep SUBID-zip_code race-education_father2
+keep SUBID_str SUBID-zip_code race-education_father2
 
 *prepare for append
 replace education_father2="12" if education_father2=="GED"
@@ -125,9 +127,9 @@ tostring step,replace
 append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-informant-demographics.dta"
 
 foreach x of varlist * {
-	bysort SUBID: replace `x'=`x'[2] if missing(`x') //copy values from old R01 if missing
+	bysort SUBID_str: replace `x'=`x'[2] if missing(`x') //copy values from old R01 if missing
 }
-duplicates drop SUBID,force //drop old R01
+duplicates drop SUBID_str,force //drop old R01
 
 
 *check conflict and fix it in the new R01
@@ -140,7 +142,7 @@ list SUBID first_name last_name gender if gender_t==1.5
 */
 
 rename * *_red //to differentiate from IADRC demo variables
-rename  SUBID_red SUBID
+rename  (SUBID_red SUBID_str_red) (SUBID SUBID_str)
 save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\Cleaned\REDcap-R01-informant-demographics.dta",replace
 
 restore

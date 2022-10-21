@@ -6,6 +6,7 @@
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01" //home
 do "REDcap-R01-Participant-import" //import excel from Redcap into stata
 cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\temp" //home
+save "REDcap-R01-participant-raw",replace
 
 *to do: 
 *how to create sum score of facial memory, emotion cognition?
