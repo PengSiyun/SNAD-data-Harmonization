@@ -3,9 +3,9 @@
 ****Version: 17
 ****Purpose: clean REDcap R01 Participant  
 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01" //home
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01" //home
 do "REDcap-R01-Participant-import" //import excel from Redcap into stata
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\temp" //home
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\temp" //home
 save "REDcap-R01-participant-raw",replace
 
 *to do: 
@@ -112,8 +112,8 @@ replace step= "0" if step=="o"
 destring step, replace
 tostring year_start1 different_jobs long_live*,replace
 
-append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-participant-demographics.dta"
-append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot missing demo clean\pilot-participant-missingdemo"
+append using "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-participant-demographics.dta"
+append using "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot missing demo clean\pilot-participant-missingdemo"
 
 foreach x of varlist * {
 	bysort SUBID: replace `x'=`x'[2] if missing(`x') //copy values from old R01 if missing
@@ -133,7 +133,7 @@ list SUBID first_name last_name gender if gender_t==1.5
 
 rename * *_red //to differentiate from IADRC demo variables
 rename  SUBID_red SUBID
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\Cleaned\REDcap-R01-participant-demographics.dta",replace
+save "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\Cleaned\REDcap-R01-participant-demographics.dta",replace
 
 restore
 
@@ -147,14 +147,16 @@ drop first_name-demographics_complete //drop demo variables
 tostring oliveoil-alcoholser,replace
 destring rey_sum,replace
 
-append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-participant.dta"
+append using "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-participant.dta"
 drop time //wave indicator in old R01
 sort SUBID date_red
 bysort SUBID: gen time=_n //create new wave indicator
 recode anxiety? (1=0) (2=1) (3=2) (4=3)
 label define anxiety 0 "No" 1 "A little" 2 "Sometimes" 3 "Extremely"
 label values anxiety? anxiety
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\Cleaned\REDcap-R01-participant.dta",replace
+recode cwpuzzles_f (1=5) (2=4) (3=3) (4=2) (5=1)
+label values cwpuzzles_f puzzlegame_f_w1_
+save "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\Cleaned\REDcap-R01-participant.dta",replace
 
 
 
