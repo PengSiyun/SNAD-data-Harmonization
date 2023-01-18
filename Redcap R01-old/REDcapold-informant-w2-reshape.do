@@ -3,9 +3,9 @@
 ****Version: 17
 ****Purpose: clean W2 data for REDcap R01 Informant  
 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old"
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old"
 do "REDcapold-R01-w2-import" //import w2 excel from Redcap into stata
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\temp" 
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\temp" 
 
 *Interview date
 gen redcap_date = dofc(gift_datei) //remove hours and minutes
@@ -58,6 +58,10 @@ order SUBID
 **# 3. drop NON-informant data (REDcap data export order is based on Designer)
 ************************************************************
 
+
+rename  coordinator_who_conducted interviewer_oldredcap
+order interviewer_oldredcap, after(record_id)
+replace interviewer_oldredcap=coord_namei if missing(interviewer_oldredcap)
 
 *drop tracking info
 drop redcap_event_name-informant_gift_card__v_9
@@ -146,7 +150,7 @@ rename total_score moca_total
 
 save "REDcap-R01-w2-informant-reformated",replace
 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old" //reset directory for rule-all do file
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old" //reset directory for rule-all do file
 
 
 

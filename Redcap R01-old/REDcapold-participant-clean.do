@@ -3,7 +3,7 @@
 ****Version: 17
 ****Purpose: clean REDcap R01 Participant  
 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\temp" //home
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\temp" //home
 use "REDcap-R01-w2-participant-reformated",clear
 tostring workhours_, replace force
 append using "REDcap-R01-w1-participant-reformated",gen(time)
@@ -15,7 +15,6 @@ duplicates report SUBID //29 focal did 2 waves
 ************************************************************
 **# 1. reorder and rename variables
 ************************************************************
-
 
 
 rename date_snad date_red
@@ -108,7 +107,7 @@ rename (demographics_sex dem_education dem_military dem_biochild dem_nonbio) (ge
 
 tostring long_live*,replace 
 
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-participant-demographics.dta",replace
+save "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-participant-demographics.dta",replace
 restore
 
 drop first_name last_name date_of_birth ///
@@ -121,5 +120,5 @@ tostring dem_jobhours,replace
 replace workhours=dem_jobhours if missing(workhours)
 drop dem_marital dem_employment dem_jobhours
 
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-participant.dta",replace
+save "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-participant.dta",replace
 

@@ -5,11 +5,11 @@
 
 
 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\temp" //home
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\temp" //home
 use "REDcap-R01-w2-informant-reformated",clear
 append using "REDcap-R01-w1-informant-reformated",gen(time)
 recode time (0=2) (1=1)
-
+gen SUBID_str=SUBID
 
 
 ************************************************************
@@ -62,13 +62,13 @@ replace moca_total=subinstr(moca_total,"/2019","",1) //turn 16/2019 into 16
 
 preserve
 
-keep SUBID time name_informant ///
+keep SUBID* time name_informant relation_participant informant_address informant_city informant_zip ///
 demographics_sex dem_education dem_military dem_biochild dem_nonbio ///
 grade_mother grade_father education_mother education_father //1st line: demo in Demographics; 2-3 lines: demo in Missing ENSO; 4 line: demo in wave1 of stress and qol
 
 *If missing values occurred in T1 demo, then they could be replaced by T2
 sort SUBID time
-foreach x of varlist name_informant ///
+foreach x of varlist name_informant relation_participant informant_address informant_city informant_zip ///
 demographics_sex dem_education dem_military dem_biochild dem_nonbio ///
 grade_mother grade_father education_mother education_father {
 	bysort SUBID: replace `x'=`x'[2] if missing(`x') 
@@ -83,10 +83,10 @@ rename (demographics_sex dem_education dem_military dem_biochild dem_nonbio) (ge
 replace SUBID =subinstr(SUBID, "a", "",.) //remove a
 destring SUBID,replace
 
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-informant-demographics.dta",replace
+save "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-informant-demographics.dta",replace
 restore
 
-drop name_informant ///
+drop name_informant relation_participant informant_address informant_city informant_zip  ///
 demographics_sex dem_education dem_military dem_biochild dem_nonbio ///
 grade_mother grade_father education_mother education_father //drop demographics 
 rename dem_marital marital
@@ -99,5 +99,5 @@ replace time=1 if SUBID=="10339a"
 replace SUBID =subinstr(SUBID, "a", "",.) //remove a
 destring SUBID,replace
 
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-informant.dta",replace
+save "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-informant.dta",replace
 
