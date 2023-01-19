@@ -30,6 +30,12 @@ bysort record_id: replace date_red=date_red[2] if missing(date_red)&redcap_event
 bysort record_id: replace ccid=ccid[1] if missing(ccid) //fill in ccid for wave lines line using demo line
 drop if missing(date_red)
 
+*interviewer
+rename  coordinator_who_completed interviewer_redcap
+order interviewer_redcap, after(record_id)
+replace interviewer_redcap=coord_name if missing(interviewer_redcap)
+replace interviewer_redcap=9 if missing(interviewer_redcap) & !missing( gift_card_receipts_complete) //Other part-time interviewer, like Mohit, Meagan, or Heather
+
 *Drop tracking and sensitive info (REDcap data export order is based on Designer)
 order date_of_clinical_core_visi,after(gift_card_receipts_complete)
 drop checkboxes___1-gift_card_receipts_complete
@@ -156,6 +162,12 @@ label define anxiety 0 "No" 1 "A little" 2 "Sometimes" 3 "Extremely"
 label values anxiety? anxiety
 recode cwpuzzles_f (1=5) (2=4) (3=3) (4=2) (5=1)
 label values cwpuzzles_f puzzlegame_f_w1_
+
+recode interviewer_oldredcap (1=0) //1 is Evan in old redcap
+replace interviewer_redcap=interviewer_oldredcap if missing(interviewer_redcap)
+lab define who 0 "ERF" 1 "MDB" 2 "HRS" 9 "Part-time"
+lab values interviewer_redcap who
+drop interviewer_oldredcap
 save "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\Cleaned\REDcap-R01-participant.dta",replace
 
 

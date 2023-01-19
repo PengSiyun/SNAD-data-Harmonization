@@ -4,9 +4,9 @@
 ****Purpose: clean REDcap R01 Participant  
 
 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01" //home
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01" //home
 do "REDcap-R01-Informant-import" //import excel from Redcap into stata
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\temp" //home
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\temp" //home
 save "REDcap-R01-informant-raw",replace
 
 *to do: 
@@ -31,6 +31,12 @@ format date_red %td
 bysort record_id: replace date_red=date_red[2] if missing(date_red)&redcap_event_name=="demographics_arm_1" //fill in date for Demo line using 1st wave line
 bysort record_id: replace ccid=ccid[1] if missing(ccid) //fill in ccid for wave lines line using demo line
 drop if missing(date_red)
+
+*interviewer
+rename coordinator_who_conducted interviewer_redcap
+order interviewer_redcap, after(record_id)
+replace interviewer_redcap=coord_namei if missing(interviewer_redcap)
+replace interviewer_redcap=9 if missing(interviewer_redcap) & !missing( gift_card_receipt_complete) //Other part-time interviewer, like Mohit, Meagan, or Heather
 
 *Drop tracking and sensitive info (REDcap data export order is based on Designer)
 drop check_each_box_to_show_tha___4-gift_card_receipt_complete
@@ -124,7 +130,7 @@ keep SUBID_str SUBID-zip_code race-education_father2
 replace education_father2="12" if education_father2=="GED"
 destring education_father2,replace
 tostring step,replace
-append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-informant-demographics.dta"
+append using "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-informant-demographics.dta"
 
 foreach x of varlist * {
 	bysort SUBID_str: replace `x'=`x'[2] if missing(`x') //copy values from old R01 if missing
@@ -143,7 +149,7 @@ list SUBID first_name last_name gender if gender_t==1.5
 
 rename * *_red //to differentiate from IADRC demo variables
 rename  (SUBID_red SUBID_str_red) (SUBID SUBID_str)
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\Cleaned\REDcap-R01-informant-demographics.dta",replace
+save "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\Cleaned\REDcap-R01-informant-demographics.dta",replace
 
 restore
 
@@ -156,11 +162,18 @@ tostring workhours day_week2 followers_*,replace
 drop if redcap_event_name=="demographics_arm_1" //drop demo line
 drop first_name-demographics_complete //drop demo variables
 
-append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-informant.dta"
+append using "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old\Cleaned\REDcap-old-R01-informant.dta"
 drop time //wave indicator in old R01
 sort SUBID date_red
 bysort SUBID: gen time=_n //create new wave indicator
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\Cleaned\REDcap-R01-informant.dta",replace
+
+recode interviewer_oldredcap (1=0) //1 is Evan in old redcap
+replace interviewer_redcap=interviewer_oldredcap if missing(interviewer_redcap)
+lab define who 0 "ERF" 1 "MDB" 2 "HRS" 9 "Part-time"
+lab values interviewer_redcap who
+drop interviewer_oldredcap
+
+save "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\Cleaned\REDcap-R01-informant.dta",replace
 
 
 
