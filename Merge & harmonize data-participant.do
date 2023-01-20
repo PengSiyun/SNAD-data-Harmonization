@@ -16,10 +16,10 @@ clear
 /*LONG (alter-level)*/
 
 
-use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot clean\clean data\SNAD-Participant-T1234-CleanB-LONG.dta", clear
-append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-LONG-pilot-clean.dta"
-append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned\NC-Participant-LONG-pilot-clean-20211112.dta"
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data"
+use "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot clean\clean data\SNAD-Participant-T1234-CleanB-LONG.dta", clear
+append using "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-LONG-pilot-clean.dta"
+append using "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned\NC-Participant-LONG-pilot-clean-20211112.dta"
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data"
 
 *gen source indicator
 drop pilot
@@ -115,13 +115,13 @@ save "SNAD-Participant-LONG-pilotmatch-clean.dta", replace
 /*EGOAGG (ego-level)*/
 
 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot clean\temp"
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot clean\temp"
 use "SNAD-Participant-T1-CleanB-EGOAGG-120419.dta", clear
 append using "SNAD-Participant-T2-CleanB-EGOAGG-062519.dta"
 append using "SNAD-Participant-T3-CleanB-EGOAGG-062519.dta"
 append using "SNAD-Participant-T4-CleanB-EGOAGG-092520.dta",force
-append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-EGOAGG-pilot-clean.dta"
-append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned\NC-Participant-EGOAGG-pilot-clean-20211112.dta"
+append using "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-EGOAGG-pilot-clean.dta"
+append using "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned\NC-Participant-EGOAGG-pilot-clean-20211112.dta"
 
 *gen source indicator
 rename time pilot //rename old time indicator in pilots
@@ -138,7 +138,7 @@ bysort SUBID: gen time=_n
 
 *make variable names consistent between pilot and Redcap for quality of life
 rename no_friends nofriends_feel
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data"
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data"
 save "SNAD-Participant-EGOAGG-pilotmatch-clean.dta", replace 
 
 
@@ -153,9 +153,9 @@ save "SNAD-Participant-EGOAGG-pilotmatch-clean.dta", replace
 /*LONG (alter-level)*/
 
 
-use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-LONG-match-clean.dta",clear
-append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned\NC-Participant-LONG-match-clean-20211112.dta"
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data"
+use "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-LONG-match-clean.dta",clear
+append using "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned\NC-Participant-LONG-match-clean-20211112.dta"
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data"
 
 *gen source indicator
 gen source=2 if ENSO==1
@@ -231,8 +231,8 @@ save "SNAD-Participant-LONG-match-clean.dta", replace
 /*EGOAGG (ego-level)*/
 
 
-use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-EGOAGG-match-clean.dta", clear
-append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned\NC-Participant-EGOAGG-match-clean-20211112.dta"
+use "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-EGOAGG-match-clean.dta", clear
+append using "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned\NC-Participant-EGOAGG-match-clean-20211112.dta"
 
 *gen source indicator
 gen source=2 if ENSO==1
@@ -245,7 +245,7 @@ label var source "Data source"
 sort SUBID date_snad
 bysort SUBID: gen time=_n
 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data"
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data"
 save "SNAD-Participant-EGOAGG-match-clean.dta", replace 
 
 
@@ -261,9 +261,9 @@ save "SNAD-Participant-EGOAGG-match-clean.dta", replace
 /*LONG (alter-level)*/
 
 
-use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-LONG-clean.dta",clear
-append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned\NC-Participant-LONG-clean-20211112.dta"
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data"
+use "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-LONG-clean.dta",clear
+append using "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned\NC-Participant-LONG-clean-20211112.dta"
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data"
 
 *gen source indicator
 gen source=2 if ENSO==1
@@ -339,8 +339,8 @@ save "SNAD-Participant-LONG-clean.dta", replace
 
 
 
-use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-EGOAGG-clean.dta", clear
-append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned\NC-Participant-EGOAGG-clean-20211112.dta"
+use "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-EGOAGG-clean.dta", clear
+append using "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned\NC-Participant-EGOAGG-clean-20211112.dta"
 
 *gen source indicator
 gen source=2 if ENSO==1
@@ -357,13 +357,13 @@ save "SNAD-Participant-EGOAGG-clean.dta", replace
 
 /*create match data for IADRC*/
 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot clean\temp"
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot clean\temp"
 use "SNAD-Participant-T1-CleanB-EGOAGG-120419.dta", clear
 append using "SNAD-Participant-T2-CleanB-EGOAGG-062519.dta"
 append using "SNAD-Participant-T3-CleanB-EGOAGG-062519.dta"
 append using "SNAD-Participant-T4-CleanB-EGOAGG-092520.dta",force
-append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-EGOAGG-clean.dta"
-append using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned\NC-Participant-EGOAGG-clean-20211112.dta"
+append using "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Clean data\ENSO-Participant-EGOAGG-clean.dta"
+append using "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned\NC-Participant-EGOAGG-clean-20211112.dta"
 
 *gen time indicator
 drop time
@@ -374,7 +374,7 @@ bysort SUBID: gen time=_n
 keep SUBID date_snad time 
 egen tot_wave=max(time)
 reshape wide date_snad, i(SUBID) j(time)
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data"
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data"
 save "SNAD-MatchData.dta", replace //match all SNAD ego regardless of they have important/health matter
 
 
@@ -390,9 +390,9 @@ save "SNAD-MatchData.dta", replace //match all SNAD ego regardless of they have 
 /*Merge IADRC with SNAD Demo & fill in those missing in IADRC*/
 
 
-use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\IADRC clean\Clean data\IADC-Cross-Clean.dta", clear
-merge 1:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\temp\ENSO-Participant-ego-clean",nogen //1 in ENSO (1352) not found in IADRC 
-merge 1:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\Cleaned\REDcap-R01-participant-demographics.dta",nogen //21 in Redcap (10469,10475,10481,10483,10484 + non IADRC focal) not found in IADRC 
+use "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\IADRC clean\Clean data\IADC-Cross-Clean.dta", clear
+merge 1:1 SUBID using "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\temp\ENSO-Participant-ego-clean",nogen //1 in ENSO (1352) not found in IADRC 
+merge 1:1 SUBID using "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\Cleaned\REDcap-R01-participant-demographics.dta",nogen //21 in Redcap (10469,10475,10481,10483,10484 + non IADRC focal) not found in IADRC 
 
 *married was collected as demo before new R01; IADC update the demo with most recent marital status
 rename married married_iadc_demo
@@ -454,7 +454,7 @@ save "Demographics.dta", replace
 
 
 
-use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\IADRC clean\Clean data\IADC-Long-Clean.dta", clear
+use "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\IADRC clean\Clean data\IADC-Long-Clean.dta", clear
 
 
 *drop cases of IADC that are 180 days apart from SNAD at any wave
@@ -494,6 +494,8 @@ list SUBID visitdate date_snad* diff* match if SUBID==6343 & minval<=180
 replace match=. if diff1==166 & SUBID==6343
 list SUBID visitdate date_snad* diff* match if SUBID==10037 & minval<=180
 replace match=. if diff3==163 & SUBID==10037
+list SUBID visitdate date_snad* diff* match if SUBID==10064 & minval<=180
+replace match=. if diff3==161 & SUBID==10064
 list SUBID visitdate date_snad* diff* match if SUBID==10179 & minval<=180
 replace match=. if diff1==170 & SUBID==10179
 
@@ -524,7 +526,7 @@ save "IADC-Long-Clean-snadMatch.dta", replace
 
 
 
-use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\IADRC clean\Neuroimaging-CleanA.dta" ,replace
+use "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\IADRC clean\Neuroimaging-CleanA.dta" ,replace
 
 merge m:1 SUBID using "SNAD-MatchData.dta"
 drop if _merge==1 //drop people did not do SNAD
@@ -706,7 +708,7 @@ save "AMY-Clean-snadMatch.dta" ,replace
 
 
 
-use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\Cleaned\REDcap-R01-participant.dta",clear
+use "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\Cleaned\REDcap-R01-participant.dta",clear
 merge m:1 SUBID using "SNAD-MatchData.dta"
 drop if _merge==1 //drop 1 people in Redcap not complete network: 10045
 drop if _merge==2 //drop people did not do REDCap
@@ -826,11 +828,11 @@ drop empstat_enso
 tostring emphrs_enso,replace
 replace workhours=emphrs_enso if missing(workhours) & ENSO==1
 drop emphrs_enso
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-preexlusion-focal-R01raw-20211222",replace
+save "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-preexlusion-focal-R01raw-20211222",replace
 
 *add LONG data (alter-level)
 merge 1:m SUBID date_snad using "SNAD-Participant-LONG-clean",nogen //add alter-level on top of EGOAGG
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\Alter-level\SNAD-preexlusion-focal-LONG-R01raw-20211222",replace
+save "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\Alter-level\SNAD-preexlusion-focal-LONG-R01raw-20211222",replace
 
 restore
 preserve
@@ -860,11 +862,11 @@ drop empstat_enso
 tostring emphrs_enso,replace
 replace workhours=emphrs_enso if missing(workhours) & ENSO==1
 drop emphrs_enso
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-preexlusion-focal-pilotmatch-20211222",replace
+save "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-preexlusion-focal-pilotmatch-20211222",replace
 
 *add LONG data (alter-level)
 merge 1:m SUBID date_snad using "SNAD-Participant-LONG-pilotmatch-clean",nogen //add alter-level on top of EGOAGG
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\Alter-level\SNAD-preexlusion-focal-LONG-pilotmatch-20211222",replace
+save "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\Alter-level\SNAD-preexlusion-focal-LONG-pilotmatch-20211222",replace
 
 
 restore
@@ -897,11 +899,11 @@ drop empstat_enso
 tostring emphrs_enso,replace
 replace workhours=emphrs_enso if missing(workhours) & ENSO==1
 drop emphrs_enso
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-preexlusion-focal-R01match-20211222",replace
+save "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\SNAD-preexlusion-focal-R01match-20211222",replace
 
 *add LONG data (alter-level)
 merge 1:m SUBID date_snad using "SNAD-Participant-LONG-match-clean",nogen //add alter-level on top of EGOAGG
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\Alter-level\SNAD-preexlusion-focal-LONG-R01match-20211222",replace
+save "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\Alter-level\SNAD-preexlusion-focal-LONG-R01match-20211222",replace
 
 
 
@@ -919,14 +921,14 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean d
 
 
 *EGOAGG
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data"
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data"
 use "SNAD-preexlusion-focal-R01raw-20211222",clear
 drop if agesnad<45 
 drop if moca_raw<10 & time==1 //exclude moca<10 for 1st wave
 save "SNAD-Analysis-focal-R01raw-20211222", replace
 
 *LONG
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\Alter-level\"
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\Alter-level\"
 use "SNAD-preexlusion-focal-LONG-R01raw-20211222",clear
 drop if agesnad<45 
 drop if moca_raw<10 & time==1 //exclude moca<10 for 1st wave
@@ -937,7 +939,7 @@ save "SNAD-Analysis-focal-LONG-R01raw-20211222", replace
 
 
 *EGOAGG
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data"
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data"
 use "SNAD-preexlusion-focal-pilotmatch-20211222",clear
 
 drop if agesnad<45 
@@ -945,7 +947,7 @@ drop if moca_raw<10 & time==1 //exclude moca<10 for 1st wave
 save "SNAD-Analysis-focal-pilotmatch-20211222", replace
 
 *LONG
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\Alter-level\"
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\Alter-level\"
 use "SNAD-preexlusion-focal-LONG-pilotmatch-20211222",clear
 drop if agesnad<45 
 drop if moca_raw<10 & time==1 //exclude moca<10 for 1st wave
@@ -956,7 +958,7 @@ save "SNAD-Analysis-focal-LONG-pilotmatch-20211222", replace
 
 
 *EGOAGG
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data"
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data"
 use "SNAD-preexlusion-focal-R01match-20211222",clear
 
 drop if agesnad<45 
@@ -964,7 +966,7 @@ drop if moca_raw<10 & time==1 //exclude moca<10 for 1st wave
 save "SNAD-Analysis-focal-R01match-20211222", replace
 
 *LONG
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\Alter-level\"
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data\Alter-level\"
 use "SNAD-preexlusion-focal-LONG-R01match-20211222",clear
 drop if agesnad<45 
 drop if moca_raw<10 & time==1 //exclude moca<10 for 1st wave
