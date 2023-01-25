@@ -163,11 +163,16 @@ label values anxiety? anxiety
 recode cwpuzzles_f (1=5) (2=4) (3=3) (4=2) (5=1)
 label values cwpuzzles_f puzzlegame_f_w1_
 
+*clean
 recode interviewer_oldredcap (1=0) //1 is Evan in old redcap
 replace interviewer_redcap=interviewer_oldredcap if missing(interviewer_redcap)
 lab define who 0 "ERF" 1 "MDB" 2 "HRS" 9 "Part-time"
 lab values interviewer_redcap who
 drop interviewer_oldredcap
+
+egen lonely=rowmean(lack_companionship1 left_out1 feel_isolated1)
+lab var lonely "UCLA 3-item loneliness"
+lab values lonely lack_companionship1_w1_
 save "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\Cleaned\REDcap-R01-participant.dta",replace
 
 
