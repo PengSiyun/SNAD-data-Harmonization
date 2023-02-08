@@ -13,7 +13,7 @@
 	/*load data in loop*/
 
 	
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data"
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\clean data"
 local files: dir . files "SNAD-Analysis-focal*match*dta" //load file names for loop
 
 foreach file of local files {
@@ -60,6 +60,7 @@ label var medtemp "Medial temporal lobe thickness"
 reg moca_raw icv totalhippvol totalamygvol wmh frolobe parlobe temlobe occlobe ,vce(robust)
 predict residual, residuals
 egen reserve=std(residual) 
+drop residual
 label var reserve "Cognitive reserve"
 		
 
@@ -67,11 +68,11 @@ label var reserve "Cognitive reserve"
 
 
 	*complexity
-merge m:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\occ_complexSNAD_03292022"
+merge m:1 SUBID using "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\occ_complexSNAD_03292022"
 drop if _merge==2 //drop cases not in the cleanned data
 drop _merge
 	*prestige
-merge m:1 SUBID using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\OccPrestigeSNAD_03292022"
+merge m:1 SUBID using "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\OccPrestigeSNAD_03292022"
 drop if _merge==2 //drop cases not in the cleanned data
 drop _merge
 
