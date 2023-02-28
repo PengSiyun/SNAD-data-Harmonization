@@ -5,7 +5,7 @@
 ****Purpose: label and create variables for IADC
 
 clear
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\IADRC clean" //home
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\IADRC clean" //home
 set more off
 
 
@@ -18,14 +18,14 @@ set more off
 
 
 
-import excel "IADC-Neuroimaging_10202021.xlsx", sheet("data") firstrow case(lower)clear
+import excel "IADRC_Imaging_SNADparticipants_02192023.xlsx", sheet("Sheet1") firstrow case(lower) clear
 labone,nrow(1) //load labels
 drop if _n==1 //drop row of labels
 
 
 *destring date 
-rename (dateofmriscan cc_visitdate taudate amydate) (date_mri date_visit date_tau date_amy)
-foreach x of varlist date_mri date_visit date_tau date_amy {
+rename (dateofmriscan taudate amydate) (date_mri date_tau date_amy)
+foreach x of varlist date_mri date_amy {
 	gen `x'_new = date(`x', "MDY"),after(`x') //for 10/20/2014
 	drop `x'
 	rename `x'_new `x'
@@ -37,7 +37,7 @@ foreach x of varlist date_mri date_visit date_tau date_amy {
 destring ccid,replace
 rename ccid SUBID
 
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\IADRC clean\Neuroimaging-CleanA.dta", replace
+save "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\IADRC clean\Neuroimaging-CleanA.dta", replace
 
 
 
@@ -52,7 +52,7 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\I
 
 
 
-import excel "IADC_clinical_13MAR2022.xlsx", sheet("Cross_sectional_Data") firstrow clear
+import excel "IADC_clinical_05DEC2022", sheet("Cross_sectional_Data") firstrow clear
 
 
 lab var birthyr "Year of birth"
@@ -160,7 +160,7 @@ lab val apoe apoecat
 *check duplicates
 duplicates drop SUBID,force //3564 had a exact copy
 
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\IADRC clean\Clean data\IADC-Cross-Clean.dta", replace
+save "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\IADRC clean\Clean data\IADC-Cross-Clean.dta", replace
 
 
 
@@ -172,11 +172,11 @@ save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\I
 
 
 
-import excel "IADC_clinical_13MAR2022.xlsx", sheet("Longitudinal Data") firstrow clear
+import excel "IADC_clinical_05DEC2022", sheet("Longitudinal Data") firstrow clear
 save "IADC-Long-raw",replace
 
 *label variables
-import excel "IADC_clinical_13MAR2022.xlsx", ///
+import excel "IADC_clinical_05DEC2022.xlsx", ///
 sheet("Longitudinal_Variables") firstrow case(lower) clear //read file with value labels 
 keep name label 
 replace label=subinstr(label, char(34), "", .) //remove quotation from string variable (label cannot handle quotation marks)
@@ -247,4 +247,4 @@ rename age age_i
 rename ageatvisit ageiadc
 
 
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\IADRC clean\Clean data\IADC-Long-Clean.dta", replace
+save "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\IADRC clean\Clean data\IADC-Long-Clean.dta", replace
