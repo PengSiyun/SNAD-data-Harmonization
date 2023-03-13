@@ -52,6 +52,8 @@ drop checkboxes___1-gift_card_receipts_complete
 
 
 rename ccid SUBID
+replace SUBID=subinstr(SUBID,"DC","",1) //remove DC
+destring SUBID, replace
 
 *Cognitive tests
 rename total_score_ moca_raw
