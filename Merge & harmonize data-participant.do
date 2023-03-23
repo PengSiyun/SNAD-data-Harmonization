@@ -487,7 +487,7 @@ forvalues i=1/`num' {
 }
 
 
-duplicates list SUBID match if !missing(match) //4 mismatch
+duplicates list SUBID match if !missing(match) //5 mismatch
 list SUBID visitdate date_snad* diff* match if SUBID==3805 & minval<=180
 replace match=. if diff1==112 & SUBID==3805
 list SUBID visitdate date_snad* diff* match if SUBID==6343 & minval<=180
@@ -495,7 +495,7 @@ replace match=. if diff1==166 & SUBID==6343
 list SUBID visitdate date_snad* diff* match if SUBID==10037 & minval<=180
 replace match=. if diff3==163 & SUBID==10037
 list SUBID visitdate date_snad* diff* match if SUBID==10064 & minval<=180
-replace match=. if diff3==161 & SUBID==10064
+replace match=. if diff3==166 & SUBID==10064
 list SUBID visitdate date_snad* diff* match if SUBID==10179 & minval<=180
 replace match=. if diff1==170 & SUBID==10179
 
@@ -537,7 +537,7 @@ save "Neuroimaging-CleanA2.dta" ,replace
 
 *drop cases of IADC that are 1 year apart from SNAD at any wave
 
-keep SUBID tot_wave date_snad* scanage-globalctx_thick //drop non-MRI variables
+keep SUBID tot_wave date_snad* date_mri-globalctx_thick //drop non-MRI variables
 destring icv-globalctx_thick,replace
 
 *extract total number of waves in SNAD
@@ -562,7 +562,7 @@ forvalues i=1/`num' {
 }
 
 
-duplicates list SUBID matchmri if !missing(matchmri) //8 mismatch
+duplicates list SUBID matchmri if !missing(matchmri) //9 mismatch
 
 list SUBID matchmri diffmri* date_mri date_snad* if SUBID==5032 & minval<=365
 replace matchmri=. if diffmri1==337 & SUBID==5032 
@@ -581,10 +581,11 @@ list SUBID matchmri diffmri* date_mri date_snad* if SUBID==10088 & minval<=365
 replace matchmri=. if diffmri1==329 & SUBID==10088  
 list SUBID matchmri diffmri* date_mri date_snad* if SUBID==10101 & minval<=365
 replace matchmri=. if diffmri1==350 & SUBID==10101  
-
+list SUBID matchmri diffmri* date_mri date_snad* if SUBID==10154 & minval<=365
+replace matchmri=. if diffmri5==257 & SUBID==10154  
 
 di date("20140514","YMD") //19857=one year before SNAD
-fre matchmri date_mri if date_mri>19857 //231 out of 312
+fre matchmri date_mri if date_mri>19857 //322 out of 456
 
 gen date_snad=.
 forvalues i=1/`num' {
@@ -633,7 +634,7 @@ forvalues i=1/`num' {
 duplicates list SUBID matchtau if !missing(matchtau) //0 mismatch
 
 di date("20140514","YMD") //19857=one year before SNAD
-fre matchtau date_tau if date_tau>19857 //90 out of 108
+fre matchtau date_tau if date_tau>19857 //145 out of 465
 gen date_snad=.
 forvalues i=1/`num' {
 	replace date_snad=date_snad`i' if matchtau==`i'
@@ -656,7 +657,7 @@ save "TAU-Clean-snadMatch.dta" ,replace
 
 
 use "Neuroimaging-CleanA2.dta" ,replace
-keep SUBID tot_wave date_snad* amyloid-glctx_cent_cl 
+keep SUBID tot_wave date_snad* amyloid-temporallobe_cl 
 
 *extract total number of waves in SNAD
 sum tot_wave
@@ -710,7 +711,7 @@ save "AMY-Clean-snadMatch.dta" ,replace
 
 use "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01\Cleaned\REDcap-R01-participant.dta",clear
 merge m:1 SUBID using "SNAD-MatchData.dta"
-drop if _merge==1 //drop 1 people in Redcap not complete network: 10045
+drop if _merge==1 //should be 0, if not check and fix
 drop if _merge==2 //drop people did not do REDCap
 order SUBID date_red date_snad*
 
@@ -737,9 +738,23 @@ forvalues i=1/`num' {
 duplicates list SUBID matchred if !missing(matchred) //0 duplicates
 
 *check interviews lag>60 days
-fre SUBID if missing(matchred) //2 not matched
+fre SUBID if missing(matchred) //15 not matched
 list SUBID date_red date_snad* if missing(matchred)
-list matchred date_red date_snad* diffred* if SUBID==6418 //NC interview not found
+list matchred date_red date_snad* diffred* if SUBID==3429 //NC interview not found for  28feb2023 Redcap interview
+list matchred date_red date_snad* diffred* if SUBID==3660 //NC interview not found for  01mar2023 Redcap interview
+list matchred date_red date_snad* diffred* if SUBID==6418 //NC interview not found for 12nov2020 Redcap interview
+list matchred date_red date_snad* diffred* if SUBID==10089 //NC interview not found for 22feb2023 Redcap interview
+list matchred date_red date_snad* diffred* if SUBID==10127 //NC interview not found for 28apr2022 Redcap interview
+list matchred date_red date_snad* diffred* if SUBID==10155 //NC interview not found for 22jun2022 Redcap interview
+list matchred date_red date_snad* diffred* if SUBID==10292 //NC interview not found for 23feb2023 Redcap interview
+list matchred date_red date_snad* diffred* if SUBID==10398 //NC interview not found for 20feb2023 Redcap interview
+list matchred date_red date_snad* diffred* if SUBID==10411 //NC interview not found for 06mar2023 Redcap interview
+list matchred date_red date_snad* diffred* if SUBID==10431 //NC interview not found for 21feb2023 Redcap interview
+list matchred date_red date_snad* diffred* if SUBID==10446 //NC interview not found for 19may2022 Redcap interview
+list matchred date_red date_snad* diffred* if SUBID==10448 //NC interview not found for 21mar2023 Redcap interview
+list matchred date_red date_snad* diffred* if SUBID==910003 //NC interview not found for 16may2022 Redcap interview
+list matchred date_red date_snad* diffred* if SUBID==910014 //NC interview not found for 13mar2023 Redcap interview
+
 list matchred date_red diffred* date_snad* if SUBID==10250
 replace matchred=4 if SUBID==10250 & diffred4==147 
 
