@@ -24,8 +24,10 @@ foreach file of local files {
 	
 	
 	sem (Bridging -> netsize diverse weakest density efctsize sole) if netsize>0 & !missing(netsize) ///
-    , var(Bridging@1) method(mlmv) cov(e.netsize*e.density) cov(e.density*e.sole) ///
-	cov(e.netsize*e.diverse) cov(e.diverse*e.density) cov(e.netsize*e.efctsize) 
+    , var(Bridging@1) method(mlmv) cov(e.netsize*e.efctsize) cov(e.netsize*e.density) cov(e.diverse*e.density) cov(e.density*e.sole) cov(e.diverse*e.weakest) cov(e.netsize*e.diverse) cov(e.weakest*e.sole)
+estat gof, stats(all)
+estat mindices
+
 predict bridging,latent(Bridging) 
 label var bridging "Bridging capital"
 
@@ -40,6 +42,7 @@ replace bridging=`min' if netsize==0 //set bridging to minimum value when netsiz
 
 
     *prepare MRI measure 
+destring lh_* rh_* wmhypointensities icv totalhippvol totalamygvol,replace
 egen frolobe=rowmean(lh_caudalmiddlefrontal_thick rh_caudalmiddlefrontal_thick lh_rostralmiddlefrontal_thicknes rh_rostralmiddlefrontal_thicknes lh_superiorfrontal_thick rh_superiorfrontal_thick lh_lateralorbitofrontal_thick rh_lateralorbitofrontal_thick lh_medialorbitofrontal_thick rh_medialorbitofrontal_thick lh_parsopercularis_thick rh_parsopercularis_thick lh_parsorbitalis_thick rh_parsorbitalis_thick lh_parstriangularis_thick rh_parstriangularis_thick lh_frontalpole_thick rh_frontalpole_thick) 
 egen parlobe=rowmean(lh_inferiorparietal_thick rh_inferiorparietal_thick lh_superiorparietal_thick rh_superiorparietal_thick lh_supramarginal_thick rh_supramarginal_thick lh_precuneus_thick rh_precuneus_thick)   
 egen temlobe=rowmean(lh_bankssts_thick rh_bankssts_thick lh_entorhinal_thick rh_entorhinal_thick lh_inferiortemporal_thick rh_inferiortemporal_thick lh_middletemporal_thick rh_middletemporal_thick lh_superiortemporal_thick rh_superiortemporal_thick lh_fusiform_thick rh_fusiform_thick lh_parahippocampal_thick rh_parahippocampal_thick lh_temporalpole_thick rh_temporalpole_thick lh_transversetemporal_thick rh_transversetemporal_thick)   	
