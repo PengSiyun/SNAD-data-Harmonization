@@ -738,23 +738,9 @@ forvalues i=1/`num' {
 duplicates list SUBID matchred if !missing(matchred) //0 duplicates
 
 *check interviews lag>60 days
-fre SUBID if missing(matchred) //15 not matched
+fre SUBID if missing(matchred) //2 not matched
 list SUBID date_red date_snad* if missing(matchred)
-list matchred date_red date_snad* diffred* if SUBID==3429 //NC interview not found for  28feb2023 Redcap interview
-list matchred date_red date_snad* diffred* if SUBID==3660 //NC interview not found for  01mar2023 Redcap interview
-list matchred date_red date_snad* diffred* if SUBID==6418 //NC interview not found for 12nov2020 Redcap interview
-list matchred date_red date_snad* diffred* if SUBID==10089 //NC interview not found for 22feb2023 Redcap interview
-list matchred date_red date_snad* diffred* if SUBID==10127 //NC interview not found for 28apr2022 Redcap interview
-list matchred date_red date_snad* diffred* if SUBID==10155 //NC interview not found for 22jun2022 Redcap interview
-list matchred date_red date_snad* diffred* if SUBID==10292 //NC interview not found for 23feb2023 Redcap interview
-list matchred date_red date_snad* diffred* if SUBID==10398 //NC interview not found for 20feb2023 Redcap interview
-list matchred date_red date_snad* diffred* if SUBID==10411 //NC interview not found for 06mar2023 Redcap interview
-list matchred date_red date_snad* diffred* if SUBID==10431 //NC interview not found for 21feb2023 Redcap interview
-list matchred date_red date_snad* diffred* if SUBID==10446 //NC interview not found for 19may2022 Redcap interview
-list matchred date_red date_snad* diffred* if SUBID==10448 //NC interview not found for 21mar2023 Redcap interview
-list matchred date_red date_snad* diffred* if SUBID==910003 //NC interview not found for 16may2022 Redcap interview
-list matchred date_red date_snad* diffred* if SUBID==910014 //NC interview not found for 13mar2023 Redcap interview
-
+list matchred date_red date_snad* diffred* if SUBID==6418 //NC interview not found for 12nov2020 Redcap interview (done by Evan, probably missing for good)
 list matchred date_red diffred* date_snad* if SUBID==10250
 replace matchred=4 if SUBID==10250 & diffred4==147 
 
