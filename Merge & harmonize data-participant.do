@@ -413,6 +413,8 @@ rename race_red race
 label define race_red 1 "American Indian or Alaskan Native" 2 "Asian" 3 "African American" 4 "Pacific Islander" 5 "White" 6 "Other"
 label values race race_red
 
+replace hispanic=ethnicity_red if missing(hispanic)
+
 rename death deceased_iadc
 
 replace military_red=veteran_enso if missing(military_red)
