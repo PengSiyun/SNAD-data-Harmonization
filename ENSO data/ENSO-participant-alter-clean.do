@@ -4,7 +4,7 @@
 ****Purpose: clean alter data for ENSO 
 
 clear
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\temp" //home
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\temp" //home
 
 ***************************************************************
 **# 1 Remove duplicates in ENSO participant alter data
@@ -13,7 +13,7 @@ cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENS
 None
 */
 
-multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\ENSO Focal\Alter") clear force  //import multiple csv in a folder (ssc install multimport)
+multimport delimited, dir("C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\ENSO Focal\Alter") clear force  //import multiple csv in a folder (ssc install multimport)
 destring respondent_name,force gen(SUBID) 
 drop if missing(SUBID) | SUBID==445566 //drop all test runs
 *Fix typo in ENSO SUBID
@@ -183,7 +183,7 @@ T1: 6377, 10150, 10352, 10353, 10360, 10382 (drop 6377, 10150, 10352, 10353, che
 T2: 10023
 7 in total, they all contain inaccurate data
 
-multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\ENSO Focal\2020 October\October Enso SNAD raw exports\Alter") clear force  
+multimport delimited, dir("C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\ENSO Focal\2020 October\October Enso SNAD raw exports\Alter") clear force  
 destring respondent_name,force gen(SUBID) 
 keep if SUBID==6377 | SUBID==10150 | SUBID==10352 | SUBID==10353 | SUBID==10360 | SUBID==10382 | SUBID==10023 // only keep 7 focals that are missing in Ben's CSV files
 drop if _filename!=1 & (SUBID==6377 | SUBID==10150 | SUBID==10352 | SUBID==10353 | SUBID==10360 | SUBID==10382) //dropped one T1 focal that is wrongfully in T2 (SUBID==10150)
@@ -288,7 +288,7 @@ save "ENSO-Participant-alter-LONG.dta", replace
 /*merge with uniqueID*/
 
 
-import excel using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\UniqueID  W12345-Focal-20210215", clear first 
+import excel using "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\UniqueID  W12345-Focal-20210215", clear first 
 keep SUBID TIEID_uniq name 
 rename (name TIEID_uniq) (alter_name alterid)
 merge m:1 SUBID alter_name using "ENSO-Participant-alter-LONG.dta"
@@ -311,7 +311,7 @@ save "ENSO-Participant-alter-LONG.dta", replace
 
 /*retrive alter demo from pilot data*/
 
-use "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot clean\clean data\SNAD-Participant-T1234-CleanB-LONG",replace
+use "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot clean\clean data\SNAD-Participant-T1234-CleanB-LONG",replace
 keep SUBID alterid time imd imr imb hmd hmr hmb rel* tfem tcollege
 
 *Only keep 1 wave 
@@ -431,6 +431,15 @@ label values alter_race alter_race
 recode alter_race (1 2 4=0) (3=1),gen(white)
 bysort SUBID: egen pwhite=mean(white)
 lab var pwhite "Proportion White in network"
+recode alter_race (1 3 4=0) (2=1),gen(black)
+bysort SUBID: egen pblack=mean(black)
+lab var pblack "Proportion Black in network"
+recode alter_race (2 3 4=0) (1=1),gen(asian)
+bysort SUBID: egen pasian=mean(asian)
+lab var pasian "Proportion Asian in network"
+recode alter_race (1 2 3=0) (4=1),gen(other)
+bysort SUBID: egen pother=mean(other)
+lab var pother "Proportion Other in network"
 
 rename nilive alterprox
 label define alterprox 1 "<30 mins" 2 "30-60 mins" 3 "1-2 hour" 4 ">2 hour"
@@ -600,7 +609,7 @@ save "ENSO-Participant-alter-LONG-clean.dta", replace
 
 duplicates drop SUBID, force
 keep SUBID date_snad netsize-ENSO
-drop tfem tkin tclose tfreq thassles numsup white alter_race alter_age numsup numsup3 prox30 tknow ttrust alterprox alterquestion alterdtr alterhknow niclose nitalk nisupcare nisupcash nisupchor nisuplstn nisupsugg nihassle nistrength //drop alter level variables
+drop tfem tkin tclose tfreq thassles numsup white black asian other alter_race alter_age numsup numsup3 prox30 tknow ttrust alterprox alterquestion alterdtr alterhknow niclose nitalk nisupcare nisupcash nisupchor nisuplstn nisupsugg nihassle nistrength //drop alter level variables
 save "ENSO-Participant-alter-EGOAGG-clean.dta", replace 
 
 
@@ -665,6 +674,15 @@ label values alter_race alter_race
 recode alter_race (1 2 4=0) (3=1),gen(white)
 bysort SUBID: egen pwhite=mean(white)
 lab var pwhite "Proportion White in network"
+recode alter_race (1 3 4=0) (2=1),gen(black)
+bysort SUBID: egen pblack=mean(black)
+lab var pblack "Proportion Black in network"
+recode alter_race (2 3 4=0) (1=1),gen(asian)
+bysort SUBID: egen pasian=mean(asian)
+lab var pasian "Proportion Asian in network"
+recode alter_race (1 2 3=0) (4=1),gen(other)
+bysort SUBID: egen pother=mean(other)
+lab var pother "Proportion Other in network"
 
 rename nilive alterprox
 label define alterprox 1 "<30 mins" 2 "30-60 mins" 3 "1-2 hour" 4 ">2 hour"
@@ -834,7 +852,7 @@ save "ENSO-Participant-alter-LONG-pilot-clean.dta", replace
 
 duplicates drop SUBID, force
 keep SUBID date_snad netsize-ENSO
-drop tfem tkin tclose tfreq thassles numsup white alter_race alter_age numsup numsup3 prox30 tknow ttrust alterprox alterquestion alterdtr alterhknow niclose nitalk nisupcare nisupcash nisupchor nisuplstn nisupsugg nihassle nistrength //drop alter level variables
+drop tfem tkin tclose tfreq thassles numsup white black asian other alter_race alter_age numsup numsup3 prox30 tknow ttrust alterprox alterquestion alterdtr alterhknow niclose nitalk nisupcare nisupcash nisupchor nisuplstn nisupsugg nihassle nistrength //drop alter level variables
 save "ENSO-Participant-alter-EGOAGG-pilot-clean.dta", replace 
 
 
@@ -898,6 +916,15 @@ label values alter_race alter_race
 recode alter_race (1 2 4=0) (3=1),gen(white)
 bysort SUBID: egen pwhite=mean(white)
 lab var pwhite "Proportion White in network"
+recode alter_race (1 3 4=0) (2=1),gen(black)
+bysort SUBID: egen pblack=mean(black)
+lab var pblack "Proportion Black in network"
+recode alter_race (2 3 4=0) (1=1),gen(asian)
+bysort SUBID: egen pasian=mean(asian)
+lab var pasian "Proportion Asian in network"
+recode alter_race (1 2 3=0) (4=1),gen(other)
+bysort SUBID: egen pother=mean(other)
+lab var pother "Proportion Other in network"
 
 rename nilive alterprox
 label define alterprox 1 "<30 mins" 2 "30-60 mins" 3 "1-2 hour" 4 ">2 hour"
@@ -1067,7 +1094,7 @@ save "ENSO-Participant-alter-LONG-match-clean.dta", replace
 
 duplicates drop SUBID, force
 keep SUBID date_snad netsize-ENSO
-drop tfem tkin tclose tfreq thassles numsup white alter_race alter_age numsup numsup3 prox30 tknow ttrust alterprox alterquestion alterdtr alterhknow niclose nitalk nisupcare nisupcash nisupchor nisuplstn nisupsugg nihassle nistrength //drop alter level variables
+drop tfem tkin tclose tfreq thassles numsup white black asian other alter_race alter_age numsup numsup3 prox30 tknow ttrust alterprox alterquestion alterdtr alterhknow niclose nitalk nisupcare nisupcash nisupchor nisuplstn nisupsugg nihassle nistrength //drop alter level variables
 save "ENSO-Participant-alter-EGOAGG-match-clean.dta", replace 
 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Code" //reset directory for rule-all do file
+cd "C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Code" //reset directory for rule-all do file
