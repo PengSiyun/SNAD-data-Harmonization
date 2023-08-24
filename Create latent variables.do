@@ -138,6 +138,30 @@ gen gen_cog = (1.075*speed_exec) + (.507*visual) + (.404*ep_memory) + (.611*atte
 */		
 		
 		
+	/*calculate heterogeneity network measures*/
+
+
+gen diff_gender = 1-pfem if female==1	
+replace diff_gender = pfem if female==0	
+lab var diff_gender "Gender heterogeneity"
+
+gen diff_college = 1-pcollege if edu==4 | edu==5
+replace diff_college = pcollege if edu<4 & !missing(edu)	
+lab var diff_college "Education heterogeneity" //only college or not is collected in R01
+
+gen diff_white = 1-pwhite if white==1	
+replace diff_white = pwhite if white==0	
+lab var diff_white "Race heterogeneity (White vs. nonWhite)"
+
+recode race (2=1) (3=2) (5=3) (1 4 6=4), gen(race4) //1Asian 2Black 3White 4Other, 4 categories in alter race
+gen     diff_race = 1-pwhite if race4==3	
+replace diff_race = 1-pblack if race4==2	
+replace diff_race = 1-pasian if race4==1	
+replace diff_race = 1-pother if race4==4	
+lab var diff_race "Race heterogeneity"
+drop race4
+		
+		
 	/*merge with occupation complexity & prestige*/
 
 
