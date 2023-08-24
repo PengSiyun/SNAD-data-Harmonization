@@ -28,12 +28,11 @@ save "NC-participant-interviewer-20211112.dta", replace
 multimport delimited, dir("C:\Users\peng_admin\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\Netcanvas Focal Interviews\ego") clear force import(stringcols(_all)) //import all variables as string
 
 *convert date
-list ccid session* if missing(sessionfinish)
-replace sessionfinish=sessionexported if missing(sessionfinish)
-replace sessionfinish = substr(sessionfinish,1,10)
-gen date_snad = date(sessionfinish,"YMD") // convert string to date 
+list ccid session* if missing(sessionstart)
+replace sessionstart = substr(sessionstart,1,10)
+gen date_snad = date(sessionstart,"YMD") // convert string to date 
 format date_snad %dM_d,_CY //display in date 
-list date_snad sessionfinish //double check
+list date_snad sessionstart //double check
 
 *check ccid
 list ccid networkcanvascaseid if ccid!=networkcanvascaseid //0 case, otherwise correct in the excel
@@ -502,6 +501,16 @@ lab var mquestion "Mean questions doctors in network, HI=MORE"
 recode alterrace (1 2 4=0) (3=1),gen(white)
 bysort SUBID NC: egen pwhite=mean(white)
 lab var pwhite "Proportion White in network"
+recode alterrace (1 3 4=0) (2=1),gen(black)
+bysort SUBID NC: egen pblack=mean(black)
+lab var pblack "Proportion Black in network"
+recode alterrace (2 3 4=0) (1=1),gen(asian)
+bysort SUBID NC: egen pasian=mean(asian)
+lab var pasian "Proportion Asian in network"
+recode alterrace (1 2 3=0) (4=1),gen(other)
+bysort SUBID NC: egen pother=mean(other)
+lab var pother "Proportion Other in network"
+
 
 gen tkin=relpartner+relparent+relsibling+relchild+relgrandp+relgrandc+relauntunc+relinlaw+relothrel
 recode tkin (1/9=1)
@@ -526,7 +535,7 @@ bysort SUBID NC: egen diverse=total(urelpartner+urelparent+urelinlaw+urelchild+u
 drop relmiss urelpartner-urelclub othfam fri work church prof
 lab var diverse "Network diversity"
 
-drop tclose tfreq numsup numsup3 thassles prox30 tknow ttrust white tkin //drop alter level variables
+drop tclose tfreq numsup numsup3 thassles prox30 tknow ttrust white black asian other tkin //drop alter level variables
 save "NC-participant-alter-clean-20211112.dta", replace
 
 
@@ -787,6 +796,15 @@ lab var mquestion "Mean questions doctors in network, HI=MORE"
 recode alterrace (1 2 4=0) (3=1),gen(white)
 bysort SUBID NC: egen pwhite=mean(white)
 lab var pwhite "Proportion White in network"
+recode alterrace (1 3 4=0) (2=1),gen(black)
+bysort SUBID NC: egen pblack=mean(black)
+lab var pblack "Proportion Black in network"
+recode alterrace (2 3 4=0) (1=1),gen(asian)
+bysort SUBID NC: egen pasian=mean(asian)
+lab var pasian "Proportion Asian in network"
+recode alterrace (1 2 3=0) (4=1),gen(other)
+bysort SUBID NC: egen pother=mean(other)
+lab var pother "Proportion Other in network"
 
 gen tkin=relpartner+relparent+relsibling+relchild+relgrandp+relgrandc+relauntunc+relinlaw+relothrel
 recode tkin (1/9=1)
@@ -811,7 +829,7 @@ bysort SUBID NC: egen diverse=total(urelpartner+urelparent+urelinlaw+urelchild+u
 drop relmiss urelpartner-urelclub othfam fri work church prof
 lab var diverse "Network diversity"
 
-drop tclose tfreq numsup numsup3 thassles prox30 tknow ttrust white tkin //drop alter level variables
+drop tclose tfreq numsup numsup3 thassles prox30 tknow ttrust white black asian other tkin //drop alter level variables
 save "NC-participant-alter-pilot-clean-20211112.dta", replace
 
 
@@ -1078,6 +1096,15 @@ lab var mquestion "Mean questions doctors in network, HI=MORE"
 recode alterrace (1 2 4=0) (3=1),gen(white)
 bysort SUBID NC: egen pwhite=mean(white)
 lab var pwhite "Proportion White in network"
+recode alterrace (1 3 4=0) (2=1),gen(black)
+bysort SUBID NC: egen pblack=mean(black)
+lab var pblack "Proportion Black in network"
+recode alterrace (2 3 4=0) (1=1),gen(asian)
+bysort SUBID NC: egen pasian=mean(asian)
+lab var pasian "Proportion Asian in network"
+recode alterrace (1 2 3=0) (4=1),gen(other)
+bysort SUBID NC: egen pother=mean(other)
+lab var pother "Proportion Other in network"
 
 gen tkin=relpartner+relparent+relsibling+relchild+relgrandp+relgrandc+relauntunc+relinlaw+relothrel
 recode tkin (1/9=1)
@@ -1102,7 +1129,7 @@ bysort SUBID NC: egen diverse=total(urelpartner+urelparent+urelinlaw+urelchild+u
 drop relmiss urelpartner-urelclub othfam fri work church prof
 lab var diverse "Network diversity"
 
-drop tclose tfreq numsup numsup3 thassles prox30 tknow ttrust white tkin //drop alter level variables
+drop tclose tfreq numsup numsup3 thassles prox30 tknow ttrust white black asian other tkin //drop alter level variables
 save "NC-participant-alter-match-clean-20211112.dta", replace
 
 
