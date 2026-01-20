@@ -13,7 +13,7 @@ clear
 **********************************************************************
 
 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot missing demo clean"
+cd "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot missing demo clean"
 do "Pilot-participant-missingdemo-clean" //import & clean
 
 
@@ -23,16 +23,22 @@ do "Pilot-participant-missingdemo-clean" //import & clean
 
 
 *clean old R01 created by Evan (Evan creates separate Redcap projects for each wave of R01; in each R01 wave, waves were created to track participant's pilot waves+R01 waves. It is an inefficient system, a new R01 project was created to streamline the process)
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old"
+cd "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-old"
 do "REDcapold-participant-w1-reshape" //import & reshape w1: 1st time R01 participants were assgined to different waves depending on their pilot participantions. Reshape this to represent 1 R01 wave.
 do "REDcapold-participant-w2-reshape" //import & reshape w2
 do "REDcapold-participant-clean" //clean reshaped data
 
 
 
-*clean new R01 created by Peng
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01"
-do "REDcap-participant-clean" //import & clean
+*clean R01-1 
+cd "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-1"
+do "REDcap-1-participant-clean" //import & clean
+
+*clean R01-2 
+cd "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Redcap R01-2"
+do "REDcap-2-participant-clean" //import & clean
+
+
 
 
 **********************************************************************
@@ -40,8 +46,8 @@ do "REDcap-participant-clean" //import & clean
 **********************************************************************
 
 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\IADRC clean"
-do "IADRC-import excel-2021" //import and clean IADRC data
+cd "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\IADRC clean"
+do "IADRC-import excel" //import and clean IADRC data
 
 
 **********************************************************************
@@ -49,7 +55,7 @@ do "IADRC-import excel-2021" //import and clean IADRC data
 **********************************************************************
 
 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot clean"
+cd "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Pilot clean"
 do "SNAD-participant-pilot-clean-041320" //import and clean pilot data
 
 
@@ -58,7 +64,7 @@ do "SNAD-participant-pilot-clean-041320" //import and clean pilot data
 **********************************************************************
 
 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Code"
+cd "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\Code"
 do "ENSO-participant-ego-clean" //import & clean ego level data
 do "ENSO-participant-alter-clean" //import & clean alter level data
 do "ENSO-participant-altertie-clean" //import & clean alter-alter tie level data
@@ -70,7 +76,7 @@ do "ENSO-participant-clean" //merge ENSO data together
 **********************************************************************
 
 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\code"
+cd "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\code"
 *do "Unzip files-participant" //Unzip files into corresponding folders (only need to be done once data were downloaded from NC)
 do "Netcanvas-participant-clean" //Clean 
 
@@ -80,7 +86,7 @@ do "Netcanvas-participant-clean" //Clean
 **********************************************************************
 
 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes"
+cd "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes"
 do "Merge & harmonize data-participant" 
 
 
@@ -89,7 +95,7 @@ do "Merge & harmonize data-participant"
 **********************************************************************
 
 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes"
+cd "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes"
 do "Create latent variables" 
 
 
