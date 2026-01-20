@@ -1,25 +1,30 @@
 version 13
 clear
 
-import delimited record_id redcap_event_name redcap_repeat_instrument redcap_repeat_instance ccid first_name last_name date_of_birth address city state zip_code phone email_address recruit_method is_this_person_a_leads_sub has_this_subject_been_disc why_has_this_person_been_d date_the_subject_withdrew first_snad deceased race___1 race___2 race___3 race___4 race___5 race___6 gender school military children step longest_job1 job_activity1 kind_business1 other_describe1 year_start1 year_end1 longest_job2 job_activity2 kind_business2 other_describe2 year_start2 year_end2 different_jobs neighborhood1 long_live1 neighborhood2 long_live2 neighborhood3 long_live3 neighborhood4 long_live4 neighborhood5 long_live5 neighborhood6 long_live6 neighborhood7 long_live7 neighborhood8 long_live8 neighborhood9 long_live9 neighborhood10 long_live10 family_finances education_mother1 education_mother2 education_father1 education_father2 demographics_complete checkboxes___1 checkboxes___2 checkboxes___3 participant_name participant_signature_2 time_consented does_this_subject_require name_of_lar signature_of_lar date_of_lar_signature person_conducting_informed_2 person_conducting_3 date_4 snad_subject_econsent_complete checkboxw2___1 checkboxw2___2 checkboxw2___3 checkboxw2___4 checkboxw2___5 checkboxw2___6 checkboxw2___7 hipaaagreementw2___1 participant_namew2 participant_signaturew2 time_consentedw2 does_this_subject_requirew2 name_of_larw2 signature_of_larw2 date_of_lar_signaturew2 person_conducting_informedw2 person_conductingw2 datew2 snad_hipaa_complete check_courtw2 check_guardianshipw2 does_courtw2 consent_by_larw2 estatew2 durationw2 relationshipw2 understandw2 will_happenw2 how_longw2 riskw2 stop_researchw2 contactw2 alternativesw2 choicew2 decision_makingw2 explainingw2 teach_backw2 adequate_timew2 consent_reviwedw2 copy_consentw2 copy_hipaaw2 instructionsw2 capacity_w2___1 larw2 name_of_lar_w2 signature_of_lar_w2 date_of_lar_signature_w2 participant_name_w2 participant_signature_w2 time_consented_w2 person_conducting_informed_w2 person_conducting_w2 date_w2 snad_capacity_to_con_v_0 is_this_subject_snad_eligi if_subject_is_not_eligible date_of_clinical_core_visi date_of_scheduled_snad_vis was_the_focal_subject_inte why_was_the_focal_subject was_the_interview_in_the_s coordinator_who_completed snad_visit_tracker_complete call_1 call_explanation_1 date_1 initials_1 call_2 call_expanation_2 date_2_05950a initials_2 call_3 explanation_3 date_3 initials_3 call_4 explanation_4 date_4_e92dc3 initials_4 call_5 explanation_5 date_5 initials_5 call_6 explanation_6 date_6 initials_6 contacts_made snad_scheduled contact_log_focal_su_v_1 gc_type gift_number name_print signature_sub gift_date subtype lar_need lar_name lar_sig lar_date coord_name coord_sig coord_date suppl_pay gift_number2 name_print2 name_signature coord_name2 coord_sig2 date_sig2 gift_card_receipts_complete rey_w1 date_avlt total_learn_rey reycorrect_w1 reyconfabs_w1 reycorrect2_w1 reyconfabs2_w1 reycorrect3_w1 reyconfabs3_w1 reycorrect4_w1 reyconfabs4_w1 reycorrect5_w1 reyconfabs5_w1 reybcorrect_w1 reybconfabs_w1 reyintrusions_w1 reycorrecta_w1 reyconfabsa_w1 reyintrusionsa_w1 rey_avlt_complete date total_score_w1f trails_w1f cube_w1f clock_w1f clock_numbers hands_w1f naming_w1f registration_w1f digits_w1f letter_a_w1f serial_7_s_w1f repetition_w1f fluency_w1f abstraction_w1f no_cue_w1f category_w1f multiple_cue date_orient_w1f month_w1f year_w1f place_w1f city_w1f where_administered_w1f moca_complete delayed_sum_rey rey_avlt_correct rey_avlt_confabs rey_avly_intrusions delayed_rey_avlt_complete trailseconds_w1 trailerrors_w1 traillines_w1 trailsecond_w1 trailerror_w1 trailline_w1 trails_complete mailing_packet_1 mastery1_w1 mastery2_w1 happiness_w1 anxiety1_w1 anxiety2_w1 anxiety3_w1 anxiety4_w1 life1_w1 life2_w1 life3_w1 life4_w1 life5_w1 life6_w1 life7_w1 health_w1 energy_w1 spirits_w1 living_situation_w1 memory_w1 family_w1 marriage_w1 friends_w1 no_friends_w1 self_w1 do_chores_w1 do_fun_w1 money_w1 whole_w1 marriage_other_w1 nofriends_w1___1 sleep stress1_w1 stress2_w1 stress3_w1 stress4_w1 stress5_w1 stress6_w1 stress7_w1 stress8_w1 stress9_w1 stress10_w1 doctor1_w1 doctor2_w1 doctor3_w1 doctor4_w1 doctor5_w1 doctor6_w1 doctor7_w1 hearing hearing_drvisit hearing_activities vision vision_drvisit vision_activities stress_and_quality_o_v_2 mailing_packet rbooks_f_w1 rbooks_d_w1 rnews_f_w1 rnews_d_w1 cwpuzzles_f_w1 cwpuzzles_d_w1 cardgame_f_w1 cardgame_d_w1 puzzlegame_f_w1 puzzlegame_w1 write_f_w1 write_d_w1 museum_f_w1 museum_d_w1 memthink_f_w1 memthink_d_w1 sew_f_w1 sew_d_w1 tv_f_w1 tv_d_w1 radio_f_w1 radio_d_w1 computer_f_w1 computer_d_w1 musicinstr_f_w1 musicinstr_d_w1 famfriends_f_w1 famfriends_d_w1 visitors_f_w1 visitors_d_w1 family_help1_w1 help_support1_w1 friends_help1_w1 go_wrong1_w1 problems_family1_w1 joys_sorrows1_w1 make_decisions1_w1 problems_friends1_w1 lack_companionship1_w1 left_out1_w1 feel_isolated1_w1 contacts_phone_w1 social_media1_w1___1 social_media1_w1___2 social_media1_w1___3 social_media1_w1___4 social_media1_w1___5 social_media1_w1___6 social_media1_w1___7 social_media1_w1___8 social_media1_w1___9 social_media1_w1___10 social_media1_w1___11 social_media1_w1___12 sm_twitter1_w1 followers_twitter1_w1 sm_instagram1_w1 followers_instagram1_w1 sm_pinterest1_w1 followers_pinterest1_w1 sm_facebook1_w1 followers_facebook1_w1 sm_linkedin1_w1 followers_linkedin1_w1 sm_snapchat1_w1 followers_snapchat1_w1 sm_whatsapp1_w1 followers_whatsapp1_w1 sm_reddit1_w1 followers_reddit1_w1 sm_tumblr1_w1 followers_tumblr1_w1 sm_skype1_w1 followers_skype1_w1 sm_other1_w1 religious_group1_w1 what_religion1_w1 religion_other1_w1 religious_attendance1_w1 white1_w1 black1_w1 hispanic1_w1 other1_w1 group_housing1_w1 living_sit1_w1 share_housing1_w1 meals_residents1_w1 social_activities1_w1 integration1 integration2 integration3 volunteer volunteer_help volunteer_activities___2 volunteer_activities___3 volunteer_activities___4 volunteer_activities___5 volunteer_activities___6 volunteer_activities___7 volunteer_activities___8 volunteer_activities___9 volunteer_activities___10 volunteer_activities___11 volunteer_activities___12 volunteer_activities___13 volunteer_activities___14 volunteer_other volunteer_often volunteer_hours volunteer_company volunteer_change1 volunteer_change2 volunteer_change3 social_activity_and__v_3 mailing_packet_2 vigor_w1 vigorhr_w1 vigormn_w1 vigortothr_w1 vigortotmn_w1 moderate_w1 modhr_w1 modmn_w1 modtothr_w1 modtotmn_w1 walk_w1 walkhr_w1 walkmn_w1 walktothr_w1 walktotmin_w1 sithr_w1 sitmn_w1 sitwedhr_w1 sitwedmn_w1 oliveoil_w1 leafy_w1 veg_w1 berry_w1 redmeat_w1 fish_w1 chicken_w1 cheese_w1 butter_w1 beans_w1 grain_w1 sweets_w1 nuts_w1 fastfood_w1 alcoholser_w1 physical_activity_an_v_4 assisting_adult_w1 patient_w1 person_relationship_w1 other_relation_w1 patient_old_w1 require_care_w1 require_expanded_w1 primary_caregiver_w1 most_help_w1 day_week_w1 hours_per_day_w1 caregiving_hardship_w1 enough_money_w1 money_retirement_w1 taking_care_w1 demand_help_w1 self_time_w1 embarassed_behaviorr_w1 angry_around_w1 impact_relationships_w1 happen_future_w1 dependency_capabilities_w1 emotionally_difficult_w1 physically_difficult_w1 caregiving_complete facial_memory_task_s_v_5 scale_01_v2_w1 scale_02_v2_w1 scale_03_v2_w1 scale_04_v2_w1 scale_05_v2_w1 scale_06_v2_w1 scale_07_v2_w1 scale_08_v2_w1 scale_09_v2_w1 scale_10_v2_w1 scale_11_v2_w1 scale_12_v2_w1 scale_13_v2_w1 scale_14_v2_w1 scale_15_v2_w1 scale_16_v2_w1 scale_17_v2_w1 scale_18_v2_w1 scale_19_v2_w1 scale_20_v2_w1 scale_21_v2_w1 scale_22_v2_w1 scale_23_v2_w1 scale_24_v2_w1 theory_of_mind_complete the_office_task_754b_complete marital_w1 living_own1 living_own2 living_number moved moved_time employment_w1 workhours_w1 buy_food_w1 skip_meals_w1 money_necessities_w1 annual_income_w1 annual_household_w1 ladder_w1 current_ses_and_demo_complete outside_recruit ccis01 ccis02 ccis03 ccis04 ccis05 ccis06 ccis07 ccis08 ccis09 ccis10 ccis11 ccis12 ccis13 ccis14 ccis15 ccis16 ccis17 ccis18 ccis19 ccis20 func_checks func_tax func_shopping func_hobby func_coffee func_meal func_events func_tv func_appts func_travel cci_and_faq_complete using "SNADLongitudinalR01P_DATA_NOHDRS_2021-12-21_1551.csv", varnames(nonames)
+import delimited record_id redcap_event_name redcap_repeat_instrument redcap_repeat_instance ccid first_name last_name date_of_birth address city state zip_code phone email_address swag_given date_swag recruit_method is_this_person_a_leads_sub has_this_subject_been_disc why_has_this_person_been_d date_the_subject_withdrew first_snad deceased orec cfnid orecid race___1 race___2 race___3 race___4 race___5 race___6 other_race ethnicity gender school military military_stress combat children step longest_job1 job_activity1 kind_business1 other_describe1 year_start1 year_end1 longest_job2 job_activity2 kind_business2 other_describe2 year_start2 year_end2 different_jobs neighborhood1 long_live1 neighborhood2 long_live2 neighborhood3 long_live3 neighborhood4 long_live4 neighborhood5 long_live5 neighborhood6 long_live6 neighborhood7 long_live7 neighborhood8 long_live8 neighborhood9 long_live9 neighborhood10 long_live10 family_finances education_mother1 education_mother2 education_father1 education_father2 demographics_complete checkboxes___1 checkboxes___2 checkboxes___3 participant_name participant_signature_2 time_consented does_this_subject_require name_of_lar signature_of_lar date_of_lar_signature person_conducting_informed_2 person_conducting_3 date_4 snad_subject_econsent_complete checkboxw2___1 checkboxw2___2 checkboxw2___3 checkboxw2___4 checkboxw2___5 checkboxw2___6 checkboxw2___7 hipaaagreementw2___1 participant_namew2 participant_signaturew2 time_consentedw2 does_this_subject_requirew2 name_of_larw2 signature_of_larw2 date_of_lar_signaturew2 person_conducting_informedw2 person_conductingw2 datew2 snad_hipaa_complete check_courtw2 check_guardianshipw2 does_courtw2 consent_by_larw2 estatew2 durationw2 relationshipw2 understandw2 will_happenw2 how_longw2 riskw2 stop_researchw2 contactw2 alternativesw2 choicew2 decision_makingw2 explainingw2 teach_backw2 adequate_timew2 consent_reviwedw2 copy_consentw2 copy_hipaaw2 instructionsw2 capacity_w2___1 larw2 name_of_lar_w2 signature_of_lar_w2 date_of_lar_signature_w2 participant_name_w2 participant_signature_w2 time_consented_w2 person_conducting_informed_w2 person_conducting_w2 date_w2 snad_capacity_to_con_v_0 is_this_subject_snad_eligi if_subject_is_not_eligible date_of_clinical_core_visi date_of_scheduled_snad_vis was_the_focal_subject_inte why_was_the_focal_subject was_the_interview_in_the_s coordinator_who_completed snad_visit_tracker_complete call_1 call_explanation_1 date_1 initials_1 call_2 call_expanation_2 date_2_05950a initials_2 call_3 explanation_3 date_3 initials_3 call_4 explanation_4 date_4_e92dc3 initials_4 call_5 explanation_5 date_5 initials_5 call_6 explanation_6 date_6 initials_6 contacts_made snad_scheduled contact_log_focal_su_v_1 gc_type gift_number name_print signature_sub gift_date subtype lar_need lar_name lar_sig lar_date coord_name coord_sig coord_date suppl_pay gift_number2 name_print2 name_signature coord_name2 coord_sig2 date_sig2 gift_card_receipts_complete rey_w1 date_avlt rey_list_number total_learn_rey reycorrect_w1 reyconfabs_w1 reycorrect2_w1 reyconfabs2_w1 reycorrect3_w1 reyconfabs3_w1 reycorrect4_w1 reyconfabs4_w1 reycorrect5_w1 reyconfabs5_w1 reybcorrect_w1 reybconfabs_w1 reyintrusions_w1 reycorrecta_w1 reyconfabsa_w1 reyintrusionsa_w1 rey_avlt_complete date total_score_w1f trails_w1f cube_w1f clock_w1f clock_numbers hands_w1f naming_w1f registration_w1f digits_w1f letter_a_w1f serial_7_s_w1f repetition_w1f fluency_w1f abstraction_w1f no_cue_w1f category_w1f multiple_cue date_orient_w1f month_w1f year_w1f day_w1f place_w1f city_w1f where_administered_w1f moca_complete delayrey_list_number delayed_sum_rey rey_avlt_correct rey_avlt_confabs rey_avly_intrusions delayed_rey_avlt_complete trailseconds_w1 trailerrors_w1 traillines_w1 trailsecond_w1 trailerror_w1 trailline_w1 trails_complete mailing_packet_1 mastery1_w1 mastery2_w1 happiness_w1 anxiety1_w1 anxiety2_w1 anxiety3_w1 anxiety4_w1 life1_w1 life2_w1 life3_w1 life4_w1 life5_w1 life6_w1 life7_w1 health_w1 energy_w1 spirits_w1 living_situation_w1 memory_w1 family_w1 marriage_w1 friends_w1 no_friends_w1 self_w1 do_chores_w1 do_fun_w1 money_w1 whole_w1 marriage_other_w1 nofriends_w1___1 sleep stress1_w1 stress2_w1 stress3_w1 stress4_w1 stress5_w1 stress6_w1 stress7_w1 stress8_w1 stress9_w1 stress10_w1 doctor1_w1 doctor2_w1 doctor3_w1 doctor4_w1 doctor5_w1 doctor6_w1 doctor7_w1 hearing hearing_drvisit hearing_activities vision vision_drvisit vision_activities time1 stress_and_quality_o_v_2 mailing_packet rbooks_f_w1 rbooks_d_w1 rnews_f_w1 rnews_d_w1 cwpuzzles_f_w1 cwpuzzles_d_w1 cardgame_f_w1 cardgame_d_w1 puzzlegame_f_w1 puzzlegame_w1 write_f_w1 write_d_w1 museum_f_w1 museum_d_w1 memthink_f_w1 memthink_d_w1 sew_f_w1 sew_d_w1 tv_f_w1 tv_d_w1 radio_f_w1 radio_d_w1 computer_f_w1 computer_d_w1 musicinstr_f_w1 musicinstr_d_w1 famfriends_f_w1 famfriends_d_w1 visitors_f_w1 visitors_d_w1 family_help1_w1 help_support1_w1 friends_help1_w1 go_wrong1_w1 problems_family1_w1 joys_sorrows1_w1 make_decisions1_w1 problems_friends1_w1 lack_companionship1_w1 left_out1_w1 feel_isolated1_w1 contacts_phone_w1 guess_contacts_phone___1 social_media1_w1___1 social_media1_w1___2 social_media1_w1___3 social_media1_w1___4 social_media1_w1___5 social_media1_w1___6 social_media1_w1___7 social_media1_w1___8 social_media1_w1___9 social_media1_w1___10 social_media1_w1___13 social_media1_w1___11 social_media1_w1___12 sm_twitter1_w1 followers_twitter1_w1 guess_twitter___1 sm_instagram1_w1 followers_instagram1_w1 guess_instagram___1 sm_pinterest1_w1 followers_pinterest1_w1 guess_pinterest___1 sm_facebook1_w1 followers_facebook1_w1 guess_facebook___1 sm_linkedin1_w1 followers_linkedin1_w1 guess_linkedin___1 sm_snapchat1_w1 followers_snapchat1_w1 guess_snapchat___1 sm_whatsapp1_w1 followers_whatsapp1_w1 guess_whatsapp___1 sm_reddit1_w1 followers_reddit1_w1 guess_reddit___1 sm_tumblr1_w1 followers_tumblr1_w1 guess_tumblr___1 sm_skype1_w1 followers_skype1_w1 guess_skype___1 sm_tiktok1_w1 followers_tiktok1_w1 guess_tiktok___1 sm_other1_w1 religious_group1_w1 what_religion1_w1 religion_other1_w1 religious_attendance1_w1 white1_w1 black1_w1 hispanic1_w1 other1_w1 group_housing1_w1 living_sit1_w1 share_housing1_w1 meals_residents1_w1 social_activities1_w1 integration1 integration2 integration3 volunteer volunteer_help volunteer_activities___2 volunteer_activities___3 volunteer_activities___4 volunteer_activities___5 volunteer_activities___6 volunteer_activities___7 volunteer_activities___8 volunteer_activities___9 volunteer_activities___10 volunteer_activities___11 volunteer_activities___12 volunteer_activities___13 volunteer_activities___14 volunteer_other volunteer_often volunteer_hours volunteer_company volunteer_change1 volunteer_change2 volunteer_change3 time2 social_activity_and__v_3 mailing_packet_2 vigor_w1 vigorhr_w1 vigormn_w1 vigortothr_w1 vigortotmn_w1 moderate_w1 modhr_w1 modmn_w1 modtothr_w1 modtotmn_w1 walk_w1 walkhr_w1 walkmn_w1 walktothr_w1 walktotmin_w1 sithr_w1 sitmn_w1 sitwedhr_w1 sitwedmn_w1 oliveoil_w1 leafy_w1 veg_w1 berry_w1 redmeat_w1 fish_w1 chicken_w1 cheese_w1 butter_w1 beans_w1 grain_w1 sweets_w1 nuts_w1 fastfood_w1 alcoholser_w1 time3 physical_activity_an_v_4 assisting_adult_w1 patient_w1 person_relationship_w1 other_relation_w1 patient_old_w1 require_care_w1 require_expanded_w1 primary_caregiver_w1 most_help_w1 day_week_w1 hours_per_day_w1 caregiving_hardship_w1 enough_money_w1 money_retirement_w1 taking_care_w1 demand_help_w1 self_time_w1 embarassed_behaviorr_w1 angry_around_w1 impact_relationships_w1 happen_future_w1 dependency_capabilities_w1 emotionally_difficult_w1 physically_difficult_w1 time4 caregiving_complete time5 facial_memory_task_s_v_5 scale_01_v2_w1 scale_02_v2_w1 scale_03_v2_w1 scale_04_v2_w1 scale_05_v2_w1 scale_06_v2_w1 scale_07_v2_w1 scale_08_v2_w1 scale_09_v2_w1 scale_10_v2_w1 scale_11_v2_w1 scale_12_v2_w1 scale_13_v2_w1 scale_14_v2_w1 scale_15_v2_w1 scale_16_v2_w1 scale_17_v2_w1 scale_18_v2_w1 scale_19_v2_w1 scale_20_v2_w1 scale_21_v2_w1 scale_22_v2_w1 scale_23_v2_w1 scale_24_v2_w1 time6 theory_of_mind_complete time7 the_office_task_754b_complete time8 nathan_for_you_complete marital_w1 living_own1 living_own2 living_number moved moved_time employment_w1 workhours_w1 buy_food_w1 skip_meals_w1 money_necessities_w1 annual_income_w1 annual_household_w1 ladder_w1 time9 current_ses_and_demo_complete covid previous_covid covid_when covid_symptom_severity covid_symptom_length loss_taste_smell brain_fog covid_avoid_contact time10 covid_complete outside_recruit ccis01 ccis02 ccis03 ccis04 ccis05 ccis06 ccis07 ccis08 ccis09 ccis10 ccis11 ccis12 ccis13 ccis14 ccis15 ccis16 ccis17 ccis18 ccis19 ccis20 func_checks func_tax func_shopping func_hobby func_coffee func_meal func_events func_tv func_appts func_travel cci_and_faq_complete address_change home obs_home1 obs_home2 obs_home3 obs_home4 obs_home5 obs_home6 obs_home7 obs_home7a obs_home8 obs_home9 obs_home10 obs_home11 obs_home12 obs_home13 obs_home14 obs_home15 obs_home15a obs_home16 obs_home17 obs_home18 obs_home19 neighborhood_observa_v_6 using "SNADLongitudinalR01P_DATA_NOHDRS_2026-01-15_1023.csv", varnames(nonames)
 
-label data "SNADLongitudinalR01P_DATA_NOHDRS_2021-12-21_1551.csv"
+label data "SNADLongitudinalR01P_DATA_NOHDRS_2026-01-15_1023.csv"
 
 
+label define swag_given_ 1 "Yes" 0 "No" 
 label define recruit_method_ 1 "IADRC" 2 "VA" 3 "Outside Recruit" 4 "Other" 5 "Dont know/Unsure" 
 label define is_this_person_a_leads_sub_ 1 "Yes" 2 "No" 
 label define has_this_subject_been_disc_ 1 "Yes" 0 "No" 
 label define first_snad_ 1 "Yes" 0 "No" 
 label define deceased_ 1 "Yes" 0 "No" 
+label define orec_ 1 "Yes" 0 "No" 
 label define race___1_ 0 "Unchecked" 1 "Checked" 
 label define race___2_ 0 "Unchecked" 1 "Checked" 
 label define race___3_ 0 "Unchecked" 1 "Checked" 
 label define race___4_ 0 "Unchecked" 1 "Checked" 
 label define race___5_ 0 "Unchecked" 1 "Checked" 
 label define race___6_ 0 "Unchecked" 1 "Checked" 
+label define ethnicity_ 1 "Hispanic or Latino" 0 "Not Hispanic or Latino" 
 label define gender_ 1 "Male" 2 "Female" 3 "Other" 
 label define school_ 1 "Less than high school" 2 "High school" 3 "Some college (no degree)" 4 "College degree" 5 "Advanced degree" 
 label define military_ 1 "Yes" 0 "No" 
+label define military_stress_ 1 "Not at all stressful" 2 "A little stressful" 3 "Moderately stressful" 4 "Very stressful" 
+label define combat_ 1 "Yes" 0 "No" 
 label define kind_business1_ 1 "Manufacturer" 2 "Retailer" 3 "Wholesaler" 4 "Service Provider" 5 "Construction" 6 "Mining" 7 "Farming" 8 "Fishing" 9 "Forestry" 10 "Government" 11 "Other" 
 label define kind_business2_ 1 "Manufacturer" 2 "Retailer" 3 "Wholesaler" 4 "Service Provider" 5 "Construction" 6 "Mining" 7 "Farming" 8 "Fishing" 9 "Forestry" 10 "Government" 11 "Other" 
 label define family_finances_ 1 "Very well off" 2 "Above average" 3 "Below average" 4 "Very poor" 
@@ -70,27 +75,28 @@ label define was_the_interview_in_the_s_ 1 "Yes" 2 "No"
 label define coordinator_who_completed_ 1 "MDB" 2 "HRS" 
 label define snad_visit_tracker_complete_ 0 "Incomplete" 1 "Unverified" 2 "Complete" 
 label define call_1_ 1 "LVM" 2 "Scheduled" 3 "Call back later" 4 "Refusal" 5 "Other" 
-label define initials_1_ 1 "HRS" 2 "MDB" 
+label define initials_1_ 1 "HRP" 2 "MDB" 
 label define call_2_ 1 "LVM" 2 "Scheduled" 3 "Call back later" 4 "Refusal" 5 "Other" 
-label define initials_2_ 1 "HRS" 2 "MDB" 
+label define initials_2_ 1 "HRP" 2 "MDB" 
 label define call_3_ 1 "LVM" 2 "Scheduled" 3 "Call back later" 4 "Refusal" 5 "Other" 
-label define initials_3_ 1 "HRS" 2 "MDB" 
+label define initials_3_ 1 "HRP" 2 "MDB" 
 label define call_4_ 1 "LVM" 2 "Scheduled" 3 "Call back later" 4 "Refusal" 5 "Other" 
-label define initials_4_ 1 "HRS" 2 "MDB" 
+label define initials_4_ 1 "HRP" 2 "MDB" 
 label define call_5_ 1 "LVM" 2 "Scheduled" 3 "Call back later" 4 "Refusal" 5 "Other" 
-label define initials_5_ 1 "HRS" 2 "MDB" 
+label define initials_5_ 1 "HRP" 2 "MDB" 
 label define call_6_ 1 "LVM" 2 "Scheduled" 3 "Call back later" 4 "Refusal" 5 "Other" 
-label define initials_6_ 1 "HRS" 2 "MDB" 
+label define initials_6_ 1 "HRP" 2 "MDB" 
 label define contacts_made_ 1 "1" 2 "2" 3 "3" 4 "4" 5 "5" 6 "6" 7 "7" 8 "8" 9 "9" 
 label define contact_log_focal_su_v_1_ 0 "Incomplete" 1 "Unverified" 2 "Complete" 
 label define gc_type_ 1 "Visa" 2 "Amazon" 
 label define subtype_ 1 "Focal subject" 2 "Co-participant" 
 label define lar_need_ 1 "Yes" 0 "No" 
-label define coord_name_ 1 "MDB" 2 "HRS" 
+label define coord_name_ 1 "MDB" 2 "HRP" 
 label define suppl_pay_ 1 "Yes" 2 "No" 
-label define coord_name2_ 1 "MDB" 2 "HRS" 
+label define coord_name2_ 1 "MDB" 2 "HRP" 
 label define gift_card_receipts_complete_ 0 "Incomplete" 1 "Unverified" 2 "Complete" 
 label define rey_w1_ 1 "Yes" 0 "No" 
+label define rey_list_number_ 1 "List 1" 2 "List 2" 3 "List 3" 
 label define rey_avlt_complete_ 0 "Incomplete" 1 "Unverified" 2 "Complete" 
 label define trails_w1f_ 0 "0" 1 "1" 
 label define cube_w1f_ 0 "0" 1 "1" 
@@ -111,10 +117,12 @@ label define multiple_cue_ 0 "0" 1 "1" 2 "2" 3 "3" 4 "4" 5 "5"
 label define date_orient_w1f_ 0 "0" 1 "1" 
 label define month_w1f_ 0 "0" 1 "1" 
 label define year_w1f_ 0 "0" 1 "1" 
+label define day_w1f_ 0 "0" 1 "1" 
 label define place_w1f_ 0 "0" 1 "1" 
 label define city_w1f_ 0 "0" 1 "1" 
 label define where_administered_w1f_ 1 "In IADC or Clinic" 2 "In Home" 
 label define moca_complete_ 0 "Incomplete" 1 "Unverified" 2 "Complete" 
+label define delayrey_list_number_ 1 "List 1" 2 "List 2" 3 "List 3" 
 label define delayed_rey_avlt_complete_ 0 "Incomplete" 1 "Unverified" 2 "Complete" 
 label define trails_complete_ 0 "Incomplete" 1 "Unverified" 2 "Complete" 
 label define mailing_packet_1_ 1 "Yes" 0 "No" 
@@ -214,6 +222,7 @@ label define problems_friends1_w1_ 1 "Strongly Disagree" 2 "Disagree" 3 "Neutral
 label define lack_companionship1_w1_ 1 "Strongly Disagree" 2 "Disagree" 3 "Neutral" 4 "Agree" 5 "Strongly Agree" 
 label define left_out1_w1_ 1 "Strongly Disagree" 2 "Disagree" 3 "Neutral" 4 "Agree" 5 "Strongly Agree" 
 label define feel_isolated1_w1_ 1 "Strongly Disagree" 2 "Disagree" 3 "Neutral" 4 "Agree" 5 "Strongly Agree" 
+label define guess_contacts_phone___1_ 0 "Unchecked" 1 "Checked" 
 label define social_media1_w1___1_ 0 "Unchecked" 1 "Checked" 
 label define social_media1_w1___2_ 0 "Unchecked" 1 "Checked" 
 label define social_media1_w1___3_ 0 "Unchecked" 1 "Checked" 
@@ -224,18 +233,31 @@ label define social_media1_w1___7_ 0 "Unchecked" 1 "Checked"
 label define social_media1_w1___8_ 0 "Unchecked" 1 "Checked" 
 label define social_media1_w1___9_ 0 "Unchecked" 1 "Checked" 
 label define social_media1_w1___10_ 0 "Unchecked" 1 "Checked" 
+label define social_media1_w1___13_ 0 "Unchecked" 1 "Checked" 
 label define social_media1_w1___11_ 0 "Unchecked" 1 "Checked" 
 label define social_media1_w1___12_ 0 "Unchecked" 1 "Checked" 
 label define sm_twitter1_w1_ 1 "Several Times a day" 2 "About once a day" 3 "A few times a week" 4 "Every few weeks or less often" 
+label define guess_twitter___1_ 0 "Unchecked" 1 "Checked" 
 label define sm_instagram1_w1_ 1 "Several Times a day" 2 "About once a day" 3 "A few times a week" 4 "Every few weeks or less often" 
+label define guess_instagram___1_ 0 "Unchecked" 1 "Checked" 
 label define sm_pinterest1_w1_ 1 "Several Times a day" 2 "About once a day" 3 "A few times a week" 4 "Every few weeks or less often" 
+label define guess_pinterest___1_ 0 "Unchecked" 1 "Checked" 
 label define sm_facebook1_w1_ 1 "Several Times a day" 2 "About once a day" 3 "A few times a week" 4 "Every few weeks or less often" 
+label define guess_facebook___1_ 0 "Unchecked" 1 "Checked" 
 label define sm_linkedin1_w1_ 1 "Several Times a day" 2 "About once a day" 3 "A few times a week" 4 "Every few weeks or less often" 
+label define guess_linkedin___1_ 0 "Unchecked" 1 "Checked" 
 label define sm_snapchat1_w1_ 1 "Several Times a day" 2 "About once a day" 3 "A few times a week" 4 "Every few weeks or less often" 
+label define guess_snapchat___1_ 0 "Unchecked" 1 "Checked" 
 label define sm_whatsapp1_w1_ 1 "Several Times a day" 2 "About once a day" 3 "A few times a week" 4 "Every few weeks or less often" 
+label define guess_whatsapp___1_ 0 "Unchecked" 1 "Checked" 
 label define sm_reddit1_w1_ 1 "Several Times a day" 2 "About once a day" 3 "A few times a week" 4 "Every few weeks or less often" 
+label define guess_reddit___1_ 0 "Unchecked" 1 "Checked" 
 label define sm_tumblr1_w1_ 1 "Several Times a day" 2 "About once a day" 3 "A few times a week" 4 "Every few weeks or less often" 
+label define guess_tumblr___1_ 0 "Unchecked" 1 "Checked" 
 label define sm_skype1_w1_ 1 "Several Times a day" 2 "About once a day" 3 "A few times a week" 4 "Every few weeks or less often" 
+label define guess_skype___1_ 0 "Unchecked" 1 "Checked" 
+label define sm_tiktok1_w1_ 1 "Several Times a day" 2 "About once a day" 3 "A few times a week" 4 "Every few weeks or less often" 
+label define guess_tiktok___1_ 0 "Unchecked" 1 "Checked" 
 label define religious_group1_w1_ 1 "Yes" 0 "No" 
 label define what_religion1_w1_ 1 "Protestant" 2 "Evangelical protestant" 3 "Black protestant" 4 "Roman Catholic" 5 "Jewish" 6 "No affiliation" 7 "Other" 
 label define religious_attendance1_w1_ 1 "At least once a week" 2 "Once or twice a month" 3 "A few times a year" 4 "Seldom" 5 "Never" 
@@ -321,6 +343,7 @@ label define scale_23_v2_w1_ 1 "1 - Happy" 2 "2 - Sad" 3 "3 - Angry" 4 "4 - Fear
 label define scale_24_v2_w1_ 1 "1 - Happy" 2 "2 - Sad" 3 "3 - Angry" 4 "4 - Fearful" 
 label define theory_of_mind_complete_ 0 "Incomplete" 1 "Unverified" 2 "Complete" 
 label define the_office_task_754b_complete_ 0 "Incomplete" 1 "Unverified" 2 "Complete" 
+label define nathan_for_you_complete_ 0 "Incomplete" 1 "Unverified" 2 "Complete" 
 label define marital_w1_ 1 "Never been married" 2 "Married" 3 "Not married but living with partner" 4 "Widowed" 5 "Divorced or annulled" 6 "Separated" 
 label define living_own1_ 1 "Own, buying" 2 "Paying rent" 3 "Group housing facilities" 4 "Other" 
 label define moved_ 1 "Yes" 0 "No" 
@@ -332,6 +355,14 @@ label define annual_income_w1_ 1 "Under $5,000" 2 "$5,000-$9,999" 3 "$10,000-$14
 label define annual_household_w1_ 1 "Under $10,000" 2 "$10,000-$14,999" 3 "$15,000-$24,999" 4 "$25,000-34,999" 5 "$35,000-$49,999" 6 "$50,000-$74,999" 7 "$75,000-99,999" 8 "$100,000 and over" 9 "Prefer not to answer" 
 label define ladder_w1_ 1 "1" 2 "2" 3 "3" 4 "4" 5 "5" 6 "6" 7 "7" 8 "8" 9 "9" 10 "10" 
 label define current_ses_and_demo_complete_ 0 "Incomplete" 1 "Unverified" 2 "Complete" 
+label define covid_ 1 "Yes" 0 "No" 
+label define previous_covid_ 1 "Yes" 0 "No" 
+label define covid_symptom_severity_ 0 "0 No symptoms" 1 "1 Very mild" 2 "2" 3 "3" 4 "4" 5 "5 Moderate" 6 "6" 7 "7" 8 "8" 9 "9" 10 "10 Very severe" 
+label define covid_symptom_length_ 1 "A few days" 2 "1-2 weeks" 3 "3-4 weeks" 4 "1-2 months" 5 "3-6 months" 6 "More than 6 months" 
+label define loss_taste_smell_ 1 "Yes" 0 "No" 
+label define brain_fog_ 1 "Yes" 0 "No" 
+label define covid_avoid_contact_ 1 "Not at all" 2 "A little" 3 "A moderate amount" 4 "A lot" 
+label define covid_complete_ 0 "Incomplete" 1 "Unverified" 2 "Complete" 
 label define outside_recruit_ 1 "Yes" 0 "No" 
 label define ccis01_ 1 "1. Normal Ability (No Change or Better than 5 years ago)" 2 "Slight/Occasional Problem (Some Change from 5 years ago)" 3 "Mild Problem (Some Change from 5 years ago)" 4 "Moderate Problem (Clearly Noticeable Change from 5 years ago)" 5 "Severe Problem (Much Worse than 5 years ago)" 
 label define ccis02_ 1 "1. Normal Ability (No Change or Better than 5 years ago)" 2 "Slight/Occasional Problem (Some Change from 5 years ago)" 3 "Mild Problem (Some Change from 5 years ago)" 4 "Moderate Problem (Clearly Noticeable Change from 5 years ago)" 5 "Severe Problem (Much Worse than 5 years ago)" 
@@ -364,20 +395,47 @@ label define func_tv_ 1 "No Assistance Needed" 2 "Has difficulty, but can do  by
 label define func_appts_ 1 "No Assistance Needed" 2 "Has difficulty, but can do  by self" 3 "Requires some assistance" 4 "Completely Dependent" 5 "Unknown" 6 "Not applicable" 
 label define func_travel_ 1 "No Assistance Needed" 2 "Has difficulty, but can do  by self" 3 "Requires some assistance" 4 "Completely Dependent" 5 "Unknown" 6 "Not applicable" 
 label define cci_and_faq_complete_ 0 "Incomplete" 1 "Unverified" 2 "Complete" 
+label define address_change_ 1 "Yes" 0 "No" 
+label define home_ 1 "Yes" 0 "No" 
+label define obs_home1_ 1 "YES" 2 "NO" 9 "NOT OBSERVED" 
+label define obs_home2_ 1 "YES" 2 "NO" 9 "NOT OBSERVED" 
+label define obs_home3_ 1 "YES" 2 "NO" 9 "NOT OBSERVED" 
+label define obs_home4_ 1 "VERY" 2 "" 3 "SOMEWHAT" 4 "" 5 "NOT AT ALL" 9 "NOT OBSERVED" 
+label define obs_home5_ 1 "VERY" 2 "" 3 "SOMEWHAT" 4 "" 5 "NOT AT ALL" 9 "NOT OBSERVED" 
+label define obs_home6_ 1 "VERY" 2 "" 3 "SOMEWHAT" 4 "" 5 "NOT AT ALL" 9 "NOT OBSERVED" 
+label define obs_home7_ 1 "SINGLE-FAMILY DETACHED HOUSE" 2 "SINGLE-FAMILY ATTACHED HOUSE (ROW HOUSE, TOWNHOUSE)" 3 "1 TO 3-STORY MULTI-FAMILY BUILDING" 4 "4 TO 6-STORY MULTI-FAMILY BUILDING" 5 "7 OR MORE STORY MULTI-FAMILY BUILDING" 6 "MOBILE HOME" 7 "MIXED COMMERCIAL-RESIDENTIAL DWELLING" 8 "PUBLIC HOUSING" 95 "OTHER" 98 "DONT KNOW" 
+label define obs_home8_ 1 "WELL-KEPT, GOOD REPAIR" 2 "FAIR CONDITION" 3 "POOR CONDITION (PEELING PAINT, BROKEN WINDOWS)" 4 "BADLY DETERIORATED" 9 "DONT KNOW" 
+label define obs_home9_ 1 "WELL-KEPT, GOOD REPAIR" 2 "FAIR CONDITION" 3 "POOR CONDITION (PEELING PAINT, BROKEN WINDOWS)" 4 "BADLY DETERIORATED" 9 "DONT KNOW" 
+label define obs_home10_ 1 "YES" 2 "NO" 9 "DONT KNOW" 
+label define obs_home11_ 1 "YES" 2 "NO" 9 "DONT KNOW" 
+label define obs_home12_ 1 "YES, ON ONE BUILDING" 2 "YES, ON MORE THAN ONE BUILDING" 3 "NO BARS OR WINDOWS" 9 "DONT KNOW" 
+label define obs_home13_ 1 "VERY GOOD (RECENT RESURFACING, SMOOTH)" 2 "MODERATE (EVIDENCE OF KEEPING IN GOOD REPAIR)" 3 "FAIR (MINOR REPAIRS NEEDED BUT NOT ROUGH SURFACE)" 4 "POOR (POTHOLES AND OTHER EVIDENCE OF NEGLECT)" 9 "DONT KNOW" 
+label define obs_home14_ 1 "MAJOR ACCUMULATION" 2 "MINOR ACCUMULATION" 3 "NONE" 9 "DONT KNOW" 
+label define obs_home15_ 1 "PRIMARILY RESIDENTIAL" 2 "PRIMARILY COMMERCIAL" 3 "MIXED RESIDENTIAL AND COMMERCIAL" 4 "PRIMARILY INDUSTRIAL" 5 "PRIMARILY VACANT HOUSES" 6 "PRIMARILY VACANT LOTS AND OPEN SPACE" 7 "PRIMARILY SERVICES OR INSTITUTIONS" 8 "PRIMARILY PARKS OR PLAYGROUNDS" 9 "PUBLIC HOUSING" 95 "OTHER" 98 "DONT KNOW" 
+label define obs_home16_ 1 "YES" 2 "NO" 9 "DONT KNOW" 
+label define obs_home17_ 1 "YES" 2 "NO" 9 "DONT KNOW" 
+label define obs_home18_ 1 "YES" 2 "NO" 9 "DONT KNOW" 
+label define obs_home19_ 1 "YES" 2 "NO" 9 "DONT KNOW" 
+label define neighborhood_observa_v_6_ 0 "Incomplete" 1 "Unverified" 2 "Complete" 
+label values swag_given swag_given_
 label values recruit_method recruit_method_
 label values is_this_person_a_leads_sub is_this_person_a_leads_sub_
 label values has_this_subject_been_disc has_this_subject_been_disc_
 label values first_snad first_snad_
 label values deceased deceased_
+label values orec orec_
 label values race___1 race___1_
 label values race___2 race___2_
 label values race___3 race___3_
 label values race___4 race___4_
 label values race___5 race___5_
 label values race___6 race___6_
+label values ethnicity ethnicity_
 label values gender gender_
 label values school school_
 label values military military_
+label values military_stress military_stress_
+label values combat combat_
 label values kind_business1 kind_business1_
 label values kind_business2 kind_business2_
 label values family_finances family_finances_
@@ -449,6 +507,7 @@ label values suppl_pay suppl_pay_
 label values coord_name2 coord_name2_
 label values gift_card_receipts_complete gift_card_receipts_complete_
 label values rey_w1 rey_w1_
+label values rey_list_number rey_list_number_
 label values rey_avlt_complete rey_avlt_complete_
 label values trails_w1f trails_w1f_
 label values cube_w1f cube_w1f_
@@ -469,10 +528,12 @@ label values multiple_cue multiple_cue_
 label values date_orient_w1f date_orient_w1f_
 label values month_w1f month_w1f_
 label values year_w1f year_w1f_
+label values day_w1f day_w1f_
 label values place_w1f place_w1f_
 label values city_w1f city_w1f_
 label values where_administered_w1f where_administered_w1f_
 label values moca_complete moca_complete_
+label values delayrey_list_number delayrey_list_number_
 label values delayed_rey_avlt_complete delayed_rey_avlt_complete_
 label values trails_complete trails_complete_
 label values mailing_packet_1 mailing_packet_1_
@@ -572,6 +633,7 @@ label values problems_friends1_w1 problems_friends1_w1_
 label values lack_companionship1_w1 lack_companionship1_w1_
 label values left_out1_w1 left_out1_w1_
 label values feel_isolated1_w1 feel_isolated1_w1_
+label values guess_contacts_phone___1 guess_contacts_phone___1_
 label values social_media1_w1___1 social_media1_w1___1_
 label values social_media1_w1___2 social_media1_w1___2_
 label values social_media1_w1___3 social_media1_w1___3_
@@ -582,18 +644,31 @@ label values social_media1_w1___7 social_media1_w1___7_
 label values social_media1_w1___8 social_media1_w1___8_
 label values social_media1_w1___9 social_media1_w1___9_
 label values social_media1_w1___10 social_media1_w1___10_
+label values social_media1_w1___13 social_media1_w1___13_
 label values social_media1_w1___11 social_media1_w1___11_
 label values social_media1_w1___12 social_media1_w1___12_
 label values sm_twitter1_w1 sm_twitter1_w1_
+label values guess_twitter___1 guess_twitter___1_
 label values sm_instagram1_w1 sm_instagram1_w1_
+label values guess_instagram___1 guess_instagram___1_
 label values sm_pinterest1_w1 sm_pinterest1_w1_
+label values guess_pinterest___1 guess_pinterest___1_
 label values sm_facebook1_w1 sm_facebook1_w1_
+label values guess_facebook___1 guess_facebook___1_
 label values sm_linkedin1_w1 sm_linkedin1_w1_
+label values guess_linkedin___1 guess_linkedin___1_
 label values sm_snapchat1_w1 sm_snapchat1_w1_
+label values guess_snapchat___1 guess_snapchat___1_
 label values sm_whatsapp1_w1 sm_whatsapp1_w1_
+label values guess_whatsapp___1 guess_whatsapp___1_
 label values sm_reddit1_w1 sm_reddit1_w1_
+label values guess_reddit___1 guess_reddit___1_
 label values sm_tumblr1_w1 sm_tumblr1_w1_
+label values guess_tumblr___1 guess_tumblr___1_
 label values sm_skype1_w1 sm_skype1_w1_
+label values guess_skype___1 guess_skype___1_
+label values sm_tiktok1_w1 sm_tiktok1_w1_
+label values guess_tiktok___1 guess_tiktok___1_
 label values religious_group1_w1 religious_group1_w1_
 label values what_religion1_w1 what_religion1_w1_
 label values religious_attendance1_w1 religious_attendance1_w1_
@@ -679,6 +754,7 @@ label values scale_23_v2_w1 scale_23_v2_w1_
 label values scale_24_v2_w1 scale_24_v2_w1_
 label values theory_of_mind_complete theory_of_mind_complete_
 label values the_office_task_754b_complete the_office_task_754b_complete_
+label values nathan_for_you_complete nathan_for_you_complete_
 label values marital_w1 marital_w1_
 label values living_own1 living_own1_
 label values moved moved_
@@ -690,6 +766,14 @@ label values annual_income_w1 annual_income_w1_
 label values annual_household_w1 annual_household_w1_
 label values ladder_w1 ladder_w1_
 label values current_ses_and_demo_complete current_ses_and_demo_complete_
+label values covid covid_
+label values previous_covid previous_covid_
+label values covid_symptom_severity covid_symptom_severity_
+label values covid_symptom_length covid_symptom_length_
+label values loss_taste_smell loss_taste_smell_
+label values brain_fog brain_fog_
+label values covid_avoid_contact covid_avoid_contact_
+label values covid_complete covid_complete_
 label values outside_recruit outside_recruit_
 label values ccis01 ccis01_
 label values ccis02 ccis02_
@@ -722,6 +806,28 @@ label values func_tv func_tv_
 label values func_appts func_appts_
 label values func_travel func_travel_
 label values cci_and_faq_complete cci_and_faq_complete_
+label values address_change address_change_
+label values home home_
+label values obs_home1 obs_home1_
+label values obs_home2 obs_home2_
+label values obs_home3 obs_home3_
+label values obs_home4 obs_home4_
+label values obs_home5 obs_home5_
+label values obs_home6 obs_home6_
+label values obs_home7 obs_home7_
+label values obs_home8 obs_home8_
+label values obs_home9 obs_home9_
+label values obs_home10 obs_home10_
+label values obs_home11 obs_home11_
+label values obs_home12 obs_home12_
+label values obs_home13 obs_home13_
+label values obs_home14 obs_home14_
+label values obs_home15 obs_home15_
+label values obs_home16 obs_home16_
+label values obs_home17 obs_home17_
+label values obs_home18 obs_home18_
+label values obs_home19 obs_home19_
+label values neighborhood_observa_v_6 neighborhood_observa_v_6_
 
 
 
@@ -730,6 +836,12 @@ gen _date_ = date(date_of_birth,"YMD")
 drop date_of_birth
 rename _date_ date_of_birth
 format date_of_birth %dM_d,_CY
+
+tostring date_swag, replace
+gen _date_ = date(date_swag,"YMD")
+drop date_swag
+rename _date_ date_swag
+format date_swag %dM_d,_CY
 
 tostring date_the_subject_withdrew, replace
 gen _date_ = date(date_the_subject_withdrew,"YMD")
@@ -881,6 +993,66 @@ drop date
 rename _date_ date
 format date %dM_d,_CY
 
+tostring time1, replace
+gen double _temp_ = Clock(time1,"YMDhms")
+drop time1
+rename _temp_ time1
+format time1 %tCMonth_dd,_CCYY_HH:MM:SS
+
+tostring time2, replace
+gen double _temp_ = Clock(time2,"YMDhms")
+drop time2
+rename _temp_ time2
+format time2 %tCMonth_dd,_CCYY_HH:MM:SS
+
+tostring time3, replace
+gen double _temp_ = Clock(time3,"YMDhms")
+drop time3
+rename _temp_ time3
+format time3 %tCMonth_dd,_CCYY_HH:MM:SS
+
+tostring time4, replace
+gen double _temp_ = Clock(time4,"YMDhms")
+drop time4
+rename _temp_ time4
+format time4 %tCMonth_dd,_CCYY_HH:MM:SS
+
+tostring time5, replace
+gen double _temp_ = Clock(time5,"YMDhms")
+drop time5
+rename _temp_ time5
+format time5 %tCMonth_dd,_CCYY_HH:MM:SS
+
+tostring time6, replace
+gen double _temp_ = Clock(time6,"YMDhms")
+drop time6
+rename _temp_ time6
+format time6 %tCMonth_dd,_CCYY_HH:MM:SS
+
+tostring time7, replace
+gen double _temp_ = Clock(time7,"YMDhms")
+drop time7
+rename _temp_ time7
+format time7 %tCMonth_dd,_CCYY_HH:MM:SS
+
+tostring time8, replace
+gen double _temp_ = Clock(time8,"YMDhms")
+drop time8
+rename _temp_ time8
+format time8 %tCMonth_dd,_CCYY_HH:MM:SS
+
+tostring time9, replace
+gen double _temp_ = Clock(time9,"YMDhms")
+drop time9
+rename _temp_ time9
+format time9 %tCMonth_dd,_CCYY_HH:MM:SS
+
+tostring time10, replace
+gen double _temp_ = Clock(time10,"YMDhms")
+drop time10
+rename _temp_ time10
+format time10 %tCMonth_dd,_CCYY_HH:MM:SS
+
 label variable record_id "Record ID"
 label variable redcap_event_name "Event Name"
 label variable redcap_repeat_instrument "Repeat Instrument"
@@ -895,6 +1067,8 @@ label variable state "State:"
 label variable zip_code "Zip Code:"
 label variable phone "Phone:"
 label variable email_address "Email Address:"
+label variable swag_given "Has swag been given?"
+label variable date_swag "Date given"
 label variable recruit_method "Recruitment method:"
 label variable is_this_person_a_leads_sub "Is this person a LEADS subject?"
 label variable has_this_subject_been_disc "Has this subject been discontinued by the IADRC?"
@@ -902,15 +1076,22 @@ label variable why_has_this_person_been_d "Why has this person been discontinued
 label variable date_the_subject_withdrew "Date the subject was discontinued from the study:"
 label variable first_snad "Is this person new to the SNAD project ever?"
 label variable deceased "Is this person deceased? "
+label variable orec "Was this participant referred from IADRC OREC?"
+label variable cfnid "CfN Registry ID"
+label variable orecid "OREC Screening Project ID"
 label variable race___1 "What race or races do you consider yourself? Please select all that apply. (choice=American Indian or Alaskan Native)"
 label variable race___2 "What race or races do you consider yourself? Please select all that apply. (choice=Asian)"
 label variable race___3 "What race or races do you consider yourself? Please select all that apply. (choice=Black or African American)"
 label variable race___4 "What race or races do you consider yourself? Please select all that apply. (choice=Native Hawaiian or Pacific Islander)"
 label variable race___5 "What race or races do you consider yourself? Please select all that apply. (choice=White)"
 label variable race___6 "What race or races do you consider yourself? Please select all that apply. (choice=Other)"
+label variable other_race "Please explain."
+label variable ethnicity "What ethnicity do you consider yourself?"
 label variable gender "What is your current sex or gender?"
 label variable school "What is the highest level of education you have completed?"
 label variable military "Have you ever served in the US military?"
+label variable military_stress "How stressful was your military experience?"
+label variable combat "Have you ever experienced combat?"
 label variable children "How many biological children do you have?"
 label variable step "How many children do you have that are not biologically related to you (e.g., adopted children, step-children)?"
 label variable longest_job1 "First, please think about the job you had the longest. What kind of work were you doing? (For example: registered nurse, personnel manager, supervisor, secretary, accountant)"
@@ -1079,6 +1260,7 @@ label variable date_sig2 "Date:"
 label variable gift_card_receipts_complete "Complete?"
 label variable rey_w1 "Is the participant currently seen in IADRC?  If NO administer Cognitive Tests at this time."
 label variable date_avlt "Date of REY AVLT:"
+label variable rey_list_number "List Number"
 label variable total_learn_rey "Total Learning REY AVLT Score"
 label variable reycorrect_w1 "Correct 1"
 label variable reyconfabs_w1 "Confabs 1"
@@ -1118,10 +1300,12 @@ label variable multiple_cue "Delayed recall- Multiple Choice Cue"
 label variable date_orient_w1f "Orientation-Date"
 label variable month_w1f "Orientation- Month"
 label variable year_w1f "Orientation- Year"
+label variable day_w1f "Orientation- Day "
 label variable place_w1f "Orientation- Place"
 label variable city_w1f "Orientation- City"
 label variable where_administered_w1f "MoCA was administered:"
 label variable moca_complete "Complete?"
+label variable delayrey_list_number "List Number"
 label variable delayed_sum_rey "Total Sum of DELAYED REY AVLT"
 label variable rey_avlt_correct "List A # Correct"
 label variable rey_avlt_confabs "List A # Confabs"
@@ -1189,6 +1373,7 @@ label variable hearing_activities "Has it affected your day-to-day activities?"
 label variable vision "Over the last year have you noticed any vision loss?"
 label variable vision_drvisit "Has it been severe enough to see a doctor?"
 label variable vision_activities "Has it affected your day-to-day activities?"
+label variable time1 "TIME STAMP"
 label variable stress_and_quality_o_v_2 "Complete?"
 label variable mailing_packet "Did subject complete mailing packet?"
 label variable rbooks_f_w1 "Frequency"
@@ -1232,7 +1417,8 @@ label variable problems_friends1_w1 "I can talk about my problems with my friend
 label variable lack_companionship1_w1 "I often feel that I lack companionship."
 label variable left_out1_w1 "I often feel left out."
 label variable feel_isolated1_w1 "I often feel isolated from others."
-label variable contacts_phone_w1 "How many contacts do you have in your phone?"
+label variable contacts_phone_w1 "How many contacts do you have in your phone?(Interviewer: Ask participant to pull out their phone to get an exact count. If phone is inaccessible, ask them to provide a guestimate. If participant does not have a phone, ask about contacts they have in their address book and use the same procedure above)"
+label variable guess_contacts_phone___1 "Check box if count provided was a guestimate. (choice=)"
 label variable social_media1_w1___1 "Do you ever use... (randomize list) (choice=Twitter)"
 label variable social_media1_w1___2 "Do you ever use... (randomize list) (choice=Instagram)"
 label variable social_media1_w1___3 "Do you ever use... (randomize list) (choice=Pinterest)"
@@ -1243,28 +1429,42 @@ label variable social_media1_w1___7 "Do you ever use... (randomize list) (choice
 label variable social_media1_w1___8 "Do you ever use... (randomize list) (choice=reddit)"
 label variable social_media1_w1___9 "Do you ever use... (randomize list) (choice=Tumblr)"
 label variable social_media1_w1___10 "Do you ever use... (randomize list) (choice=Skype)"
+label variable social_media1_w1___13 "Do you ever use... (randomize list) (choice=TikTok)"
 label variable social_media1_w1___11 "Do you ever use... (randomize list) (choice=Other (specify))"
 label variable social_media1_w1___12 "Do you ever use... (randomize list) (choice=None apply)"
 label variable sm_twitter1_w1 "Thinking about social media sites you use...About how often do you visit or use Twitter?  "
-label variable followers_twitter1_w1 "Thinking about social media sites you use...How many friends or followers do you have on Twitter?"
+label variable followers_twitter1_w1 "Thinking about social media sites you use...How many friends or followers do you have on Twitter?(Interviewer: Ask participant to access this social media account to get an exact count of friends/followers. If inaccessible, ask them to provide a guestimate.)"
+label variable guess_twitter___1 "Check box if count provided was a guestimate. (choice=)"
 label variable sm_instagram1_w1 "Thinking about social media sites you use...About how often do you visit or use Instagram?"
-label variable followers_instagram1_w1 "Thinking about social media sites you use...How many friends or followers do you have on Instagram?"
+label variable followers_instagram1_w1 "Thinking about social media sites you use...How many friends or followers do you have on Instagram?(Interviewer: Ask participant to access this social media account to get an exact count of friends/followers. If inaccessible, ask them to provide a guestimate.)"
+label variable guess_instagram___1 "Check box if count provided was a guestimate. (choice=)"
 label variable sm_pinterest1_w1 "Thinking about social media sites you use...About how often do you visit or use Pinterest?"
-label variable followers_pinterest1_w1 "Thinking about social media sites you use...How many friends or followers do you have on Pinterest?"
+label variable followers_pinterest1_w1 "Thinking about social media sites you use...How many friends or followers do you have on Pinterest?(Interviewer: Ask participant to access this social media account to get an exact count of friends/followers. If inaccessible, ask them to provide a guestimate.)"
+label variable guess_pinterest___1 "Check box if count provided was a guestimate. (choice=)"
 label variable sm_facebook1_w1 "Thinking about social media sites you use...About how often do you visit or use Facebook?"
-label variable followers_facebook1_w1 "Thinking about social media sites you use...How many friends or followers do you have on Facebook?"
+label variable followers_facebook1_w1 "Thinking about social media sites you use...How many friends or followers do you have on Facebook? (Interviewer: Ask participant to access this social media account to get an exact count of friends/followers. If inaccessible, ask them to provide a guestimate.)"
+label variable guess_facebook___1 "Check box if count provided was a guestimate. (choice=)"
 label variable sm_linkedin1_w1 "Thinking about social media sites you use...About how often do you visit or use LinkedIn?"
-label variable followers_linkedin1_w1 "Thinking about social media sites you use...How many friends or followers do you have on LinkedIn?"
+label variable followers_linkedin1_w1 "Thinking about social media sites you use...How many friends or followers do you have on LinkedIn?(Interviewer: Ask participant to access this social media account to get an exact count of friends/followers. If inaccessible, ask them to provide a guestimate.)"
+label variable guess_linkedin___1 "Check box if count provided was a guestimate. (choice=)"
 label variable sm_snapchat1_w1 "Thinking about social media sites you use...About how often do you visit or use Snapchat?"
-label variable followers_snapchat1_w1 "Thinking about social media sites you use...How many friends or followers do you have on Snapchat?"
+label variable followers_snapchat1_w1 "Thinking about social media sites you use...How many friends or followers do you have on Snapchat?(Interviewer: Ask participant to access this social media account to get an exact count of friends/followers. If inaccessible, ask them to provide a guestimate.)"
+label variable guess_snapchat___1 "Check box if count provided was a guestimate. (choice=)"
 label variable sm_whatsapp1_w1 "Thinking about social media sites you use...About how often do you visit or use WhatsApp?"
-label variable followers_whatsapp1_w1 "Thinking about social media sites you use...How many friends or followers do you have on WhatsApp?"
+label variable followers_whatsapp1_w1 "Thinking about social media sites you use...How many friends or followers do you have on WhatsApp?(Interviewer: Ask participant to access this social media account to get an exact count of friends/followers. If inaccessible, ask them to provide a guestimate.)"
+label variable guess_whatsapp___1 "Check box if count provided was a guestimate. (choice=)"
 label variable sm_reddit1_w1 "Thinking about social media sites you use...About how often do you visit or use Reddit?"
-label variable followers_reddit1_w1 "Thinking about social media sites you use...How many friends or followers do you have on Reddit?"
+label variable followers_reddit1_w1 "Thinking about social media sites you use...How many friends or followers do you have on Reddit?(Interviewer: Ask participant to access this social media account to get an exact count of friends/followers. If inaccessible, ask them to provide a guestimate.)"
+label variable guess_reddit___1 "Check box if count provided was a guestimate. (choice=)"
 label variable sm_tumblr1_w1 "Thinking about social media sites you use...About how often do you visit or use Tumblr?"
-label variable followers_tumblr1_w1 "Thinking about social media sites you use...How many friends or followers do you have on Tumblr?"
+label variable followers_tumblr1_w1 "Thinking about social media sites you use...How many friends or followers do you have on Tumblr?(Interviewer: Ask participant to access this social media account to get an exact count of friends/followers. If inaccessible, ask them to provide a guestimate.)"
+label variable guess_tumblr___1 "Check box if count provided was a guestimate. (choice=)"
 label variable sm_skype1_w1 "Thinking about social media sites you use...About how often do you visit or use Skype?"
-label variable followers_skype1_w1 "Thinking about social media sites you use...How many friends or followers do you have on Skype?"
+label variable followers_skype1_w1 "Thinking about social media sites you use...How many friends or followers do you have on Skype?(Interviewer: Ask participant to access this social media account to get an exact count of friends/followers. If inaccessible, ask them to provide a guestimate.)"
+label variable guess_skype___1 "Check box if count provided was a guestimate. (choice=)"
+label variable sm_tiktok1_w1 "Thinking about social media sites you use...About how often do you visit or use TikTok?"
+label variable followers_tiktok1_w1 "Thinking about social media sites you use...How many friends or followers do you have on TikTok?(Interviewer: Ask participant to access this social media account to get an exact count of friends/followers. If inaccessible, ask them to provide a guestimate.)"
+label variable guess_tiktok___1 "Check box if count provided was a guestimate. (choice=)"
 label variable sm_other1_w1 "If other, please explain:"
 label variable religious_group1_w1 "Are you a member of a religious group?"
 label variable what_religion1_w1 "What is your religion?"
@@ -1304,6 +1504,7 @@ label variable volunteer_company "When you volunteer, are you working alone or a
 label variable volunteer_change1 "In the last year or so, has there been a change in the amount of volunteering you do? In other words, have you increased or decreased your volunteering over the last year? "
 label variable volunteer_change2 "Why have you [increased/decreased] your volunteering?    "
 label variable volunteer_change3 "[If other please specify]"
+label variable time2 "TIME STAMP"
 label variable social_activity_and__v_3 "Complete?"
 label variable mailing_packet_2 "Did subject complete mailing packet?"
 label variable vigor_w1 "1. During the last 7 days, on how many days did you do vigorous physical activities?"
@@ -1340,6 +1541,7 @@ label variable sweets_w1 "12. How often do you consume sweets, candy bars, pastr
 label variable nuts_w1 "13. How many servings of nuts do you eat each week (handful or 1/4 - 1/3 cup)? "
 label variable fastfood_w1 "14. How many times per week do you consume food from a fast food restaurant (such as McDonalds, Burger King, Dennys Dominos, Popeyes, Kentucky Fried Chicken, etc.)? "
 label variable alcoholser_w1 "15. How many servings of alcohol (5 ounces of wine, 12 ounces of beer, 1 ounce of hard liquor) do you drink each day?"
+label variable time3 "TIME STAMP"
 label variable physical_activity_an_v_4 "Complete?"
 label variable assisting_adult_w1 "Are you currently assisting an adult who needs help with day-to-day activities because of age or disability? "
 label variable patient_w1 "What is the patients first name?"
@@ -1365,7 +1567,9 @@ label variable happen_future_w1 "I am afraid of what might happen to [patient_w1
 label variable dependency_capabilities_w1 "I feel that [patient_w1]s dependency on me is more than I am capable. "
 label variable emotionally_difficult_w1 "I feel that caring for [patient_w1] is emotionally difficult."
 label variable physically_difficult_w1 "I feel that caring for [patient_w1] is physically difficult."
+label variable time4 "TIME STAMP"
 label variable caregiving_complete "Complete?"
+label variable time5 "TIME STAMP"
 label variable facial_memory_task_s_v_5 "Complete?"
 label variable scale_01_v2_w1 "Indicate Corresponding Emotion "
 label variable scale_02_v2_w1 "Indicate Corresponding Emotion "
@@ -1391,8 +1595,12 @@ label variable scale_21_v2_w1 "Indicate Corresponding Emotion "
 label variable scale_22_v2_w1 "Indicate Corresponding Emotion "
 label variable scale_23_v2_w1 "Indicate Corresponding Emotion "
 label variable scale_24_v2_w1 "Indicate Corresponding Emotion "
+label variable time6 "TIME STAMP"
 label variable theory_of_mind_complete "Complete?"
+label variable time7 "TIME STAMP"
 label variable the_office_task_754b_complete "Complete?"
+label variable time8 "TIME STAMP"
+label variable nathan_for_you_complete "Complete?"
 label variable marital_w1 "What is your current marital status?"
 label variable living_own1 "Do you own your home/apartment, pay rent, live in group housing facilities (e.g., Retirement Communities, Assisted Living, and Nursing Homes), or something else?"
 label variable living_own2 "[If other please specify]"
@@ -1407,7 +1615,18 @@ label variable money_necessities_w1 "In the past 6 months, how often did you NOT
 label variable annual_income_w1 "What is your current annual personal income, including income from employment, retirement, pensions, Social Security, and any other sources?"
 label variable annual_household_w1 "What is your current annual household income, including income from employment, retirement, pensions, Social Security, and any other sources?"
 label variable ladder_w1 "Social Ladder"
+label variable time9 "TIME STAMP"
 label variable current_ses_and_demo_complete "Complete?"
+label variable covid "Have you ever tested positive for COVID-19?If participant says theyve tested positive multiple times, prompt for the time their symptoms lasted the longest."
+label variable previous_covid "Has there been a change to the status of your most recent contraction of the COVID-19 virus? (Interviewer should check most recent data during this conversation with the participant. For example, if participant had entered a positive COVID-19 test in October of 2022 during interview 1, interviewer reminds participant of the given date.  IF NEW CONTRACTION, interviewer probes Did symptoms last longer than previous contraction? IF YES, respond YES to this item. IF NO, despite new contraction, respond NO to this item.)"
+label variable covid_when "When did that occur? (enter Month, Year) If participant recalls a season, enter month in the middle of that season. For winter, enter January, for spring, enter April, for summer, enter July, for fall, enter October."
+label variable covid_symptom_severity "When your symptoms were at their worst, on a scale of 1 to 10, where 1 is very mild and 10 is very severe, how severe were your symptoms?"
+label variable covid_symptom_length "When youve had COVID-19, about how long did you have ANY symptoms? If youve had COVID-19 multiple times, think about the time your symptoms lasted the longest."
+label variable loss_taste_smell "Did you have a loss of taste or smell?"
+label variable brain_fog "Did you have brain fog (e.g., memory problems or issues concentrating)?"
+label variable covid_avoid_contact "During the worst months of the pandemic, how much did you avoid social contact to protect yourself and others from COVID-19?"
+label variable time10 "TIME STAMP"
+label variable covid_complete "Complete?"
 label variable outside_recruit "Is subject an outside recruit? "
 label variable ccis01 "1. Recalling information when I really try:"
 label variable ccis02 "2. Remembering names and faces of new people I meet:"
@@ -1440,7 +1659,31 @@ label variable func_tv "Paying attention to and understanding a TV program, book
 label variable func_appts "Remembering appointments, family occasions, holidays, medications"
 label variable func_travel "Traveling out of the neighborhood, driving, or arranging to take public transportation"
 label variable cci_and_faq_complete "Complete?"
+label variable address_change "Has participant changed addresses in the last year?"
+label variable home "Did the interview take place in the participants home?"
+label variable obs_home1 "Did you observe any open cracks or holes in walls or ceiling, not little hairline cracks or nail holes but OPEN cracks or holes wider than the edge of a dime?"
+label variable obs_home2 "Did you observe any areas of broken plaster or peeling paint bigger than the size of a standard business letter (8.5 x 11)?"
+label variable obs_home3 "Does the house or apartment have evidence of cigarette smoking?"
+label variable obs_home4 "Was the house or apartment noisy from noise in the house, so that it was difficult or distracting to hear and be heard (TV, radio, shouts of children)?"
+label variable obs_home5 "Was the house or apartment noisy from noise outside the house, so that it was difficult or distracting to hear and be heard (trains, cars, music, people)?"
+label variable obs_home6 "Were all the visible rooms in the apartment/ house cluttered?"
+label variable obs_home7 "Which category best describes the building in which the respondents unit is located?"
+label variable obs_home7a "Please specify other"
+label variable obs_home8 "How would you rate the general condition of this housing unit or building?"
+label variable obs_home9 "How would you rate the general condition of most of the housing units or other buildings on this block?"
+label variable obs_home10 "Does this building have any broken windows?"
+label variable obs_home11 "Does this building have metal bars on any of its windows above the basement level?"
+label variable obs_home12 "Are there metal bars on the windows above the basement level of any other buildings on either side of the street, within half a block in either direction of the unit?"
+label variable obs_home13 "How would you rate the condition of the street in this block?"
+label variable obs_home14 "Is there trash, litter or junk within a half a block in either direction of the unit?"
+label variable obs_home15 "How would you characterize the land use on this block face, based on street-level frontage?"
+label variable obs_home15a "Please specify other"
+label variable obs_home16 "sidewalks or walking paths"
+label variable obs_home17 "park or playground area"
+label variable obs_home18 "recreational center, community center, or Boys/Girls Club"
+label variable obs_home19 "library or bookmobile"
+label variable neighborhood_observa_v_6 "Complete?"
 
-order record_id redcap_event_name redcap_repeat_instrument redcap_repeat_instance ccid first_name last_name date_of_birth address city state zip_code phone email_address recruit_method is_this_person_a_leads_sub has_this_subject_been_disc why_has_this_person_been_d date_the_subject_withdrew first_snad deceased race___1 race___2 race___3 race___4 race___5 race___6 gender school military children step longest_job1 job_activity1 kind_business1 other_describe1 year_start1 year_end1 longest_job2 job_activity2 kind_business2 other_describe2 year_start2 year_end2 different_jobs neighborhood1 long_live1 neighborhood2 long_live2 neighborhood3 long_live3 neighborhood4 long_live4 neighborhood5 long_live5 neighborhood6 long_live6 neighborhood7 long_live7 neighborhood8 long_live8 neighborhood9 long_live9 neighborhood10 long_live10 family_finances education_mother1 education_mother2 education_father1 education_father2 demographics_complete checkboxes___1 checkboxes___2 checkboxes___3 participant_name participant_signature_2 time_consented does_this_subject_require name_of_lar signature_of_lar date_of_lar_signature person_conducting_informed_2 person_conducting_3 date_4 snad_subject_econsent_complete checkboxw2___1 checkboxw2___2 checkboxw2___3 checkboxw2___4 checkboxw2___5 checkboxw2___6 checkboxw2___7 hipaaagreementw2___1 participant_namew2 participant_signaturew2 time_consentedw2 does_this_subject_requirew2 name_of_larw2 signature_of_larw2 date_of_lar_signaturew2 person_conducting_informedw2 person_conductingw2 datew2 snad_hipaa_complete check_courtw2 check_guardianshipw2 does_courtw2 consent_by_larw2 estatew2 durationw2 relationshipw2 understandw2 will_happenw2 how_longw2 riskw2 stop_researchw2 contactw2 alternativesw2 choicew2 decision_makingw2 explainingw2 teach_backw2 adequate_timew2 consent_reviwedw2 copy_consentw2 copy_hipaaw2 instructionsw2 capacity_w2___1 larw2 name_of_lar_w2 signature_of_lar_w2 date_of_lar_signature_w2 participant_name_w2 participant_signature_w2 time_consented_w2 person_conducting_informed_w2 person_conducting_w2 date_w2 snad_capacity_to_con_v_0 is_this_subject_snad_eligi if_subject_is_not_eligible date_of_clinical_core_visi date_of_scheduled_snad_vis was_the_focal_subject_inte why_was_the_focal_subject was_the_interview_in_the_s coordinator_who_completed snad_visit_tracker_complete call_1 call_explanation_1 date_1 initials_1 call_2 call_expanation_2 date_2_05950a initials_2 call_3 explanation_3 date_3 initials_3 call_4 explanation_4 date_4_e92dc3 initials_4 call_5 explanation_5 date_5 initials_5 call_6 explanation_6 date_6 initials_6 contacts_made snad_scheduled contact_log_focal_su_v_1 gc_type gift_number name_print signature_sub gift_date subtype lar_need lar_name lar_sig lar_date coord_name coord_sig coord_date suppl_pay gift_number2 name_print2 name_signature coord_name2 coord_sig2 date_sig2 gift_card_receipts_complete rey_w1 date_avlt total_learn_rey reycorrect_w1 reyconfabs_w1 reycorrect2_w1 reyconfabs2_w1 reycorrect3_w1 reyconfabs3_w1 reycorrect4_w1 reyconfabs4_w1 reycorrect5_w1 reyconfabs5_w1 reybcorrect_w1 reybconfabs_w1 reyintrusions_w1 reycorrecta_w1 reyconfabsa_w1 reyintrusionsa_w1 rey_avlt_complete date total_score_w1f trails_w1f cube_w1f clock_w1f clock_numbers hands_w1f naming_w1f registration_w1f digits_w1f letter_a_w1f serial_7_s_w1f repetition_w1f fluency_w1f abstraction_w1f no_cue_w1f category_w1f multiple_cue date_orient_w1f month_w1f year_w1f place_w1f city_w1f where_administered_w1f moca_complete delayed_sum_rey rey_avlt_correct rey_avlt_confabs rey_avly_intrusions delayed_rey_avlt_complete trailseconds_w1 trailerrors_w1 traillines_w1 trailsecond_w1 trailerror_w1 trailline_w1 trails_complete mailing_packet_1 mastery1_w1 mastery2_w1 happiness_w1 anxiety1_w1 anxiety2_w1 anxiety3_w1 anxiety4_w1 life1_w1 life2_w1 life3_w1 life4_w1 life5_w1 life6_w1 life7_w1 health_w1 energy_w1 spirits_w1 living_situation_w1 memory_w1 family_w1 marriage_w1 friends_w1 no_friends_w1 self_w1 do_chores_w1 do_fun_w1 money_w1 whole_w1 marriage_other_w1 nofriends_w1___1 sleep stress1_w1 stress2_w1 stress3_w1 stress4_w1 stress5_w1 stress6_w1 stress7_w1 stress8_w1 stress9_w1 stress10_w1 doctor1_w1 doctor2_w1 doctor3_w1 doctor4_w1 doctor5_w1 doctor6_w1 doctor7_w1 hearing hearing_drvisit hearing_activities vision vision_drvisit vision_activities stress_and_quality_o_v_2 mailing_packet rbooks_f_w1 rbooks_d_w1 rnews_f_w1 rnews_d_w1 cwpuzzles_f_w1 cwpuzzles_d_w1 cardgame_f_w1 cardgame_d_w1 puzzlegame_f_w1 puzzlegame_w1 write_f_w1 write_d_w1 museum_f_w1 museum_d_w1 memthink_f_w1 memthink_d_w1 sew_f_w1 sew_d_w1 tv_f_w1 tv_d_w1 radio_f_w1 radio_d_w1 computer_f_w1 computer_d_w1 musicinstr_f_w1 musicinstr_d_w1 famfriends_f_w1 famfriends_d_w1 visitors_f_w1 visitors_d_w1 family_help1_w1 help_support1_w1 friends_help1_w1 go_wrong1_w1 problems_family1_w1 joys_sorrows1_w1 make_decisions1_w1 problems_friends1_w1 lack_companionship1_w1 left_out1_w1 feel_isolated1_w1 contacts_phone_w1 social_media1_w1___1 social_media1_w1___2 social_media1_w1___3 social_media1_w1___4 social_media1_w1___5 social_media1_w1___6 social_media1_w1___7 social_media1_w1___8 social_media1_w1___9 social_media1_w1___10 social_media1_w1___11 social_media1_w1___12 sm_twitter1_w1 followers_twitter1_w1 sm_instagram1_w1 followers_instagram1_w1 sm_pinterest1_w1 followers_pinterest1_w1 sm_facebook1_w1 followers_facebook1_w1 sm_linkedin1_w1 followers_linkedin1_w1 sm_snapchat1_w1 followers_snapchat1_w1 sm_whatsapp1_w1 followers_whatsapp1_w1 sm_reddit1_w1 followers_reddit1_w1 sm_tumblr1_w1 followers_tumblr1_w1 sm_skype1_w1 followers_skype1_w1 sm_other1_w1 religious_group1_w1 what_religion1_w1 religion_other1_w1 religious_attendance1_w1 white1_w1 black1_w1 hispanic1_w1 other1_w1 group_housing1_w1 living_sit1_w1 share_housing1_w1 meals_residents1_w1 social_activities1_w1 integration1 integration2 integration3 volunteer volunteer_help volunteer_activities___2 volunteer_activities___3 volunteer_activities___4 volunteer_activities___5 volunteer_activities___6 volunteer_activities___7 volunteer_activities___8 volunteer_activities___9 volunteer_activities___10 volunteer_activities___11 volunteer_activities___12 volunteer_activities___13 volunteer_activities___14 volunteer_other volunteer_often volunteer_hours volunteer_company volunteer_change1 volunteer_change2 volunteer_change3 social_activity_and__v_3 mailing_packet_2 vigor_w1 vigorhr_w1 vigormn_w1 vigortothr_w1 vigortotmn_w1 moderate_w1 modhr_w1 modmn_w1 modtothr_w1 modtotmn_w1 walk_w1 walkhr_w1 walkmn_w1 walktothr_w1 walktotmin_w1 sithr_w1 sitmn_w1 sitwedhr_w1 sitwedmn_w1 oliveoil_w1 leafy_w1 veg_w1 berry_w1 redmeat_w1 fish_w1 chicken_w1 cheese_w1 butter_w1 beans_w1 grain_w1 sweets_w1 nuts_w1 fastfood_w1 alcoholser_w1 physical_activity_an_v_4 assisting_adult_w1 patient_w1 person_relationship_w1 other_relation_w1 patient_old_w1 require_care_w1 require_expanded_w1 primary_caregiver_w1 most_help_w1 day_week_w1 hours_per_day_w1 caregiving_hardship_w1 enough_money_w1 money_retirement_w1 taking_care_w1 demand_help_w1 self_time_w1 embarassed_behaviorr_w1 angry_around_w1 impact_relationships_w1 happen_future_w1 dependency_capabilities_w1 emotionally_difficult_w1 physically_difficult_w1 caregiving_complete facial_memory_task_s_v_5 scale_01_v2_w1 scale_02_v2_w1 scale_03_v2_w1 scale_04_v2_w1 scale_05_v2_w1 scale_06_v2_w1 scale_07_v2_w1 scale_08_v2_w1 scale_09_v2_w1 scale_10_v2_w1 scale_11_v2_w1 scale_12_v2_w1 scale_13_v2_w1 scale_14_v2_w1 scale_15_v2_w1 scale_16_v2_w1 scale_17_v2_w1 scale_18_v2_w1 scale_19_v2_w1 scale_20_v2_w1 scale_21_v2_w1 scale_22_v2_w1 scale_23_v2_w1 scale_24_v2_w1 theory_of_mind_complete the_office_task_754b_complete marital_w1 living_own1 living_own2 living_number moved moved_time employment_w1 workhours_w1 buy_food_w1 skip_meals_w1 money_necessities_w1 annual_income_w1 annual_household_w1 ladder_w1 current_ses_and_demo_complete outside_recruit ccis01 ccis02 ccis03 ccis04 ccis05 ccis06 ccis07 ccis08 ccis09 ccis10 ccis11 ccis12 ccis13 ccis14 ccis15 ccis16 ccis17 ccis18 ccis19 ccis20 func_checks func_tax func_shopping func_hobby func_coffee func_meal func_events func_tv func_appts func_travel cci_and_faq_complete 
+order record_id redcap_event_name redcap_repeat_instrument redcap_repeat_instance ccid first_name last_name date_of_birth address city state zip_code phone email_address swag_given date_swag recruit_method is_this_person_a_leads_sub has_this_subject_been_disc why_has_this_person_been_d date_the_subject_withdrew first_snad deceased orec cfnid orecid race___1 race___2 race___3 race___4 race___5 race___6 other_race ethnicity gender school military military_stress combat children step longest_job1 job_activity1 kind_business1 other_describe1 year_start1 year_end1 longest_job2 job_activity2 kind_business2 other_describe2 year_start2 year_end2 different_jobs neighborhood1 long_live1 neighborhood2 long_live2 neighborhood3 long_live3 neighborhood4 long_live4 neighborhood5 long_live5 neighborhood6 long_live6 neighborhood7 long_live7 neighborhood8 long_live8 neighborhood9 long_live9 neighborhood10 long_live10 family_finances education_mother1 education_mother2 education_father1 education_father2 demographics_complete checkboxes___1 checkboxes___2 checkboxes___3 participant_name participant_signature_2 time_consented does_this_subject_require name_of_lar signature_of_lar date_of_lar_signature person_conducting_informed_2 person_conducting_3 date_4 snad_subject_econsent_complete checkboxw2___1 checkboxw2___2 checkboxw2___3 checkboxw2___4 checkboxw2___5 checkboxw2___6 checkboxw2___7 hipaaagreementw2___1 participant_namew2 participant_signaturew2 time_consentedw2 does_this_subject_requirew2 name_of_larw2 signature_of_larw2 date_of_lar_signaturew2 person_conducting_informedw2 person_conductingw2 datew2 snad_hipaa_complete check_courtw2 check_guardianshipw2 does_courtw2 consent_by_larw2 estatew2 durationw2 relationshipw2 understandw2 will_happenw2 how_longw2 riskw2 stop_researchw2 contactw2 alternativesw2 choicew2 decision_makingw2 explainingw2 teach_backw2 adequate_timew2 consent_reviwedw2 copy_consentw2 copy_hipaaw2 instructionsw2 capacity_w2___1 larw2 name_of_lar_w2 signature_of_lar_w2 date_of_lar_signature_w2 participant_name_w2 participant_signature_w2 time_consented_w2 person_conducting_informed_w2 person_conducting_w2 date_w2 snad_capacity_to_con_v_0 is_this_subject_snad_eligi if_subject_is_not_eligible date_of_clinical_core_visi date_of_scheduled_snad_vis was_the_focal_subject_inte why_was_the_focal_subject was_the_interview_in_the_s coordinator_who_completed snad_visit_tracker_complete call_1 call_explanation_1 date_1 initials_1 call_2 call_expanation_2 date_2_05950a initials_2 call_3 explanation_3 date_3 initials_3 call_4 explanation_4 date_4_e92dc3 initials_4 call_5 explanation_5 date_5 initials_5 call_6 explanation_6 date_6 initials_6 contacts_made snad_scheduled contact_log_focal_su_v_1 gc_type gift_number name_print signature_sub gift_date subtype lar_need lar_name lar_sig lar_date coord_name coord_sig coord_date suppl_pay gift_number2 name_print2 name_signature coord_name2 coord_sig2 date_sig2 gift_card_receipts_complete rey_w1 date_avlt rey_list_number total_learn_rey reycorrect_w1 reyconfabs_w1 reycorrect2_w1 reyconfabs2_w1 reycorrect3_w1 reyconfabs3_w1 reycorrect4_w1 reyconfabs4_w1 reycorrect5_w1 reyconfabs5_w1 reybcorrect_w1 reybconfabs_w1 reyintrusions_w1 reycorrecta_w1 reyconfabsa_w1 reyintrusionsa_w1 rey_avlt_complete date total_score_w1f trails_w1f cube_w1f clock_w1f clock_numbers hands_w1f naming_w1f registration_w1f digits_w1f letter_a_w1f serial_7_s_w1f repetition_w1f fluency_w1f abstraction_w1f no_cue_w1f category_w1f multiple_cue date_orient_w1f month_w1f year_w1f day_w1f place_w1f city_w1f where_administered_w1f moca_complete delayrey_list_number delayed_sum_rey rey_avlt_correct rey_avlt_confabs rey_avly_intrusions delayed_rey_avlt_complete trailseconds_w1 trailerrors_w1 traillines_w1 trailsecond_w1 trailerror_w1 trailline_w1 trails_complete mailing_packet_1 mastery1_w1 mastery2_w1 happiness_w1 anxiety1_w1 anxiety2_w1 anxiety3_w1 anxiety4_w1 life1_w1 life2_w1 life3_w1 life4_w1 life5_w1 life6_w1 life7_w1 health_w1 energy_w1 spirits_w1 living_situation_w1 memory_w1 family_w1 marriage_w1 friends_w1 no_friends_w1 self_w1 do_chores_w1 do_fun_w1 money_w1 whole_w1 marriage_other_w1 nofriends_w1___1 sleep stress1_w1 stress2_w1 stress3_w1 stress4_w1 stress5_w1 stress6_w1 stress7_w1 stress8_w1 stress9_w1 stress10_w1 doctor1_w1 doctor2_w1 doctor3_w1 doctor4_w1 doctor5_w1 doctor6_w1 doctor7_w1 hearing hearing_drvisit hearing_activities vision vision_drvisit vision_activities time1 stress_and_quality_o_v_2 mailing_packet rbooks_f_w1 rbooks_d_w1 rnews_f_w1 rnews_d_w1 cwpuzzles_f_w1 cwpuzzles_d_w1 cardgame_f_w1 cardgame_d_w1 puzzlegame_f_w1 puzzlegame_w1 write_f_w1 write_d_w1 museum_f_w1 museum_d_w1 memthink_f_w1 memthink_d_w1 sew_f_w1 sew_d_w1 tv_f_w1 tv_d_w1 radio_f_w1 radio_d_w1 computer_f_w1 computer_d_w1 musicinstr_f_w1 musicinstr_d_w1 famfriends_f_w1 famfriends_d_w1 visitors_f_w1 visitors_d_w1 family_help1_w1 help_support1_w1 friends_help1_w1 go_wrong1_w1 problems_family1_w1 joys_sorrows1_w1 make_decisions1_w1 problems_friends1_w1 lack_companionship1_w1 left_out1_w1 feel_isolated1_w1 contacts_phone_w1 guess_contacts_phone___1 social_media1_w1___1 social_media1_w1___2 social_media1_w1___3 social_media1_w1___4 social_media1_w1___5 social_media1_w1___6 social_media1_w1___7 social_media1_w1___8 social_media1_w1___9 social_media1_w1___10 social_media1_w1___13 social_media1_w1___11 social_media1_w1___12 sm_twitter1_w1 followers_twitter1_w1 guess_twitter___1 sm_instagram1_w1 followers_instagram1_w1 guess_instagram___1 sm_pinterest1_w1 followers_pinterest1_w1 guess_pinterest___1 sm_facebook1_w1 followers_facebook1_w1 guess_facebook___1 sm_linkedin1_w1 followers_linkedin1_w1 guess_linkedin___1 sm_snapchat1_w1 followers_snapchat1_w1 guess_snapchat___1 sm_whatsapp1_w1 followers_whatsapp1_w1 guess_whatsapp___1 sm_reddit1_w1 followers_reddit1_w1 guess_reddit___1 sm_tumblr1_w1 followers_tumblr1_w1 guess_tumblr___1 sm_skype1_w1 followers_skype1_w1 guess_skype___1 sm_tiktok1_w1 followers_tiktok1_w1 guess_tiktok___1 sm_other1_w1 religious_group1_w1 what_religion1_w1 religion_other1_w1 religious_attendance1_w1 white1_w1 black1_w1 hispanic1_w1 other1_w1 group_housing1_w1 living_sit1_w1 share_housing1_w1 meals_residents1_w1 social_activities1_w1 integration1 integration2 integration3 volunteer volunteer_help volunteer_activities___2 volunteer_activities___3 volunteer_activities___4 volunteer_activities___5 volunteer_activities___6 volunteer_activities___7 volunteer_activities___8 volunteer_activities___9 volunteer_activities___10 volunteer_activities___11 volunteer_activities___12 volunteer_activities___13 volunteer_activities___14 volunteer_other volunteer_often volunteer_hours volunteer_company volunteer_change1 volunteer_change2 volunteer_change3 time2 social_activity_and__v_3 mailing_packet_2 vigor_w1 vigorhr_w1 vigormn_w1 vigortothr_w1 vigortotmn_w1 moderate_w1 modhr_w1 modmn_w1 modtothr_w1 modtotmn_w1 walk_w1 walkhr_w1 walkmn_w1 walktothr_w1 walktotmin_w1 sithr_w1 sitmn_w1 sitwedhr_w1 sitwedmn_w1 oliveoil_w1 leafy_w1 veg_w1 berry_w1 redmeat_w1 fish_w1 chicken_w1 cheese_w1 butter_w1 beans_w1 grain_w1 sweets_w1 nuts_w1 fastfood_w1 alcoholser_w1 time3 physical_activity_an_v_4 assisting_adult_w1 patient_w1 person_relationship_w1 other_relation_w1 patient_old_w1 require_care_w1 require_expanded_w1 primary_caregiver_w1 most_help_w1 day_week_w1 hours_per_day_w1 caregiving_hardship_w1 enough_money_w1 money_retirement_w1 taking_care_w1 demand_help_w1 self_time_w1 embarassed_behaviorr_w1 angry_around_w1 impact_relationships_w1 happen_future_w1 dependency_capabilities_w1 emotionally_difficult_w1 physically_difficult_w1 time4 caregiving_complete time5 facial_memory_task_s_v_5 scale_01_v2_w1 scale_02_v2_w1 scale_03_v2_w1 scale_04_v2_w1 scale_05_v2_w1 scale_06_v2_w1 scale_07_v2_w1 scale_08_v2_w1 scale_09_v2_w1 scale_10_v2_w1 scale_11_v2_w1 scale_12_v2_w1 scale_13_v2_w1 scale_14_v2_w1 scale_15_v2_w1 scale_16_v2_w1 scale_17_v2_w1 scale_18_v2_w1 scale_19_v2_w1 scale_20_v2_w1 scale_21_v2_w1 scale_22_v2_w1 scale_23_v2_w1 scale_24_v2_w1 time6 theory_of_mind_complete time7 the_office_task_754b_complete time8 nathan_for_you_complete marital_w1 living_own1 living_own2 living_number moved moved_time employment_w1 workhours_w1 buy_food_w1 skip_meals_w1 money_necessities_w1 annual_income_w1 annual_household_w1 ladder_w1 time9 current_ses_and_demo_complete covid previous_covid covid_when covid_symptom_severity covid_symptom_length loss_taste_smell brain_fog covid_avoid_contact time10 covid_complete outside_recruit ccis01 ccis02 ccis03 ccis04 ccis05 ccis06 ccis07 ccis08 ccis09 ccis10 ccis11 ccis12 ccis13 ccis14 ccis15 ccis16 ccis17 ccis18 ccis19 ccis20 func_checks func_tax func_shopping func_hobby func_coffee func_meal func_events func_tv func_appts func_travel cci_and_faq_complete address_change home obs_home1 obs_home2 obs_home3 obs_home4 obs_home5 obs_home6 obs_home7 obs_home7a obs_home8 obs_home9 obs_home10 obs_home11 obs_home12 obs_home13 obs_home14 obs_home15 obs_home15a obs_home16 obs_home17 obs_home18 obs_home19 neighborhood_observa_v_6 
 set more off
 describe
