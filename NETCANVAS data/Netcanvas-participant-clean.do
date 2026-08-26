@@ -35,7 +35,7 @@ format date_snad %dM_d,_CY //display in date
 list date_snad sessionstart //double check
 
 *check ccid
-list ccid networkcanvascaseid if ccid!=networkcanvascaseid //0 case, otherwise correct in the excel
+list ccid networkcanvascaseid if ccid!=networkcanvascaseid //0 case, otherwise fix in the excel
 
 *create wave for NC
 sort ccid date_snad //sort ccid by time
@@ -61,8 +61,8 @@ drop if missing(networkcanvasegouuid) //empty row with no networkcanvasegouuid
 drop v57 _filename // drop unnessary variables
 
 *merge with ego level 
-merge m:1 networkcanvasegouuid using "NC-participant-ego-20211112.dta", nogen //all matched
-
+merge m:1 networkcanvasegouuid using "NC-participant-ego-20211112.dta" //check all matched, otherwise fix
+drop _merge
 rename (ccid name) (SUBID alter_name)
 order SUBID alterid id
 sort SUBID alterid
@@ -102,9 +102,25 @@ rename alterid alterid_nc
 save "NC-altername-match",replace
 
 rename (alterid_nc alter_name) (alterid alter_name_nc)
+
+* Mark SUBID containing at least one record after the cutoff
 duplicates tag SUBID alterid,gen(dup)
-sort SUBID alterid
-list SUBID alterid alter_name_nc if dup>0 //double check to make sure people with same id are indeed different spelling rather than different people, otherwise fix. Ignore 910019:9; 10125:11; 10124:9;
+egen has_new = max(date_snad > td(19aug2026) & date_snad < .), ///
+    by(SUBID alterid)
+sort SUBID alterid date_snad
+list SUBID alterid alter_name_nc date_snad ///
+    if dup > 0 & has_new //double check to make sure people with same id are indeed different spelling rather than different people, otherwise fix. 
+	
+/* high priority check 3+ duplicated alterids to save time
+*Count distinct duplicated alterids with new records for each SUBID
+egen dup_alterid_tag = tag(SUBID alterid) if dup > 0 & has_new
+egen n_dup_alterids = total(dup_alterid_tag), by(SUBID)
+
+* List old and new records for SUBIDs with 3+ duplicated alterids
+sort SUBID alterid date_snad
+list SUBID alterid alter_name_nc date_snad ///
+    if dup > 0 & has_new & n_dup_alterids >= 3 
+*/
 
 duplicates drop SUBID alterid,force //Those are safe to drop different spelling
 save "NC-alterid-match",replace
@@ -127,10 +143,10 @@ import excel using "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD
 keep SUBID TIEID_uniq name 
 rename (TIEID_uniq name) (alterid alter_name)
 duplicates drop SUBID alterid,force
-merge 1:1 SUBID alterid using "NC-alterid-match",keepusing(SUBID alterid alter_name_nc) 
+merge 1:1 SUBID alterid using "NC-alterid-match",keepusing(SUBID alterid alter_name_nc date_snad) 
 sort SUBID alterid
 keep if _merge==3
-list SUBID alterid alter_name* if alter_name != alter_name_nc //double check to make sure people with same id are indeed different spelling rather than different people, otherwise fix
+list SUBID alterid alter_name* if alter_name != alter_name_nc & date_snad > td(19aug2026) //double check to make sure people with same id are indeed different spelling rather than different people, otherwise fix
 
 
 
@@ -151,22 +167,22 @@ foreach x of varlist prevalter broughtforward stilldiscuss alterim* alterhm* alt
 recode broughtforward stilldiscuss (. 2 =0)
 
 *10052 missing generators despite stilldiscuss=1 (fill from ENSO data)
-replace alterim1=1 if SUBID==10052 & alter_name=="maria p"
-replace alterhm1=1 if SUBID==10052 & alter_name=="maria p"
-replace alterim1=1 if SUBID==10052 & alter_name=="paula s"
-replace alterhm1=1 if SUBID==10052 & alter_name=="paula s"
-replace alterim1=1 if SUBID==10052 & alter_name=="risa d"
-replace alteret4=1 if SUBID==10052 & alter_name=="shanel p"
-replace alterim1=1 if SUBID==10052 & alter_name=="dereck r"
-replace alterim1=1 if SUBID==10052 & alter_name=="sophie m"
-replace alterhm1=1 if SUBID==10052 & alter_name=="sophie m" 
-replace alterim1=1 if SUBID==10052 & alter_name=="angie r"
-replace alterim1=1 if SUBID==10052 & alter_name=="becky f"
-replace alterhm1=1 if SUBID==10052 & alter_name=="becky f"
-replace alterim1=1 if SUBID==10052 & alter_name=="dea l"
-replace alterhm1=1 if SUBID==10052 & alter_name=="dea l"
-replace alteret5=1 if SUBID==10052 & alter_name=="mike a"
-replace alteret6=1 if SUBID==10052 & alter_name=="winston j"
+replace alterim1=1 if networkcanvasegouuid=="3ff31145-3dcf-4d92-bcc6-00b9e7928c0c" & alter_name=="maria p"
+replace alterhm1=1 if networkcanvasegouuid=="3ff31145-3dcf-4d92-bcc6-00b9e7928c0c" & alter_name=="maria p"
+replace alterim1=1 if networkcanvasegouuid=="3ff31145-3dcf-4d92-bcc6-00b9e7928c0c" & alter_name=="paula s"
+replace alterhm1=1 if networkcanvasegouuid=="3ff31145-3dcf-4d92-bcc6-00b9e7928c0c" & alter_name=="paula s"
+replace alterim1=1 if networkcanvasegouuid=="3ff31145-3dcf-4d92-bcc6-00b9e7928c0c" & alter_name=="risa d"
+replace alteret4=1 if networkcanvasegouuid=="3ff31145-3dcf-4d92-bcc6-00b9e7928c0c" & alter_name=="shanel p"
+replace alterim1=1 if networkcanvasegouuid=="3ff31145-3dcf-4d92-bcc6-00b9e7928c0c" & alter_name=="dereck r"
+replace alterim1=1 if networkcanvasegouuid=="3ff31145-3dcf-4d92-bcc6-00b9e7928c0c" & alter_name=="sophie m"
+replace alterhm1=1 if networkcanvasegouuid=="3ff31145-3dcf-4d92-bcc6-00b9e7928c0c" & alter_name=="sophie m" 
+replace alterim1=1 if networkcanvasegouuid=="3ff31145-3dcf-4d92-bcc6-00b9e7928c0c" & alter_name=="angie r"
+replace alterim1=1 if networkcanvasegouuid=="3ff31145-3dcf-4d92-bcc6-00b9e7928c0c" & alter_name=="becky f"
+replace alterhm1=1 if networkcanvasegouuid=="3ff31145-3dcf-4d92-bcc6-00b9e7928c0c" & alter_name=="becky f"
+replace alterim1=1 if networkcanvasegouuid=="3ff31145-3dcf-4d92-bcc6-00b9e7928c0c" & alter_name=="dea l"
+replace alterhm1=1 if networkcanvasegouuid=="3ff31145-3dcf-4d92-bcc6-00b9e7928c0c" & alter_name=="dea l"
+replace alteret5=1 if networkcanvasegouuid=="3ff31145-3dcf-4d92-bcc6-00b9e7928c0c" & alter_name=="mike a"
+replace alteret6=1 if networkcanvasegouuid=="3ff31145-3dcf-4d92-bcc6-00b9e7928c0c" & alter_name=="winston j"
 
 egen name_gen=rowtotal(alterim* alterhm* alteret* prevalterimcat*)
 list SUBID alter_name if name_gen==0 & stilldiscuss==1 //910009 missing generators while stilldiscuss=1
@@ -606,7 +622,7 @@ bysort SUBID NC: gen npossties=trandom*(trandom-1)/2
 bysort SUBID NC: replace npossties=netsize*(netsize-1)/2 if missing(npossties) //early NC did not implement randomization
 
 foreach x of varlist totval totnum totnum1 {
-	replace `x'=0 if inrange(netsize,2,4) & missing(`x') & !missing(mclose) //all 0 on alter-alter ties are absent and treated as missing for totval,totnum, totnum1; need to replace them as 0
+	replace `x'=0 if inrange(netsize,2,900) & missing(`x') & !missing(trandom) //all 0 on alter-alter ties are absent and treated as missing for totval,totnum, totnum1; need to replace them as 0
 }
 
 gen density=totval/npossties
@@ -643,8 +659,14 @@ save "NC-Participant-LONG-clean-20211112.dta", replace
 
 duplicates drop SUBID NC, force
 
+list SUBID date_snad netsize interviewername if missing(density) & netsize>1 & !missing(netsize) // check: 10299 (2021, 2024) , 10339 (2020), 10392 (2024), 10547 (2023), 10724 (2025) missing alter-alter tie info due to time constraint
+
 *merge with ego level 
-merge 1:1 networkcanvasegouuid using "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\temp\NC-participant-ego-20211112.dta" //all matched, check otherwise fix
+merge 1:1 networkcanvasegouuid using "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\temp\NC-participant-ego-20211112.dta" //all matched, check otherwise fix (missing vs. true 0 netsize; remove completely missing data from the folder)
+list SUBID date_snad if _merge==2 
+
+*add netsize 0 back to the cleaned data 
+replace netsize=0 if _merge==2 //assign 0 for people netsize 0
 
 keep SUBID date_snad NC netsize-efctsize
 save "NC-Participant-EGOAGG-clean-20211112.dta", replace 
@@ -913,7 +935,7 @@ bysort SUBID NC: gen npossties=trandom*(trandom-1)/2
 bysort SUBID NC: replace npossties=netsize*(netsize-1)/2 if missing(npossties) //early NC did not implement randomization
 
 foreach x of varlist totval totnum totnum1 {
-	replace `x'=0 if inrange(netsize,2,4) & missing(`x') & !missing(mclose) //all 0 on alter-alter ties are absent and treated as missing for totval,totnum, totnum1; need to replace them as 0
+	replace `x'=0 if inrange(netsize,2,900) & missing(`x') & !missing(trandom) //all 0 on alter-alter ties are absent and treated as missing for totval,totnum, totnum1; need to replace them as 0
 }
 
 gen density=totval/npossties
@@ -953,6 +975,9 @@ duplicates drop SUBID NC, force
 
 *merge with ego level 
 merge 1:1 networkcanvasegouuid using "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\temp\NC-participant-ego-20211112.dta" //all matched, check otherwise fix
+
+*add 0 netsize back to the cleaned data 
+replace netsize=0 if _merge==2 //assign 0 for people netsize 0
 
 keep SUBID date_snad NC netsize-efctsize
 save "NC-Participant-EGOAGG-pilot-clean-20211112.dta", replace 
@@ -1220,7 +1245,7 @@ bysort SUBID NC: gen npossties=trandom*(trandom-1)/2
 bysort SUBID NC: replace npossties=netsize*(netsize-1)/2 if missing(npossties) //early NC did not implement randomization
 
 foreach x of varlist totval totnum totnum1 {
-	replace `x'=0 if inrange(netsize,2,4) & missing(`x') & !missing(mclose) //all 0 on alter-alter ties are absent and treated as missing for totval,totnum, totnum1; need to replace them as 0
+	replace `x'=0 if inrange(netsize,2,900) & missing(`x') & !missing(trandom) //all 0 on alter-alter ties are absent and treated as missing for totval,totnum, totnum1; need to replace them as 0
 }
 
 gen density=totval/npossties
@@ -1260,6 +1285,9 @@ duplicates drop SUBID NC, force
 
 *merge with ego level 
 merge 1:1 networkcanvasegouuid using "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\temp\NC-participant-ego-20211112.dta" //all matched, check otherwise fix
+
+*add 0 netsize back to the cleaned data 
+replace netsize=0 if _merge==2 //assign 0 for people netsize 0
 
 keep SUBID date_snad NC netsize-efctsize
 save "NC-Participant-EGOAGG-match-clean-20211112.dta", replace 

@@ -9,8 +9,8 @@ clear
 //	#1 Unzip files into folders
 ***************************************************************
 
-local sourcedir "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\SNAD Informant Interviews" //download and save zip files in here
-local unzipdir "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\Netcanvas Informant Interviews"
+local sourcedir "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\SNAD Informant Interviews" //download and save zip files in here
+local unzipdir "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\Netcanvas Informant Interviews"
 cap mkdir "`unzipdir'" //create a new directory
 
 /*
@@ -27,6 +27,7 @@ foreach f of local fls {
 
 mvfiles , infolder("`unzipdir'") outfolder("`unzipdir'/ego") match("*ego*") makedirs erase //ssc install mvfiles
 mvfiles , infolder("`unzipdir'") outfolder("`unzipdir'/alter") match("*attributeList_name*") makedirs erase
+mvfiles , infolder("`unzipdir'") outfolder("`unzipdir'/alter") match("*attributeList_FOCAL*") makedirs erase
 mvfiles , infolder("`unzipdir'") outfolder("`unzipdir'/interviewer") match("*attributeList_Inter*") makedirs erase
 mvfiles , infolder("`unzipdir'") outfolder("`unzipdir'/alter_tie") match("*edgeList*") makedirs erase
 

@@ -3,7 +3,7 @@
 ****Version: 17
 ****Purpose: Clean NC Informant report of FOCAL
 
-clear
+
 
 
 ***************************************************************
@@ -11,13 +11,13 @@ clear
 ***************************************************************
 
 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\temp"
+cd "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\temp"
 
 
 /*read interviewer files*/
 
 
-multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\Netcanvas Informant Interviews\interviewer") clear force 
+multimport delimited, dir("C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\Netcanvas Informant Interviews\interviewer") clear force 
 drop id _filename networkcanvasuuid // drop unnessary variables 
 save "NC-informant-interviewer-20211112.dta", replace
 
@@ -25,33 +25,35 @@ save "NC-informant-interviewer-20211112.dta", replace
 /*read ego files*/
 
 
-multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\Netcanvas Informant Interviews\ego") clear force import(stringcols(_all) varnames(1)) //import all variables as string
+multimport delimited, dir("C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\Netcanvas Informant Interviews\ego") clear force import(stringcols(_all) varnames(1)) //import all variables as string
 
 *convert date
-list ccid session* if missing(sessionfinish)
-replace sessionfinish=sessionexported if missing(sessionfinish)
-replace sessionfinish = substr(sessionfinish,1,10)
-gen date_snad = date(sessionfinish,"YMD") // convert string to date 
+replace sessionstart = substr(sessionstart,1,10)
+gen date_snad = date(sessionstart,"YMD") // convert string to date 
 format date_snad %dM_d,_CY //display in date 
-list date_snad sessionfinish //double check
+list date_snad sessionstart //double check
 
 *check ccid
-list ccid networkcanvascaseid if ccid!=networkcanvascaseid //5 cases, correct in the excel if networkcanvascaseid is wrong
-replace ccid=networkcanvascaseid if ccid!=networkcanvascaseid //networkcanvascaseid are all correct for 5 cases
+list ccid networkcanvascaseid if ccid!=networkcanvascaseid //11 cases, correct in the excel if networkcanvascaseid is wrong
+replace ccid=networkcanvascaseid if ccid!=networkcanvascaseid //networkcanvascaseid are all correct for 11 cases
 
 *create wave for NC
 gen SUBID_str=ccid
 gen SUBID =subinstr(ccid, "a", "",.) 
 replace SUBID =subinstr(SUBID, "b", "",.) 
 replace SUBID=subinstr(SUBID, "c", "",.) 
+replace SUBID=subinstr(SUBID, "d", "",.) 
+
 destring SUBID,replace
-sort SUBID date_snad //sort ccid by time
-bysort SUBID: gen NC=_n
+sort SUBID date_snad //sort SUBID by time
+bysort SUBID: gen NC=_n // NC for each informant report on focal
+sort ccid date_snad //sort ccid by time
+bysort ccid: gen NC_i=_n //NC for each informant report on informant
+
 list SUBID date_snad NC  //check order by time
 drop sessionstart sessionfinish sessionexported interviewwave alterid ego_variable _filename // drop unnessary variables
 
 save "NC-informant-ego-20211112.dta", replace
-
 
 
 
@@ -63,12 +65,12 @@ save "NC-informant-ego-20211112.dta", replace
 
 
 *read file
-multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\Netcanvas Informant Interviews\alter") clear force import(stringcols(_all)) //import all variables as string
+multimport delimited, dir("C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\Netcanvas Informant Interviews\alter") clear force import(stringcols(_all)) //import all variables as string
 drop if missing(networkcanvasegouuid) //empty row with no networkcanvasegouuid
 drop null _filename // drop unnessary variables
 
 *merge with ego level 
-merge m:1 networkcanvasegouuid using "NC-informant-ego-20211112.dta", nogen //all matched
+merge m:1 networkcanvasegouuid using "NC-informant-ego-20211112.dta", nogen //check all matched, otherwise fix
 
 rename (name) (alter_name)
 order SUBID alterid id
@@ -90,6 +92,10 @@ replace alter_name =stritrim(alter_name) //consecutive blanks collapsed to one b
 
 /*check and fill missing on generators*/
 
+
+replace alterhm1=alterihm1 if missing(alterhm1) //alterhm were used in T2; alterihm used in T1
+replace alterhm2=alterihm2 if missing(alterhm2) //alterhm were used in T2; alterihm used in T1
+replace alterhm3=alterihm3 if missing(alterhm3) //alterhm were used in T2; alterihm used in T1
 
 foreach x of varlist prevalter broughtforward stilldiscuss alterim* alterhm* alteret* prevalterimcat* alterrel* ///
 prevalteri broughtforwardi stilldiscussi iim* iihm* iet* stilldiscusscati* {
@@ -133,13 +139,13 @@ altersex alterrace altercollege alterage altercloseego alterfreqcon alterprox  a
 
 fre prevalter 
 drop if prevalter!=1 & name_gen==0
-save "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned\NC-informant-focal alter-LONG-prevalters.dta",replace
+save "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned\NC-informant-focal alter-LONG-prevalters.dta",replace
 
 /*drop alters from previous wave but not mentioned in this wave*/
 
 *mvpatterns if name_gen==0 //check those alters are not interviewed
 drop if name_gen==0
-
+recode alterim* alterhm* alteret* (.=0)
 
 
 ***************************************************************
@@ -166,7 +172,26 @@ rename alterid alterid_nc
 save "NC-informant focal-altername-match",replace
 
 rename (alterid_nc alter_name) (alterid alter_name_nc)
-duplicates list SUBID alterid //9 alters have different spelling in 2 waves (6368:5; 6585: 13; 10395:3,5,13,14; 910003:1,2,21)
+
+* Mark SUBID containing at least one record after the cutoff
+duplicates tag SUBID alterid,gen(dup)
+egen has_new = max(date_snad > td(19aug2026) & date_snad < .), ///
+    by(SUBID alterid)
+sort SUBID alterid date_snad
+list SUBID alterid alter_name_nc date_snad ///
+    if dup > 0 & has_new //double check to make sure people with same id are indeed different spelling rather than different people, otherwise fix. 
+	
+/* high priority check 3+ duplicated alterids to save time
+*Count distinct duplicated alterids with new records for each SUBID
+egen dup_alterid_tag = tag(SUBID alterid) if dup > 0 & has_new
+egen n_dup_alterids = total(dup_alterid_tag), by(SUBID)
+
+* List old and new records for SUBIDs with 3+ duplicated alterids
+sort SUBID alterid date_snad
+list SUBID alterid alter_name_nc date_snad ///
+    if dup > 0 & has_new & n_dup_alterids >= 3 
+*/
+
 duplicates drop SUBID alterid,force //drop different spelling
 save "NC-informant focal-alterid-match",replace
 
@@ -175,7 +200,7 @@ save "NC-informant focal-alterid-match",replace
 
 *same name but different alterid
 
-import excel using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\UniqueID W12345-Informant-Focal alter", clear first 
+import excel using "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\UniqueID W12345-Informant-Focal alter", clear first 
 replace SUBID =subinstr(SUBID, "a", "",.) //remove a
 destring SUBID,replace
 keep SUBID TIEID_uniq name 
@@ -187,16 +212,16 @@ keep if _merge==3
 list SUBID alter_name alterid* if alterid != alterid_nc //none should exist, otherwise fix
 
 *same alterid but different name
-import excel using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\UniqueID W12345-Informant-Focal alter", clear first 
+import excel using "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\UniqueID W12345-Informant-Focal alter", clear first 
 replace SUBID =subinstr(SUBID, "a", "",.) //remove a
 destring SUBID,replace
 keep SUBID TIEID_uniq name 
 rename (TIEID_uniq name) (alterid alter_name)
 duplicates drop SUBID alterid,force
-merge 1:1 SUBID alterid using "NC-informant focal-alterid-match",keepusing(SUBID alterid alter_name_nc) 
+merge 1:1 SUBID alterid using "NC-informant focal-alterid-match",keepusing(SUBID alterid alter_name_nc date_snad) 
 sort SUBID alterid
 keep if _merge==3
-list SUBID alterid alter_name* if alter_name != alter_name_nc //double check to make sure people with same id are indeed different spelling rather than different people
+list SUBID alterid alter_name* if alter_name != alter_name_nc & date_snad > td(19aug2026) //double check to make sure people with same id are indeed different spelling rather than different people
 
 
 
@@ -232,7 +257,7 @@ keep if NC==1
 egen relmiss=rowtotal(alterrel*) //40 alters are missing/0 on all relation type
 
 *merge NC with ENSO
-merge 1:1 SUBID alterid using "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\temp\ENSO-Informant-Focal alter-LONG-clean.dta",keepusing(frel* tfem alter_race alter_age alter_college) update //update missing values in tfem alter_race alter_age alter_college of master data with values in using data
+merge 1:1 SUBID alterid using "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\ENSO clean\temp\ENSO-Informant-Focal alter-LONG-clean.dta",keepusing(frel* tfem alter_race alter_age alter_college) update //update missing values in tfem alter_race alter_age alter_college of master data with values in using data
 
 drop if _merge==2 //drop ENSO alters did not match with NC old alters
 drop _merge
@@ -263,7 +288,7 @@ replace alterrel_22=frelclub if relmiss==0
 replace alterrel_23=frelactvt if relmiss==0
 
 drop relmiss frel*
-egen relmiss=rowtotal(alterrel*) //20 alters are still missing/0 on all relation type
+egen relmiss=rowtotal(alterrel*) //619 alters are still missing/0 on all relation type
 
 *append with wave 2+ NC
 recode NC (1=.)
@@ -274,6 +299,26 @@ rename (tfem) (alterfem)
 rename (alterrel_1-alterrel_23) (relpartner relparent relsibling relchild relgrandp relgrandc relauntunc relinlaw relothrel relcowork relneigh relfriend relboss relemploy relschool rellawyer reldoctor relothmed relmental relrelig relchurch relclub relleisure)
 recode rel* (.=0) //. were from ENSO/pilots
 
+
+
+
+***************************************************************
+**#6 Retrive alter demo from NC T1 (those are skiped for T2+ NC)
+***************************************************************
+
+
+
+sort SUBID alterid NC // T1 alter appears first
+
+foreach x of varlist alter_college alterfem alter_race {
+	bysort SUBID alterid: replace `x'=`x'[1] if missing(`x') & NC>1 //take T1 values if missing
+}
+foreach x of varlist rel* {
+	bysort SUBID alterid: replace `x'=`x'[1] if relmiss==0 & NC>1 //take T1 values if relmiss=0
+}
+bysort SUBID alterid: replace alter_age=alter_age[1]+age(date_snad[1], date_snad) if missing(alter_age) & NC>1 //take T1 values+time between waves if missing
+
+
 save "NC-informant-focal alter-20211112.dta", replace
 
 
@@ -281,7 +326,7 @@ save "NC-informant-focal alter-20211112.dta", replace
 
 
 ***************************************************************
-**#6a Full: clean alter level interpretors
+**#7a Full: clean alter level interpretors
 ***************************************************************
 
 
@@ -457,7 +502,7 @@ save "NC-informant-focal alter-clean-20211112.dta", replace
 
 
 ***************************************************************
-**#7a Full: Clean alter-alter level data
+**#8a Full: Clean alter-alter level data
 ***************************************************************
 
 
@@ -466,7 +511,7 @@ save "NC-informant-focal alter-clean-20211112.dta", replace
 /*read alter tie files*/
 
 
-multimport delimited, dir("C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\Netcanvas Informant Interviews\alter_tie") clear force import(stringcols(_all))
+multimport delimited, dir("C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\Netcanvas Informant Interviews\alter_tie") clear force import(stringcols(_all))
 
 *drop informant alter tie
 destring alteralterclose,replace
@@ -517,7 +562,7 @@ bysort SUBID NC: gen npossties=trandom*(trandom-1)/2
 bysort SUBID NC: replace npossties=netsize*(netsize-1)/2 if missing(npossties) //early NC did not implement randomization
 
 foreach x of varlist totval totnum totnum1 {
-	replace `x'=0 if inrange(netsize,2,4) & missing(`x') & !missing(mclose) //all 0 on alter-alter ties are absent and treated as missing for totval,totnum, totnum1; need to replace them as 0
+	replace `x'=0 if inrange(netsize,2,900) & missing(`x') & !missing(trandom) //all 0 on alter-alter ties are absent and treated as missing for totval,totnum, totnum1; need to replace them as 0
 }
 
 gen density=totval/npossties
@@ -533,6 +578,8 @@ bysort SUBID NC: gen npossties_rd=trandom*(trandom-1)/2
 bysort SUBID NC: gen npossties_full=netsize*(netsize-1)/2
 gen efctsize=netsize - 2*totnum1*(npossties_full/npossties_rd)/netsize //adjust totnum1 proportionaly to npossties_full/npossties_rd; trandom to netsize/trandom
 replace efctsize=netsize-2*totnum1/netsize if missing(efctsize)
+replace efctsize=0 if netsize==0
+replace efctsize=1 if netsize==1
 label var efctsize "Effective size"
 drop npossties_rd npossties_full
 
@@ -541,16 +588,23 @@ drop npossties_rd npossties_full
 
 
 ***************************************************************
-**#8a Full: save files 
+**#9a Full: save files 
 ***************************************************************
 
 
 
 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned"
+cd "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned"
 save "NC-informant focal-LONG-clean-20211112.dta", replace 
-
 duplicates drop SUBID NC, force
+
+*merge with ego level 
+merge m:1 networkcanvasegouuid using "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\temp\NC-informant-ego-20211112.dta" //all matched, check otherwise fix (missing vs. true 0 netsize; remove completely missing data from the folder)
+
+*add netsize 0 back to the cleaned data 
+list SUBID_str date_snad if _merge==2 //10113a had 0 focal alters
+replace netsize=0 if _merge==2 //assign 0 for people netsize 0 
+
 keep SUBID* date_snad NC netsize-efctsize
 save "NC-informant focal-EGOAGG-clean-20211112.dta", replace 
 
@@ -563,14 +617,14 @@ save "NC-informant focal-EGOAGG-clean-20211112.dta", replace
 
 
 ***************************************************************
-**#6b Pilot: clean alter level interpretors
+**#7b Pilot: clean alter level interpretors
 ***************************************************************
 
 
 
 
 *drop names that are not in health and important matter to be consistent with Pilot data 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\temp"
+cd "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\temp"
 use "NC-informant-focal alter-20211112.dta", clear
 egen pilot=rowtotal(alterim* alterhm*)
 drop if pilot==0 | missing(pilot) 
@@ -745,7 +799,7 @@ save "NC-informant-focal alter-pilot-clean-20211112.dta", replace
 
 
 ***************************************************************
-**#7b Pilot: Clean alter-alter level data
+**#8b Pilot: Clean alter-alter level data
 ***************************************************************
 
 
@@ -812,7 +866,7 @@ bysort SUBID NC: gen npossties=trandom*(trandom-1)/2
 bysort SUBID NC: replace npossties=netsize*(netsize-1)/2 if missing(npossties) //early NC did not implement randomization
 
 foreach x of varlist totval totnum totnum1 {
-	replace `x'=0 if inrange(netsize,2,4) & missing(`x') & !missing(mclose) //all 0 on alter-alter ties are absent and treated as missing for totval,totnum, totnum1; need to replace them as 0
+	replace `x'=0 if inrange(netsize,2,900) & missing(`x') & !missing(trandom) //all 0 on alter-alter ties are absent and treated as missing for totval,totnum, totnum1; need to replace them as 0
 }
 
 gen density=totval/npossties
@@ -828,6 +882,8 @@ bysort SUBID NC: gen npossties_rd=trandom*(trandom-1)/2
 bysort SUBID NC: gen npossties_full=netsize*(netsize-1)/2
 gen efctsize=netsize - 2*totnum1*(npossties_full/npossties_rd)/netsize //adjust totnum1 proportionaly to npossties_full/npossties_rd; trandom to netsize/trandom
 replace efctsize=netsize-2*totnum1/netsize if missing(efctsize)
+replace efctsize=0 if netsize==0
+replace efctsize=1 if netsize==1
 label var efctsize "Effective size"
 drop npossties_rd npossties_full
 
@@ -836,17 +892,23 @@ drop npossties_rd npossties_full
 
 
 ***************************************************************
-**#8b Pilot: save files 
+**#9b Pilot: save files 
 ***************************************************************
 
 
 
 
 *save files
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned"
+cd "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned"
 save "NC-informant focal-LONG-pilot-clean-20211112.dta", replace 
 
 duplicates drop SUBID NC, force
+
+*merge with ego level 
+merge m:1 networkcanvasegouuid using "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\temp\NC-informant-ego-20211112.dta" // check and fix not matched cases
+list SUBID_str date_snad if _merge==2 // 10113a had 0 focal alters
+replace netsize=0 if _merge==2 //assign 0 for people netsize 0
+
 keep SUBID* date_snad NC netsize-efctsize
 save "NC-informant focal-EGOAGG-pilot-clean-20211112.dta", replace 
 
@@ -857,14 +919,14 @@ save "NC-informant focal-EGOAGG-pilot-clean-20211112.dta", replace
 
 
 ***************************************************************
-**#6c ENSO match (ENSO only added anyone else + study partner generators): clean alter level interpretors
+**#7c ENSO match (ENSO only added anyone else + study partner generators): clean alter level interpretors
 ***************************************************************
 
 
 
 
 *drop name generators that are not in ENSO to be consistent with latest NC data 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\temp"
+cd "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\temp"
 use "NC-informant-focal alter-20211112.dta", clear
 egen match=rowtotal(alterim* alterhm* alteret6 alteret7)
 drop if match==0 | missing(match) 
@@ -1040,7 +1102,7 @@ save "NC-informant-focal alter-ENSOmatch-clean-20211112.dta", replace
 
 
 ***************************************************************
-**#7c ENSO match: Clean alter-alter level data
+**#8c ENSO match: Clean alter-alter level data
 ***************************************************************
 
 
@@ -1109,7 +1171,7 @@ bysort SUBID NC: gen npossties=trandom*(trandom-1)/2
 bysort SUBID NC: replace npossties=netsize*(netsize-1)/2 if missing(npossties) //early NC did not implement randomization
 
 foreach x of varlist totval totnum totnum1 {
-	replace `x'=0 if inrange(netsize,2,4) & missing(`x') & !missing(mclose) //all 0 on alter-alter ties are absent and treated as missing for totval,totnum, totnum1; need to replace them as 0
+	replace `x'=0 if inrange(netsize,2,900) & missing(`x') & !missing(trandom) //all 0 on alter-alter ties are absent and treated as missing for totval,totnum, totnum1; need to replace them as 0
 }
 
 gen density=totval/npossties
@@ -1125,6 +1187,8 @@ bysort SUBID NC: gen npossties_rd=trandom*(trandom-1)/2
 bysort SUBID NC: gen npossties_full=netsize*(netsize-1)/2
 gen efctsize=netsize - 2*totnum1*(npossties_full/npossties_rd)/netsize //adjust totnum1 proportionaly to npossties_full/npossties_rd; trandom to netsize/trandom
 replace efctsize=netsize-2*totnum1/netsize if missing(efctsize)
+replace efctsize=0 if netsize==0
+replace efctsize=1 if netsize==1
 label var efctsize "Effective size"
 drop npossties_rd npossties_full
 
@@ -1133,30 +1197,36 @@ drop npossties_rd npossties_full
 
 
 ***************************************************************
-**#8c ENSO match: save files 
+**#9c ENSO match: save files 
 ***************************************************************
 
 
 
 
 *save files
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned"
+cd "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned"
 save "NC-informant focal-LONG-ENSOmatch-clean-20211112.dta", replace 
 
 duplicates drop SUBID NC, force
+
+*merge with ego level 
+merge m:1 networkcanvasegouuid using "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\temp\NC-informant-ego-20211112.dta" // check and fix not matched cases
+list SUBID_str date_snad if _merge==2 //10113a had 0 focal alters
+replace netsize=0 if _merge==2 //assign 0 for people netsize 0
+
 keep SUBID* date_snad NC netsize-efctsize
 save "NC-informant focal-EGOAGG-ENSOmatch-clean-20211112.dta", replace 
 
 
 ***************************************************************
-**#6d NC match (workdays and weekends generators are dropped at early of 2021): clean alter level interpretors
+**#7d NC match (workdays and weekends generators are dropped at early of 2021): clean alter level interpretors
 ***************************************************************
 
 
 
 
 *drop names that are workdays and weekend ties to be consistent with latest NC data 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\temp"
+cd "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\temp"
 use "NC-informant-focal alter-20211112.dta", clear
 egen match=rowtotal(alterim* alterhm* alteret3 alteret4 alteret5 alteret6 alteret7)
 drop if match==0 | missing(match) 
@@ -1331,7 +1401,7 @@ save "NC-informant-focal alter-NCmatch-clean-20211112.dta", replace
 
 
 ***************************************************************
-**#7d NC match: Clean alter-alter level data
+**#8d NC match: Clean alter-alter level data
 ***************************************************************
 
 
@@ -1400,7 +1470,7 @@ bysort SUBID NC: gen npossties=trandom*(trandom-1)/2
 bysort SUBID NC: replace npossties=netsize*(netsize-1)/2 if missing(npossties) //early NC did not implement randomization
 
 foreach x of varlist totval totnum totnum1 {
-	replace `x'=0 if inrange(netsize,2,4) & missing(`x') & !missing(mclose) //all 0 on alter-alter ties are absent and treated as missing for totval,totnum, totnum1; need to replace them as 0
+	replace `x'=0 if inrange(netsize,2,900) & missing(`x') & !missing(trandom) //all 0 on alter-alter ties are absent and treated as missing for totval,totnum, totnum1; need to replace them as 0
 }
 
 gen density=totval/npossties
@@ -1416,6 +1486,8 @@ bysort SUBID NC: gen npossties_rd=trandom*(trandom-1)/2
 bysort SUBID NC: gen npossties_full=netsize*(netsize-1)/2
 gen efctsize=netsize - 2*totnum1*(npossties_full/npossties_rd)/netsize //adjust totnum1 proportionaly to npossties_full/npossties_rd; trandom to netsize/trandom
 replace efctsize=netsize-2*totnum1/netsize if missing(efctsize)
+replace efctsize=0 if netsize==0
+replace efctsize=1 if netsize==1
 label var efctsize "Effective size"
 drop npossties_rd npossties_full
 
@@ -1424,18 +1496,24 @@ drop npossties_rd npossties_full
 
 
 ***************************************************************
-**#8d NC match: save files 
+**#9d NC match: save files 
 ***************************************************************
 
 
 
 
 *save files
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned"
+cd "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\cleaned"
 save "NC-informant focal-LONG-NCmatch-clean-20211112.dta", replace 
 
 duplicates drop SUBID NC, force
+
+*merge with ego level 
+merge m:1 networkcanvasegouuid using "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\temp\NC-informant-ego-20211112.dta" // check and fix not matched cases
+list SUBID_str date_snad if _merge==2 //10113a had 0 focal alters
+replace netsize=0 if _merge==2 //assign 0 for people netsize 0
+
 keep SUBID* date_snad NC netsize-efctsize
 save "NC-informant focal-EGOAGG-NCmatch-clean-20211112.dta", replace 
 
-cd "C:\Users\bluep\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\code"  //reset directory for rule-all do file
+cd "C:\Users\siyunpeng\Dropbox\peng\Academia\Work with Brea\SNAD\SNAD data\codes\Netcanvas\code"  //reset directory for rule-all do file
